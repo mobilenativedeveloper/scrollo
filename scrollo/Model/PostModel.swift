@@ -16,7 +16,7 @@ struct PostModel:  Identifiable, Decodable {
     var liked, commented, disliked, inSaved: Bool
     var files: [PostFiles]
     var lastComments: [CommentsModel]
-    var lastLikes: [LastLikes]
+//    var lastLikes: [LastLikes]?
     
     enum CodingKeys: CodingKey {
         case id
@@ -33,7 +33,7 @@ struct PostModel:  Identifiable, Decodable {
         case inSaved
         case files
         case lastComments
-        case lastLikes
+//        case lastLikes
     }
     
     struct CommentsModel: Decodable {
@@ -148,7 +148,7 @@ struct PostModel:  Identifiable, Decodable {
 }
 
 
-struct FeedResponse: Decodable {
+struct PostResponse: Decodable {
     var data: [PostModel]
     var page: Int
     var totalPages: Int

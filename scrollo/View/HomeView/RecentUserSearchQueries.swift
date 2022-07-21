@@ -50,15 +50,15 @@ struct RecentUserSearchQueries: View {
                         Text("Нет истории поиска")
                             .foregroundColor(.gray)
                     } else {
-//                        ForEach(0..<searchHistoryViewModel.usersSearchHistory.count, id: \.self) {index in
-//                            UserSearchHistoryView(name: searchHistoryViewModel.usersSearchHistory[index], searchText: false)
-//                                .environmentObject(searchHistoryViewModel)
-//                        }
-//                        .padding(.horizontal, 15)
-//                        .padding(.bottom, 28)
-//                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-//                        .listRowBackground(Color.clear)
-//                        .listRowSeparatorTint(.clear)
+                        ForEach(0..<searchHistoryViewModel.usersSearchHistory.count, id: \.self) {index in
+                            UserSearchHistoryView(name: searchHistoryViewModel.usersSearchHistory[index])
+                                .environmentObject(searchHistoryViewModel)
+                        }
+                        .padding(.horizontal, 15)
+                        .padding(.bottom, 28)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                        .listRowBackground(Color.clear)
+                        .listRowSeparatorTint(.clear)
                     }
                    
                 }

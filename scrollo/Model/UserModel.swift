@@ -87,3 +87,12 @@ struct UserSearchResponse: Decodable {
     var page: Int
     var totalPages: Int
 }
+
+struct ResponseResult: Decodable {
+    var result: Bool
+}
+
+struct SendConfirmCodeResponse: Decodable {
+    var id: String
+}
+

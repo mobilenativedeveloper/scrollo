@@ -18,7 +18,7 @@
 		<string>gotham_light.ttf</string>
 		<string>gotham_medium.ttf</string>
 	</array>
-	<key>UIUserInterfaceStyle</key>
-	<string>Light</string>
+	<key>UILaunchScreen</key>
+	<dict/>
 </dict>
 </plist>

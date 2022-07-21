@@ -10,12 +10,7 @@ import SwiftUI
 struct SignUpView : View {
     @ObservedObject var keyboardHelper = KeyboardHelper()
     @StateObject var otpViewModel = OTPViewModel()
-    @State var login: String = String()
-    @State var email: String = String()
-    @State var password: String = String()
-    @State var stepSingUp: StepSignUp = .enterLogin
-    @State var error: Bool = false
-    @State var errorMessage: String = String()
+    @StateObject var signUp: SignUpViewModel = SignUpViewModel()
     
     var body : some View {
         
@@ -34,7 +29,7 @@ struct SignUpView : View {
                 .overlay(
                     
                     VStack(spacing: 0) {
-                        if self.stepSingUp == .enterLogin {
+                        if signUp.stepSingUp == .enterLogin {
                             
                             Text("шаг №1")
                                 .font(.system(size: 16))
@@ -52,16 +47,25 @@ struct SignUpView : View {
                             
                             Spacer(minLength: 0)
                             
-                            TextFieldLogin(value: self.$login, placeholder: "Аккаунт")
+                            TextFieldLogin(value: $signUp.login, placeholder: "Аккаунт")
                             
                             Spacer(minLength: 0)
                             
                             Button(action: {
-                                if !self.login.isEmpty {
-                                    self.stepSingUp = .enterEmailAndPassword
+                                if signUp.login.isEmpty {
+                                    signUp.alert = AlertModel(title: "Ошибка", message: "Логин не должен быть пустым.", show: true)
                                 } else {
-                                    self.errorMessage = "Поле логин не должно быть пустым"
-                                    self.error.toggle()
+                                    signUp.load = true
+                                    signUp.checkExistLogin { exist in
+                                        guard let exist = exist else {return}
+                                        if exist {
+                                            signUp.alert = AlertModel(title: "Ошибка", message: "Этот логин уже занят, выберите другой.", show: true)
+                                            signUp.load = false
+                                        } else {
+                                            signUp.load = false
+                                            signUp.stepSingUp = .enterEmailAndPassword
+                                        }
+                                    }
                                 }
                             }) {
                                 Text("Далее")
@@ -75,7 +79,7 @@ struct SignUpView : View {
                             .padding(.bottom, 49)
                         }
                         
-                        if self.stepSingUp == .enterEmailAndPassword {
+                        if signUp.stepSingUp == .enterEmailAndPassword {
                             
                             Text("шаг №2")
                                 .font(.system(size: 16))
@@ -93,14 +97,20 @@ struct SignUpView : View {
                             
                             Spacer(minLength: 0)
                             
-                            TextFieldLogin(value: self.$email, placeholder: "E-mail")
+                            TextFieldLogin(value: $signUp.email, placeholder: "E-mail")
                                 .padding(.bottom, 14)
-                            TextFieldLogin(value: self.$password, placeholder: "Пароль", secure: true)
+                            TextFieldLogin(value: $signUp.password, placeholder: "Пароль", secure: true)
                             
                             Spacer()
                             
                             Button(action: {
-                                self.sendCode()
+                                if signUp.email.isEmpty {
+                                    signUp.alert = AlertModel(title: "Ошибка", message: "Email не должен быть пустым.", show: true)
+                                } else if (signUp.password.isEmpty) {
+                                    signUp.alert = AlertModel(title: "Ошибка", message: "Пароль не должен быть пустым", show: true)
+                                } else {
+                                    signUp.sendConfirmCode()
+                                }
                             }) {
                                 Text("Далее")
                                     .foregroundColor(.white)
@@ -113,7 +123,7 @@ struct SignUpView : View {
                             .padding(.bottom, 49)
                         }
                         
-                        if self.stepSingUp == .enterCode {
+                        if signUp.stepSingUp == .enterCode {
                             
                             Text("шаг №3")
                                 .font(.system(size: 16))
@@ -136,7 +146,15 @@ struct SignUpView : View {
                             Spacer()
                             
                             Button(action: {
-                                self.confirm()
+                                signUp.confirm(code: otpViewModel.otpField) { confirmed in
+                                    guard let confirmed = confirmed else {return}
+                                    
+                                    if confirmed {
+                                        signUp.createUser()
+                                    } else {
+                                        signUp.alert = AlertModel(title: "Ошибка", message: "Вы ввели не верный код.", show: true)
+                                    }
+                                }
                             }) {
                                 Text("Создать аккаунт")
                                     .foregroundColor(.white)
@@ -163,41 +181,15 @@ struct SignUpView : View {
         .onTapGesture {
             UIApplication.shared.endEditing()
         }
-        .alert(isPresented: self.$error) {
-            Alert(title: Text("Ошибка"), message: Text(self.errorMessage), dismissButton: .default(Text("Продолжить")))
+        .alert(isPresented: $signUp.alert.show) {
+            Alert(title: Text(signUp.alert.title), message: Text(signUp.alert.message), dismissButton: .default(Text("Продолжить")))
         }
     }
     
-    private func sendCode () -> Void {
-        
-        if !self.email.isEmpty && !self.password.isEmpty {
-            //MARK: This is send code
-            self.stepSingUp = .enterCode
-        } else {
-            self.errorMessage = "Заполните все поля"
-            self.error.toggle()
-        }
-    }
-    
-    private func confirm () -> Void {
-        if otpViewModel.otpField.count == 4 {
-            
-        } else {
-            
-            self.errorMessage = "Введите код"
-            self.error.toggle()
-        }
-    }
 }
 
 struct SignUpView_Previews: PreviewProvider {
     static var previews: some View {
         SignUpView()
     }
-}
-
-enum StepSignUp {
-    case enterLogin
-    case enterEmailAndPassword
-    case enterCode
 }

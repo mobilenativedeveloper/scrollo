@@ -16,7 +16,7 @@ struct ActivitiesView: View {
             self.tabsHeader()
             VStack {
                 TabView(selection: self.$selection) {
-                    ScrollView(showsIndicators: false) {
+                    List {
                         
                         HStack {
                             Text("сегодня")
@@ -29,6 +29,7 @@ struct ActivitiesView: View {
                                 .padding(.horizontal, 19)
                             Spacer()
                         }
+                        .ignoreListAppearance()
                         
                         VStack(spacing: 0) {
                             
@@ -152,6 +153,7 @@ struct ActivitiesView: View {
                             .padding(.bottom)
                         }
                         .padding(.horizontal)
+                        .ignoreListAppearance()
                         
                         HStack {
                             Text("эта неделя")
@@ -164,6 +166,7 @@ struct ActivitiesView: View {
                                 .padding(.horizontal, 19)
                             Spacer()
                         }
+                        .ignoreListAppearance()
                         
                         VStack(spacing: 0) {
                             
@@ -288,7 +291,9 @@ struct ActivitiesView: View {
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 100)
+                        .ignoreListAppearance()
                     }
+                    .listStyle(.plain)
                     .tag("Вы")
                     
                     ScrollView(showsIndicators: false) {
@@ -301,6 +306,7 @@ struct ActivitiesView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: Alignment(horizontal: .leading, vertical: .top))
         .background(Color(hex: "#F9F9F9").ignoresSafeArea(.all))
+        
     }
     
     @ViewBuilder
@@ -309,7 +315,9 @@ struct ActivitiesView: View {
             ForEach(0..<self.tabs.count, id: \.self) {index in
                 ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
                     Button(action: {
-                        self.selection = self.tabs[index]
+                        withAnimation(.default) {
+                            self.selection = self.tabs[index]
+                        }
                     }) {
                         Text(self.tabs[index])
                             .font(.custom(self.selection == self.tabs[index] ? GothamBold : GothamBook, size: 13))
@@ -321,13 +329,14 @@ struct ActivitiesView: View {
                     RoundedRectangle(cornerRadius: 4)
                         .fill(Color(hex: "#5B86E5").opacity(self.selection == self.tabs[index] ? 1 : 0))
                         .frame(width: (UIScreen.main.bounds.width / CGFloat(self.tabs.count) - 32), height: 3)
-                        .animation(.spring())
                 }
             }
         }
         .padding(.horizontal)
         .frame(maxWidth: .infinity)
     }
+    
+    
 }
 
 struct ActivitiesView_Previews: PreviewProvider {

@@ -103,3 +103,35 @@ extension View {
         }
     }
 }
+
+extension View {
+    
+    func navigationController<Content: View>(
+        isPresent: Binding<Bool>,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        self
+            .overlay(content: {
+                if isPresent.wrappedValue {
+                    content()
+                        .transition(.move(edge: .trailing))
+                }
+            })
+            .animation(.easeInOut, value: isPresent.wrappedValue)
+    }
+}
+
+extension Data {
+   mutating func append(_ string: String) {
+      if let data = string.data(using: .utf8) {
+         append(data)
+      }
+   }
+}
+
+extension NSMutableData {
+    func appendString(_ string: String) {
+        let data = string.data(using: .utf8)
+        append(data!)
+    }
+}

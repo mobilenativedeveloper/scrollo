@@ -11,21 +11,42 @@ struct HomeView: View {
     @State var selectedTab = "home"
     @State var upload: Bool = false
     
+    @StateObject var notify: NotifyViewModel = NotifyViewModel()
+    
+    //MARK: Publication screens
+    @StateObject var publicationPresent: PublicationViewModel = PublicationViewModel()
+    
+    //MARK: Bottom Sheets present
+    @StateObject var bottomSheetViewModel : BottomSheetViewModel = BottomSheetViewModel()
+    
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+            //MARK: Publication screens view
+            NavigationLink(destination: PublicationTextPostView()
+                            .environmentObject(notify).ignoreDefaultHeaderBar, isActive: $publicationPresent.presentPublicationTextPostView) { EmptyView() }
             
+            NavigationLink(destination: PublicationMediaPostView()
+                            .environmentObject(notify)
+                            .environmentObject(publicationPresent).ignoreDefaultHeaderBar, isActive: $publicationPresent.presentPublicationMediaPostView) { EmptyView() }
+            
+            NavigationLink(destination: Text("presentPublicationStoryView").ignoreDefaultHeaderBar, isActive: $publicationPresent.presentPublicationStoryView) { EmptyView() }
             TabView(selection: $selectedTab){
                 FeedView()
+                    .environmentObject(notify)
+                    .environmentObject(bottomSheetViewModel)
+                    .ignoresSafeArea(SafeAreaRegions.container, edges: .bottom)
                     .ignoreDefaultHeaderBar
                     .tag("home")
                 SearchView()
+                    .environmentObject(bottomSheetViewModel)
                     .ignoreDefaultHeaderBar
                     .tag("search")
                 ActivitiesView()
                     .ignoreDefaultHeaderBar
                     .tag("activities")
-                Text("profile")
+                ProfileView(userId: UserDefaults.standard.string(forKey: "userId")!)
                     .ignoreDefaultHeaderBar
+                    .environmentObject(bottomSheetViewModel)
                     .tag("profile")
             }
             
@@ -42,20 +63,344 @@ struct HomeView: View {
                         }
                 }
                 Tabbar(selectedTab: $selectedTab, upload: self.$upload)
+                    .environmentObject(publicationPresent)
             }
         }
         .ignoresSafeArea(.all, edges: .bottom)
+        .bottomSheet(isPresented: self.$bottomSheetViewModel.isShareBottomSheet, height: UIScreen.main.bounds.height / 2, topBarCornerRadius: 16, showTopIndicator: true, corners: false) {
+            ShareBottomSheet()
+        }
+        .bottomSheet(isPresented: $bottomSheetViewModel.profileSettingsBottomSheet, height: UIScreen.main.bounds.height / 1.6, topBarCornerRadius: 16, corners: true) {
+            ProfileSettinsBottomSheet().environmentObject(bottomSheetViewModel)
+        }
+        .bottomSheet(isPresented: $bottomSheetViewModel.postBottomSheet, height: UIScreen.main.bounds.height / 2, topBarCornerRadius: 16, corners: false) {
+            PostBottomSheetContent().environmentObject(bottomSheetViewModel)
+        }
+        .bottomSheet(isPresented: $bottomSheetViewModel.presentAddPublication, height: UIScreen.main.bounds.height / 2.2, topBarCornerRadius: 16, corners: false) {
+            AddPublicationBottomSheetContent()
+        }
     }
 }
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        ShareBottomSheet()
+    }
+}
+
+struct AddPublicationBottomSheetContent: View {
+    let sepparatorGradient: LinearGradient = LinearGradient(colors: [Color(hex: "#C4C4C4").opacity(0), Color(hex: "#C4C4C4"), Color(hex: "#C4C4C4").opacity(0)], startPoint: .leading, endPoint: .trailing)
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 0) {
+                Text("Добавить")
+                    .font(.custom(GothamBold, size: 20))
+                    .foregroundColor(Color(hex: "#2E313C"))
+                    .textCase(.uppercase)
+                Spacer(minLength: 0)
+                Button(action: {}) {
+                    Image("roundedRectanglePlus")
+                }
+            }
+            .padding(.horizontal, 24)
+            .padding(.bottom, 34)
+            self.sepparator()
+            self.addPublicationItem(icon: "publication", title: "публикацию")
+            self.sepparator()
+            self.addPublicationItem(icon: "post", title: "пост")
+            self.sepparator()
+            self.addPublicationItem(icon: "story", title: "историю")
+            self.sepparator()
+            self.addPublicationItem(icon: "actualStory", title: "актуальное из истории")
+            self.sepparator()
+        }
+    }
+    @ViewBuilder
+    private func sepparator() -> some View {
+        Rectangle()
+            .fill(sepparatorGradient)
+            .frame(height: 1)
+    }
+    @ViewBuilder
+    private func addPublicationItem(icon: String, title: String) -> some View {
+        Button(action: {}) {
+            HStack(spacing: 0) {
+                Image(icon)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 23, height: 23)
+                    .padding(.trailing, 14)
+                Text(title)                     .font(.custom(GothamBook, size: 16))
+                    .textCase(.uppercase)
+                    .foregroundColor(.black)
+            }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 24)
+        }
     }
 }
 
 
+struct PostBottomSheetContent: View {
+    var body: some View {
+        VStack {
+            HStack(spacing: 10) {
+                CustomButtonPostSheet(title: "поделиться", image: "share_bottom_sheet")
+                CustomButtonPostSheet(title: "ссылка", image: "link_bottom_sheet")
+                CustomButtonPostSheet(title: "пожаловаться", image: "report_bottom_sheet")
+            }
+            .padding(.bottom)
+            VStack {
+                Spacer(minLength: 0)
+                Button(action: {}) {
+                    VStack(spacing: 0) {
+                        Text("Добавить в избранное")
+                            .font(.system(size: 12))
+                            .foregroundColor(.black)
+                            .padding(.bottom, 15)
+                        Rectangle()
+                            .fill(Color(hex: "#D8D2E5").opacity(0.25))
+                            .frame(width: UIScreen.main.bounds.width - 42, height: 1)
+                    }
+                }
+                .padding(.bottom, 13)
+                Button(action: {}) {
+                    VStack(spacing: 0) {
+                        Text("Скрыть")
+                            .font(.system(size: 12))
+                            .foregroundColor(.black)
+                            .padding(.bottom, 15)
+                        Rectangle()
+                            .fill(Color(hex: "#D8D2E5").opacity(0.25))
+                            .frame(width: UIScreen.main.bounds.width - 42, height: 1)
+                    }
+                }
+                .padding(.bottom, 13)
+                Button(action: {}) {
+                    VStack(spacing: 0) {
+                        Text("Отменить подписку")
+                            .font(.system(size: 12))
+                            .foregroundColor(.black)
+                            .padding(.bottom, 15)
+                        Rectangle()
+                            .fill(Color(hex: "#D8D2E5").opacity(0.25))
+                            .frame(width: UIScreen.main.bounds.width - 42, height: 1)
+                    }
+                }
+                Spacer(minLength: 0)
+            }
+            .frame(width: (UIScreen.main.bounds.width - 42))
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color(hex: "#FAFAFA"))
+                    .modifier(RoundedEdge(width: 1, color: Color(hex: "#DFDFDF"), cornerRadius: 10))
+            )
+        }
+        .padding(.bottom, 24)
+        .padding(.top, 43)
+    }
+    @ViewBuilder
+    func CustomButtonPostSheet(title: String, image: String) -> some View {
+        Button(action: {}) {
+            VStack {
+                Image(image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 18, height: 18)
+                    .padding(.bottom, 1)
+                Text(title)
+                    .font(.system(size: 12))
+                    .foregroundColor(.black)
+            }
+        }
+        .frame(width: (UIScreen.main.bounds.width - 42) / 3.2, height: ((UIScreen.main.bounds.width - 78) / 3) / 1.5, alignment: .center)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color(hex: "#FAFAFA"))
+                .modifier(RoundedEdge(width: 1, color: Color(hex: "#DFDFDF"), cornerRadius: 10))
+        )
+    }
+}
+
+struct ShareBottomSheet : View {
+    @State var searchText: String = ""
+    var body : some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 0) {
+                Text("поделиться")
+                    .textCase(.uppercase)
+                    .font(.custom(GothamBold, size: 23))
+                    .foregroundColor(Color(hex: "2E313C"))
+                Spacer(minLength: 0)
+                Button(action: {}) {
+                    Image("share.square")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                }
+            }
+            .padding(.bottom, 25)
+            
+            HStack(spacing: 0) {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(Color(hex: "#444A5E"))
+                    .padding(.trailing, 8)
+                TextField("Найти", text: self.$searchText)
+            }
+            .padding(.horizontal, 17)
+            .padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 10.0)
+                    .strokeBorder(Color(hex: "#DDE8E8"), style: StrokeStyle(lineWidth: 1.0))
+                    
+            )
+            .padding(.bottom, 38)
+            
+            ForEach(0..<2, id: \.self) {_ in
+                HStack(spacing: 16) {
+                    ForEach(0..<4, id:\.self) {_ in
+                        Button(action: {}) {
+                            VStack(spacing: 0) {
+                                Image("testUserPhoto")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 54, height: 54)
+                                    .cornerRadius(10)
+                                    .padding(.bottom, 12)
+                                Text("Lana Smith")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(Color(hex: "#444A5E"))
+                            }
+                        }
+                    }
+                }
+                .padding(.bottom, 17)
+            }
+            
+            Button(action: {}) {
+                Text("Отправить")
+                    .font(.custom(GothamMedium, size: 14))
+                    .foregroundColor(.white)
+            }
+            .frame(width: 130, height: 56)
+            .background(
+                LinearGradient(colors: [Color(hex: "#5B86E5"), Color(hex: "#36DCD8")], startPoint: .leading, endPoint: .trailing)
+            )
+            .cornerRadius(40)
+        }
+        .padding(.horizontal, 32)
+    }
+}
+
+private struct ProfileSettinsBottomSheet : View {
+    @EnvironmentObject var bottomSheetViewModel: BottomSheetViewModel
+    var body : some View {
+        
+        VStack {
+            Button(action: {}) {
+                HStack {
+                    Image("your_activity")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                    Text("Ваша активность")
+                        .font(.system(size: 14))
+                        .fontWeight(.bold)
+                        .foregroundColor(Color(hex: "#2E313C"))
+                    Spacer(minLength: 0)
+                }
+                .padding()
+            }
+            NavigationLink(destination: SavedView()
+                            .ignoreDefaultHeaderBar) {
+                HStack {
+                    Image("saves")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                    Text("Сохраненное")
+                        .font(.system(size: 14))
+                        .fontWeight(.bold)
+                        .foregroundColor(Color(hex: "#2E313C"))
+                    Spacer(minLength: 0)
+                }
+                .padding()
+            }
+            .simultaneousGesture(TapGesture().onEnded{
+                bottomSheetViewModel.profileSettingsBottomSheet = false
+            })
+            Button(action: {}) {
+                HStack {
+                    Image("favorite")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                    Text("Близкие друзья")
+                        .font(.system(size: 14))
+                        .fontWeight(.bold)
+                        .foregroundColor(Color(hex: "#2E313C"))
+                    Spacer(minLength: 0)
+                }
+                .padding()
+            }
+            Button(action: {}) {
+                HStack {
+                    Image("add_friend")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                    Text("Интересные люди")
+                        .font(.system(size: 14))
+                        .fontWeight(.bold)
+                        .foregroundColor(Color(hex: "#2E313C"))
+                    Spacer(minLength: 0)
+                }
+                .padding()
+            }
+            Button(action: {}) {
+                HStack {
+                    Image("edit_profile")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                    Text("Редактировать профиль")
+                        .font(.system(size: 14))
+                        .fontWeight(.bold)
+                        .foregroundColor(Color(hex: "#2E313C"))
+                    Spacer(minLength: 0)
+                }
+                .padding()
+            }
+            Spacer(minLength: 0)
+            NavigationLink(destination: SettingsView().ignoreDefaultHeaderBar) {
+                VStack(spacing: 0) {
+                    Rectangle()
+                        .fill(Color(hex: "#F2F2F2"))
+                        .frame(height: 1)
+                    HStack {
+                        Image("settings")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 24, height: 24)
+                        Text("Настройки")
+                            .font(.system(size: 14))
+                            .fontWeight(.bold)
+                            .foregroundColor(Color(hex: "#2E313C"))
+                        Spacer(minLength: 0)
+                    }
+                    .padding(.horizontal)
+                    .padding(.top)
+                }
+            }
+            .simultaneousGesture(TapGesture().onEnded{
+                bottomSheetViewModel.profileSettingsBottomSheet = false
+            })
+        }
+    }
+}
+
 struct Tabbar : View {
+    @EnvironmentObject var publicationPresent: PublicationViewModel
+    
     @Binding var selectedTab: String
     @Binding var upload: Bool
     
@@ -91,7 +436,7 @@ struct Tabbar : View {
         .padding(.vertical)
         .padding(.bottom, UIApplication.shared.windows.first?.safeAreaInsets.bottom)
         .overlay(
-            UploadView(show: self.upload),
+            UploadView(show: self.$upload).environmentObject(publicationPresent),
             alignment: Alignment(horizontal: .center, vertical: .top)
         )
     }
@@ -178,10 +523,11 @@ struct BlurView: UIViewRepresentable {
 }
 
 struct UploadView : View {
-    private let show: Bool
+    @EnvironmentObject var publicationPresent: PublicationViewModel
+    @Binding var show: Bool
     
-    public init (show: Bool) {
-        self.show = show
+    public init (show: Binding<Bool>) {
+        self._show = show
     }
     
     var body : some View {
@@ -194,14 +540,22 @@ struct UploadView : View {
                         .padding(.top, 15)
                     Spacer(minLength: 0)
                     HStack(spacing: 18) {
-                        NavigationLink(destination: Text("").ignoreDefaultHeaderBar) {
-                            UploadButtonView(icon: "gallery_icon", title: "Фото", callback: {})
+                        Button(action: {
+                            self.show = false
+                            publicationPresent.presentPublicationMediaPostView = true
+                        }) {
+                            UploadButtonView(icon: "gallery_icon", title: "Фото")
                         }
-                        NavigationLink(destination: Text("").ignoreDefaultHeaderBar) {
-                            UploadButtonView(icon: "message_icon", title: "Пост", callback: {})
+                        Button(action: {
+                            self.show = false
+                            publicationPresent.presentPublicationTextPostView = true
+                        }) {
+                            UploadButtonView(icon: "message_icon", title: "Пост")
                         }
-                        NavigationLink(destination: Text("").ignoreDefaultHeaderBar) {
-                            UploadButtonView(icon: "video_icon", title: "История", callback: {})
+                        Button(action: {
+                            
+                        }) {
+                            UploadButtonView(icon: "video_icon", title: "История")
                         }
                     }
                     .padding(.bottom, 34)
@@ -228,12 +582,10 @@ struct UploadView : View {
 struct UploadButtonView : View {
     private let icon : String
     private let title : String
-    private let callback : () -> Void
     
-    public init (icon: String, title: String, callback: @escaping () -> Void) {
+    public init (icon: String, title: String) {
         self.icon = icon
         self.title = title
-        self.callback = callback
     }
     
     var body: some View {

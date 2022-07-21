@@ -11,7 +11,7 @@ import AVKit
 class VideoThumbnailViewModel: ObservableObject {
     @Published var load: Bool = false
     @Published var thumbnailVideo: UIImage = UIImage()
-    
+    @Published var error: Bool = false
     func createThumbnailFromVideo(url: URL) {
         DispatchQueue.global().async {
             let asset = AVAsset(url: url)
@@ -27,6 +27,9 @@ class VideoThumbnailViewModel: ObservableObject {
                     self.load = true
                 }
             } catch {
+                DispatchQueue.main.async {
+                    self.error = true
+                }
                 print(error.localizedDescription)
             }
         }

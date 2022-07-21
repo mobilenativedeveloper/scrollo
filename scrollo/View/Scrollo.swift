@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import AVKit
 struct Scrollo: View {
     @State var userId: String = UserDefaults.standard.value(forKey: "userId") as? String ?? String()
     
@@ -17,7 +17,6 @@ struct Scrollo: View {
     }
     
     var body: some View {
-        
         NavigationView {
             if self.userId.isEmpty {
                 LoginView()

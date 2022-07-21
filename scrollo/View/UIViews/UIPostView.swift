@@ -9,17 +9,19 @@ import SwiftUI
 import AVKit
 import SDWebImageSwiftUI
 
-private struct PostHeader : View {
-    private let post : PostModel
+struct PostHeader : View {
     
-    init (post: PostModel) {
+    @EnvironmentObject var bottomSheetViewModel : BottomSheetViewModel
+    private let post : PostModel
+    var isDetail: Bool
+    init (post: PostModel, isDetail: Bool = false) {
         self.post = post
+        self.isDetail = isDetail
     }
     
     var body : some View {
         
         HStack(spacing: 0) {
-            
             if let avatar = self.post.creator.avatar {
                 WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)"))
                     .resizable()
@@ -29,9 +31,7 @@ private struct PostHeader : View {
                     .cornerRadius(10)
                     .padding(.trailing, 7)
             } else {
-                Color.gray
-                    .frame(width: 35, height: 35)
-                    .cornerRadius(10)
+                UIDefaultAvatar(width: 35, height: 35, cornerRadius: 10)
                     .padding(.trailing, 7)
             }
             
@@ -56,6 +56,11 @@ private struct PostHeader : View {
             Spacer()
             
             Button(action: {
+                if isDetail {
+                    bottomSheetViewModel.postDetailBottomSheet.toggle()
+                } else {
+                    bottomSheetViewModel.postBottomSheet.toggle()
+                }
                 
             }) {
                 VStack {
@@ -71,7 +76,7 @@ private struct PostHeader : View {
     }
 }
 
-private struct PostAction: View {
+struct PostAction: View {
     var activeImage: String
     var inactiveImage: String
     var isActive: Bool
@@ -103,24 +108,30 @@ private struct PostAction: View {
     }
 }
 
-private struct PostFooter : View {
-    
-    private let post : PostModel
-    
-    init (post: PostModel) {
-        self.post = post
+struct PostFooter : View {
+    @EnvironmentObject var bottomSheetViewModel: BottomSheetViewModel
+    @State var isShowingSheet: Bool = false
+    @State var presentCommentsView: Bool = false
+    @Binding var post : PostModel
+    var isDetail: Bool
+    init (post: Binding<PostModel>, isDetail: Bool = false) {
+        self._post = post
+        self.isDetail = isDetail
     }
     
     var body : some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                PostAction(activeImage: "heart_active", inactiveImage: "heart_inactive", isActive: self.post.liked, count: self.post.likesCount, onPress: {
-                   
-                })
-                PostAction(activeImage: "dislike_active", inactiveImage: "dislike_inactive", isActive: self.post.disliked, count: self.post.dislikeCount, onPress: {
-                    
-                })
-                
+        
+        HStack(spacing: 5) {
+
+            PostAction(activeImage: "heart_active", inactiveImage: "heart_inactive", isActive: post.liked, count: post.likesCount, onPress: {
+                likePost()
+            })
+            PostAction(activeImage: "dislike_active", inactiveImage: "dislike_inactive", isActive: post.disliked, count: post.dislikeCount, onPress: {
+                dislikePost()
+            })
+            Button(action: {
+                presentCommentsView.toggle()
+            }) {
                 HStack(spacing: 0) {
                     Image("comments")
                         .resizable()
@@ -132,19 +143,122 @@ private struct PostFooter : View {
                         .foregroundColor(Color.black)
                 }
                 .frame(width: 61, height: 20)
-                
-                Button(action: {}) {
-                    Image("share")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 21, height: 21)
+            }
+
+            Button(action: {
+                if isDetail {
+                    bottomSheetViewModel.isShareDetailBottomSheet.toggle()
+                } else {
+                    bottomSheetViewModel.isShareBottomSheet.toggle()
                 }
-                .frame(width: 61, height: 20)
+            }) {
+                Image("share")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 21, height: 21)
+            }
+            .frame(width: 61, height: 20)
+            Spacer(minLength: 0)
+
+            Saved()
+        }
+        .background(NavigationLink(destination: CommentsView(post: post).ignoreDefaultHeaderBar, isActive: $presentCommentsView) { EmptyView() }.hidden())
+    }
+    
+    func likePost() {
+        if !self.post.disliked {
+            
+            if !self.post.liked {
+                guard let url = URL(string: "\(API_URL)\(API_URL_LIKE)") else {return}
+                guard let request = Request(url: url, httpMethod: "POST", body: ["postId": self.post.id]) else {return}
                 
-                Spacer(minLength: 0)
-                
-                Button(action: {
+                URLSession.shared.dataTask(with: request) {data, response, _ in
                     
+                    guard let response = response as? HTTPURLResponse else { return }
+                    guard let data = data else {return}
+                    
+                    if response.statusCode == 200 {
+                        DispatchQueue.main.async {
+//                            guard let newPost = try? JSONDecoder().decode(PostModel.self, from: data) else { return }
+                            
+                            post.liked = true
+                            post.likesCount = post.likesCount + 1
+                        }
+                    }
+                }.resume()
+            } else {
+                guard let url = URL(string: "\(API_URL)\(API_URL_LIKE)\(self.post.id)") else {return}
+                guard let request = Request(url: url, httpMethod: "DELETE", body: nil) else {return}
+                
+                URLSession.shared.dataTask(with: request) {data, response, _ in
+                    
+                    guard let response = response as? HTTPURLResponse else { return }
+                    guard let data = data else {return}
+                    
+                    if response.statusCode == 200 {
+                        
+//                        guard let newPost = try? JSONDecoder().decode(PostModel.self, from: data) else {return}
+                        DispatchQueue.main.async {
+                            post.liked = false
+                            post.likesCount = post.likesCount - 1
+                        }
+                    }
+                }.resume()
+            }
+        }
+    }
+    
+    func dislikePost() {
+        if !self.post.liked {
+            if !self.post.disliked {
+                guard let url = URL(string: "\(API_URL)\(API_URL_DISLIKE)") else { return }
+                guard let request = Request(url: url, httpMethod: "POST", body: ["postId": self.post.id]) else {return}
+                
+                URLSession.shared.dataTask(with: request) {data, response, _ in
+                    
+                    guard let response = response as? HTTPURLResponse else { return }
+                    guard let data = data else {return}
+                    
+                    if response.statusCode == 200 {
+                        
+                        DispatchQueue.main.async {
+//                            guard let newPost = try? JSONDecoder().decode(PostModel.self, from: data) else {return}
+                            
+                            post.disliked = true
+                            post.dislikeCount = post.dislikeCount + 1
+                        }
+                    }
+                }.resume()
+
+            } else {
+                guard let url = URL(string: "\(API_URL)\(API_URL_DISLIKE)\(self.post.id)") else {return}
+                guard let request = Request(url: url, httpMethod: "DELETE", body: nil) else {return}
+                
+                URLSession.shared.dataTask(with: request) {data, response, _ in
+                    
+                    guard let response = response as? HTTPURLResponse else { return }
+                    guard let data = data else {return}
+                    if response.statusCode == 200 {
+                        
+//                        guard let newPost = try? JSONDecoder().decode(PostModel.self, from: data) else {return}
+                        DispatchQueue.main.async {
+                            
+                            post.disliked = false
+                            post.dislikeCount = post.dislikeCount - 1
+                        }
+                    }
+                }.resume()
+            }
+        }
+    }
+    
+    @ViewBuilder func Saved() -> some View {
+        if let userId = UserDefaults.standard.string(forKey: "userId") {
+            if userId == self.post.creator.id {
+                Color.clear.frame(height: 0)
+            } else {
+                Button(action: {
+
                 }) {
                     if self.post.inSaved {
                         Image("bookmark_active")
@@ -157,14 +271,16 @@ private struct PostFooter : View {
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 21, height: 21)
                     }
-                    
+
                 }
             }
+        } else {
+            Color.clear.frame(height: 0)
         }
     }
 }
 
-private struct TruncateTextView : View {
+struct TruncateTextView : View {
     @State private var fullPost: Bool = false
     private let text: String
     private let limitedTextLength: Int = 140
@@ -205,7 +321,7 @@ private struct TruncateTextView : View {
     }
 }
 
-private struct PostMediaCarousel : View {
+struct PostMediaCarousel : View {
     @State var selection : Int = 0
     private let images: [PostModel.PostFiles]
     
@@ -228,11 +344,9 @@ private struct PostMediaCarousel : View {
                                     .tag(index)
                             }
                         } else if self.images[index].type == "VIDEO" {
-                            Text("VIDEO")
                             if let path = images[index].filePath {
-                                Text("VIDEO")
-//                                SlideVideo()
-//                                    .tag(index)
+                                SlideVideo(path: path)
+                                    .tag(index)
                             }
                         }
                     }
@@ -261,9 +375,10 @@ private struct PostMediaCarousel : View {
     }
 }
 
-private struct SlideVideo : View {
-    @ObservedObject var videoThumbnailViewModel: VideoThumbnailViewModel = VideoThumbnailViewModel()
+struct SlideVideo : View {
+    @StateObject var videoThumbnailViewModel: VideoThumbnailViewModel = VideoThumbnailViewModel()
     @State var playVideo: Bool = false
+    var path: String
     let player = AVPlayer(url:  URL(string: "https://images.all-free-download.com/footage_preview/mp4/jasmine_flower_6891520.mp4")!)
     
     var body : some View {
@@ -301,7 +416,7 @@ private struct SlideVideo : View {
                     }
                 })
             } else {
-                UIAVPlayerControllerRepresented(player: player)
+                UIAVPlayerControllerRepresented(player: AVPlayer(url: URL(string: "\(API_URL)/uploads/\(path)")!))
                     .aspectRatio(contentMode: .fill)
                     .frame(height: UIScreen.main.bounds.width - 48)
                     .onAppear(perform: {
@@ -311,9 +426,11 @@ private struct SlideVideo : View {
             }
         }
         .frame(height: UIScreen.main.bounds.width - 48)
-        .onAppear(perform: {
-            videoThumbnailViewModel.createThumbnailFromVideo(url: URL(string: "https://images.all-free-download.com/footage_preview/mp4/jasmine_flower_6891520.mp4")!)
-        })
+        .onAppear{
+            if !videoThumbnailViewModel.error {
+                videoThumbnailViewModel.createThumbnailFromVideo(url: URL(string: "\(API_URL)/uploads/\(path)")!)
+            }
+        }
         .onTapGesture(perform: {
             if videoThumbnailViewModel.load {
                 if self.playVideo == true {
@@ -327,55 +444,27 @@ private struct SlideVideo : View {
 }
 
 struct UIPostTextView: View {
-    private let post : PostModel
+    @EnvironmentObject var bottomSheetViewModel: BottomSheetViewModel
+    @Binding var post: PostModel
+    @State var isDetail: Bool = false
     
-    public init (post: PostModel) {
-        self.post = post
+    public init (post: Binding<PostModel>) {
+        self._post = post
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             
+            
+            
             PostHeader(post: self.post)
                 .padding(.bottom, 13)
             
             TruncateTextView(text: self.post.content)
             
-            PostFooter(post: self.post)
+            PostFooter(post: self.$post)
                 .padding(.top, 17)
-        }
-        .padding(.vertical, 18)
-        .padding(.horizontal, 14)
-        .background(Color.white)
-        .cornerRadius(20)
-        .shadow(color: Color.black.opacity(0.2), radius: 9, x: 0, y: 0)
-        .padding(.vertical, 13.5)
-        .padding(.horizontal, 10)
-    }
-    
-    
-    private func share () -> Void {}
-}
-
-struct UIPostStandartView : View {
-    private let post: PostModel
-    
-    public init(post: PostModel) {
-        self.post = post
-    }
-    
-    var body : some View {
-        
-        VStack(alignment: .leading, spacing: 0){
-            
-            PostHeader(post: self.post)
-                .padding(.bottom, 13)
-            PostMediaCarousel(images: self.post.files)
-                .padding(.bottom, 16)
-            TruncateTextView(text: self.post.content)
-            
-            PostFooter(post: self.post)
-                .padding(.top, 17)
+                .environmentObject(bottomSheetViewModel)
         }
         .buttonStyle(PlainButtonStyle())
         .padding(.vertical, 18)
@@ -384,6 +473,112 @@ struct UIPostStandartView : View {
         .cornerRadius(20)
         .shadow(color: Color.black.opacity(0.2), radius: 9, x: 0, y: 0)
         .padding(.vertical, 13.5)
-        .padding(.horizontal, 10)
+        .padding(.horizontal)
+        .background(NavigationLink(destination: PostDetailView(post: $post)
+                                    .ignoreDefaultHeaderBar
+                                    .environmentObject(bottomSheetViewModel), isActive: $isDetail) { EmptyView() }.hidden())
+        .onTapGesture {
+            isDetail.toggle()
+        }
+    }
+    
+    
+    private func share () -> Void {}
+}
+
+struct UIPostStandartView : View {
+    @EnvironmentObject var bottomSheetViewModel: BottomSheetViewModel
+    @Binding var post: PostModel
+    @State var isDetail: Bool = false
+    
+    public init(post: Binding<PostModel>) {
+        self._post = post
+    }
+    
+    var body : some View {
+        
+        VStack(alignment: .leading, spacing: 0){
+            
+            PostHeader(post: self.post)
+                .padding(.bottom, 13)
+                .environmentObject(bottomSheetViewModel)
+            PostMediaCarousel(images: self.post.files)
+                .padding(.bottom, 16)
+            TruncateTextView(text: self.post.content)
+            
+            PostFooter(post: self.$post)
+                .padding(.top, 17)
+                .environmentObject(bottomSheetViewModel)
+            HStack(spacing: 0) {
+                ZStack{
+                    Image("story1")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 18, height: 18)
+                        .background(Color(hex: "#F2F2F2"))
+                        .clipShape(Circle())
+                        .background(
+                            Circle()
+                                .fill(Color(hex: "#F2F2F2"))
+                                .frame(width: 20, height: 20)
+                        )
+                    Image("story4")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 18, height: 18)
+                        .background(Color(hex: "#F2F2F2"))
+                        .clipShape(Circle())
+                        .background(
+                            Circle()
+                                .fill(Color(hex: "#F2F2F2"))
+                                .frame(width: 20, height: 20)
+                        )
+                        .offset(x: 10)
+                    Image("story3")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 18, height: 18)
+                        .background(Color(hex: "#F2F2F2"))
+                        .clipShape(Circle())
+                        .background(
+                            Circle()
+                                .fill(Color(hex: "#F2F2F2"))
+                                .frame(width: 20, height: 20)
+                        )
+                        .offset(x: 20)
+                }
+                .padding(.trailing, 35)
+                Text("Привет друзья, как вы? Хочу поделиться новостями...")
+                    .font(Font.custom(GothamBook, size: 11))
+                    .padding(.trailing, 3)
+                Spacer(minLength: 0)
+                Button(action: {}){
+                    Text("Далее")
+                        .font(Font.custom(GothamBook, size: 10))
+                        .foregroundColor(.black)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 15)
+                }
+                .background(Color(hex: "#F0F0F0"))
+                .cornerRadius(50)
+            }
+            .padding(.top, 20)
+        }
+        .buttonStyle(PlainButtonStyle())
+        .padding(.vertical, 18)
+        .padding(.horizontal, 14)
+        .background(Color.white)
+        .cornerRadius(20)
+        .shadow(color: Color.black.opacity(0.2), radius: 9, x: 0, y: 0)
+        .padding(.vertical, 13.5)
+        .padding(.horizontal)
+        .background(
+            NavigationLink(destination: PostDetailView(post: $post)
+                            .ignoreDefaultHeaderBar
+                            .environmentObject(bottomSheetViewModel), isActive: $isDetail) { EmptyView() }.hidden()
+        )
+        .onTapGesture {
+            isDetail.toggle()
+        }
     }
 }

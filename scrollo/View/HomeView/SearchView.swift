@@ -9,6 +9,7 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct SearchView: View {
+    @EnvironmentObject var bottomSheetViewModel: BottomSheetViewModel
     @ObservedObject var searchViewModel : SearchViewModel = SearchViewModel()
     @ObservedObject var searchHistoryViewModel : SearchHistoryViewModel = SearchHistoryViewModel()
     @FocusState private var isSearch : Bool
@@ -16,11 +17,11 @@ struct SearchView: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            
+
             Color.white.edgesIgnoringSafeArea(.all)
-            
+
             VStack(spacing: 0) {
-                
+
                 HStack {
                     VStack (spacing: 0) {
                         HStack(spacing: 0) {
@@ -52,7 +53,7 @@ struct SearchView: View {
                                         .font(.title3)
                                         .foregroundColor(Color.gray)
                                 }
-                                
+
                             }
                             .padding(.vertical, 8)
                             .padding(.horizontal)
@@ -71,7 +72,7 @@ struct SearchView: View {
                                     self.searchTextFieldOnLongPressColor = Color.primary.opacity(0.06)
                                 }
                             }, perform: {})
-                            
+
                             if self.searchHistoryViewModel.isSearch {
                                 Button(action: {
                                     withAnimation(.default) {
@@ -100,20 +101,19 @@ struct SearchView: View {
                     }
                 }
                 .background(Color.white)
-                
+
                 ZStack(alignment: .top) {
                     List {
                         if let images = self.searchViewModel.images {
                             SearchCompositionLayout(items: images, id: \.id, spacing: 11) {item in
                                 GeometryReader{proxy in
-        
+
                                 let size = proxy.size
-        
+
                                 WebImage(url: URL(string: item.download_url))
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: size.width, height: size.height)
-                                    .transition(.fade(duration: 0.5))
                                     .cornerRadius(10)
                                 }
                             }
@@ -133,12 +133,15 @@ struct SearchView: View {
                             .listRowBackground(Color.clear)
                             .listRowSeparatorTint(.clear)
                         }
-                        
+
                     }
                     .listStyle(.plain)
-                    
+                    .refreshable {
+
+                    }
                     if self.searchHistoryViewModel.isSearch {
                         SearchLayer()
+                            .environmentObject(bottomSheetViewModel)
                             .environmentObject(self.searchViewModel)
                             .environmentObject(self.searchHistoryViewModel)
                     }
@@ -189,7 +192,7 @@ private struct HashTagButtom : View {
 }
 
 private struct SearchUserItem: View {
-    
+    @EnvironmentObject var bottomSheetViewModel: BottomSheetViewModel
     private let user: UserModel.User
 
     init (user: UserModel.User) {
@@ -198,6 +201,7 @@ private struct SearchUserItem: View {
     
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
+            
             HStack(alignment: .center, spacing: 0) {
                     if let avatar = self.user.avatar {
                         WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
@@ -207,9 +211,7 @@ private struct SearchUserItem: View {
                             .cornerRadius(10)
                             .padding(.trailing, 13)
                     } else {
-                        Color.gray
-                            .frame(width: 44, height: 44)
-                            .cornerRadius(10)
+                        UIDefaultAvatar(width: 44, height: 44, cornerRadius: 10)
                             .padding(.trailing, 13)
                     }
                 
@@ -235,7 +237,9 @@ private struct SearchUserItem: View {
         .padding(.horizontal, 15)
         .padding(.bottom, 28)
         .overlay(
-            NavigationLink(destination: Text("User profile").ignoreDefaultHeaderBar) {
+            NavigationLink(destination: ProfileView(userId:user.id)
+                            .ignoreDefaultHeaderBar
+                            .environmentObject(bottomSheetViewModel)) {
                 EmptyView()
             }
                 .opacity(0)
@@ -245,22 +249,22 @@ private struct SearchUserItem: View {
 
 struct UserSearchHistoryView : View {
     @EnvironmentObject var searchHistoryViewModel : SearchHistoryViewModel
-    @Binding var searchText : String?
+  
     
     private var name : String
     
-    init (name: String, searchText: Binding<String?>) {
+    init (name: String) {
         self.name = name
-        self._searchText = searchText
+//        self._searchText = searchText
     }
     
     var body : some View {
         
         HStack(spacing: 0) {
             Button(action: {
-                if let searchText = self.searchText {
+//                if let searchText = self.searchText {
 //                    searchText = self.name
-                }
+//                }
             }) {
                 HStack(spacing: 0) {
                     Image(systemName: "magnifyingglass")
@@ -290,6 +294,7 @@ struct UserSearchHistoryView : View {
 }
 
 private struct SearchLayer : View {
+    @EnvironmentObject var bottomSheetViewModel: BottomSheetViewModel
     @EnvironmentObject var searchViewModel : SearchViewModel
     @EnvironmentObject var searchHistoryViewModel : SearchHistoryViewModel
     @State private var animated : Bool = false
@@ -309,6 +314,7 @@ private struct SearchLayer : View {
                             if searchViewModel.searchText.count > 0 {
                                 ForEach(0..<self.searchViewModel.users.count, id: \.self) {index in
                                     SearchUserItem(user: self.searchViewModel.users[index])
+                                        .environmentObject(bottomSheetViewModel)
                                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                         .listRowBackground(Color.clear)
                                         .listRowSeparatorTint(.clear)
@@ -340,8 +346,9 @@ private struct SearchLayer : View {
                                 
                                 ForEach(0..<searchHistoryViewModel.usersSearchHistory.count, id: \.self) {index in
                                     
-//                                    UserSearchHistoryView(name: searchHistoryViewModel.usersSearchHistory[index], searchText: true)
-//                                        .environmentObject(searchHistoryViewModel)
+                                    UserSearchHistoryView(name: searchHistoryViewModel.usersSearchHistory[index])
+                                        .environmentObject(searchHistoryViewModel)
+                                        
                                 }
                                 .padding(.horizontal, 15)
                                 .padding(.bottom, 28)
@@ -396,7 +403,9 @@ private struct SearchLayer : View {
                 ForEach(0..<self.tabs.count, id: \.self) {index in
                     ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
                         Button(action: {
-                            self.selection = self.tabs[index]
+                            withAnimation(.default) {
+                                self.selection = self.tabs[index]
+                            }
                         }) {
                             Text(self.tabs[index])
                                 .font(.custom(self.selection == self.tabs[index] ? GothamBold : GothamBook, size: 12))
@@ -408,7 +417,6 @@ private struct SearchLayer : View {
                         RoundedRectangle(cornerRadius: 4)
                             .fill(Color(hex: "#5B86E5").opacity(self.selection == self.tabs[index] ? 1 : 0))
                             .frame(width: (UIScreen.main.bounds.width / CGFloat(self.tabs.count) - 32), height: 3)
-                            .animation(.spring())
                     }
                 }
             }

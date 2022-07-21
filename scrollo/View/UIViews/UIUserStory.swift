@@ -168,8 +168,8 @@ struct UIUserStory : View {
     }
 }
 
-struct UIUserStory_Previews: PreviewProvider {
-    static var previews: some View {
-        UIUserStory()
-    }
-}
+//struct UIUserStory_Previews: PreviewProvider {
+//    static var previews: some View {
+//        UIUserStory()
+//    }
+//}

@@ -8,59 +8,60 @@
 import SwiftUI
 
 class FeedPostViewModel: ObservableObject {
-    //36
-    @Published var posts : [PostModel] = []
-    @Published var isLoadingPage : Bool = false
-    private var countPostsOnPage : Int = 5
-    private var currentPage = 1
-    private var postCountLoad = 5
-    private var canLoadMorePages = true
+    @Published var posts: [PostModel] = []
+    @Published var isLoadingPage = false
+    @Published var load : Bool = false
+    
+    @Published var isLoadMore: Bool = false
+    @Published var canLoadMorePages: Bool = false
+    @Published var page = 0
+    @Published var pageSize = 5
+    @Published var refreshable: Bool = false
     
     init () {
-        self.getFeedPosts()
+        self.getPostsFeed()
     }
     
-    
-    func getFeedPosts() -> Void {
-        
-        guard !self.isLoadingPage && self.canLoadMorePages else {
-          return
+    func getPostsFeed () {
+        if self.refreshable {
+            self.page = 0
+            self.canLoadMorePages = false
         }
+        guard let url = URL(string: "\(API_URL)\(API_GET_FEED_POST)?page=\(page)&pageSize=\(pageSize)") else {return}
+        guard let request = Request(url: url, httpMethod: "GET", body: nil) else { return }
         
-        self.isLoadingPage = true
-        
-        let url = URL(string: "\(API_URL)\(API_GET_FEED_POST)?page=\(self.currentPage)&pageSize=\(self.postCountLoad)")!
-        
-        if let request = Request(url: url, httpMethod: "GET", body: nil) {
+        URLSession.shared.dataTask(with: request) {(data, response, _) in
+            guard let response = response as? HTTPURLResponse else {return}
+            guard let data = data else {return}
+            guard let json = try? JSONDecoder().decode(PostResponse.self, from: data) else { return }
             
-            URLSession.shared.dataTask(with: request){data, response, error in
-                if let _ = error { return }
+            if response.statusCode == 200 {
                 
-                guard let response = response as? HTTPURLResponse else {return}
-                
-                if response.statusCode == 200 {
-                    if let feed = try? JSONDecoder().decode(FeedResponse.self, from: data!) {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            self.canLoadMorePages = self.currentPage != feed.totalPages
-                            self.isLoadingPage = false
-                            self.currentPage += 1
-                            self.posts += feed.data
-                        }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    self.canLoadMorePages = self.page == json.totalPages
+                    if self.refreshable {
+                        self.posts = json.data
+                        self.refreshable = false
+                    } else {
+                        self.posts += json.data
                     }
+                    if self.isLoadMore { self.isLoadMore = false }
+                    if !self.load { self.load = true }
                 }
-            }.resume()
-        }
+            }
+            
+        }.resume()
     }
     
-    func loadMoreContentIfNeeded(currentItem item: PostModel?) {
-        guard let item = item else {
-            self.getFeedPosts()
-            return
-        }
-
-        let thresholdIndex = posts.index(posts.endIndex, offsetBy: -5)
-        if posts.firstIndex(where: { $0.id == item.id }) == thresholdIndex {
-            self.getFeedPosts()
+    func loadMore () -> Void {
+        
+        if !self.canLoadMorePages {
+            self.isLoadMore = true
+            self.page += 1
+            print(self.page)
+            self.getPostsFeed()
+        } else {
+            print("POST END")
         }
     }
 }

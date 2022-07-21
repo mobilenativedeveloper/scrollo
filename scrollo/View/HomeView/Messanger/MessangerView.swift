@@ -15,7 +15,7 @@ struct MessangerView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            
+            //fix nav
             //MARK: HeaderBar
             HStack {
                 Button(action: {
@@ -78,11 +78,6 @@ struct MessangerView: View {
                         HStack(spacing: 20) {
                             ForEach(0..<12, id: \.self) {_ in
                                 UIFavoriteContactView()
-                                    .overlay(
-                                        NavigationLink(destination: UserMessages().ignoreDefaultHeaderBar, label: {
-                                            EmptyView()
-                                        }).opacity(0)
-                                    )
                             }
                         }
                         .padding(.horizontal)
@@ -93,13 +88,10 @@ struct MessangerView: View {
                 
                 //MARK: Chat list
                 VStack(spacing: 13) {
-                    ForEach(0..<self.messangerViewModel.chats.count, id: \.self) {index in
-//                        UIUserMessageView(message: self.messageViewModel.userMessageList[index])
-//                            .overlay(
-//                                NavigationLink(destination: UserMessages().ignoreDefaultHeaderBar, label: {
-//                                    EmptyView()
-//                                }).opacity(0)
-//                            )
+                    ForEach(0..<8, id: \.self) {index in
+                        UIUserMessageView(online: true, login: "login", viewed: true, time: "4")
+                        UIUserMessageView(online: true, login: "login", viewed: true, time: "1")
+                        UIUserMessageView(online: false, login: "login", viewed: false, time: "7")
                     }
                 }
                 .padding(.horizontal)
@@ -119,7 +111,7 @@ struct MessangerView_Previews: PreviewProvider {
 }
 
 private struct UIFavoriteContactView : View {
-    
+    @State var isDetail: Bool = false
     var body : some View {
         VStack(spacing: 0) {
             
@@ -142,29 +134,34 @@ private struct UIFavoriteContactView : View {
                 .font(.system(size: 13))
                 .foregroundColor(Color(hex: "#4F4F4F"))
         }
+        .background(
+            NavigationLink(destination: UserMessages()
+                            .ignoreDefaultHeaderBar, isActive: $isDetail) { EmptyView() }.hidden()
+        )
+        .onTapGesture {
+            isDetail.toggle()
+        }
     }
 }
 
 private struct UIUserMessageView : View {
-    
-    let message : UserMessageModel
-    
-    init (message: UserMessageModel) {
-        self.message = message
-    }
-    
+    @State var isDetail: Bool = false
+    var online: Bool
+    var login: String
+    var viewed: Bool
+    var time: String
     var body : some View {
         
         HStack(spacing: 0) {
             
             ZStack(alignment: .bottomTrailing) {
-                Image(self.message.avatar)
+                Image("testUserPhoto")
                     .resizable()
                     .scaledToFill()
                     .frame(width: 44, height: 44)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 
-                if self.message.online {
+                if online {
                     Circle()
                         .fill(Color(hex: "#38DA7C"))
                         .frame(width: 9, height: 9)
@@ -187,21 +184,21 @@ private struct UIUserMessageView : View {
             }
             
             VStack(alignment: .leading, spacing: 8) {
-                Text(self.message.login)
+                Text(login)
                     .font(.custom(GothamBold, size: 14))
                     .foregroundColor(Color(hex: "#2E313C"))
                 Text("See you on the next meeting! 😂")
                     .font(.custom(GothamBook, size: 14))
-                    .foregroundColor(!self.message.viewed ? Color(hex: "#2E313C") : Color(hex:"#828796"))
+                    .foregroundColor(viewed ? Color(hex: "#2E313C") : Color(hex:"#828796"))
             }
             .padding(.leading, 20)
             
             Spacer(minLength: 0)
             
-            if !self.message.viewed {
+            if viewed {
                 VStack(spacing: 0) {
                     
-                    Text("\(self.message.time) мин")
+                    Text("\(time) мин")
                         .font(.custom(GothamMedium, size: 10))
                         .foregroundColor(Color(hex: "828796"))
                         .padding(.bottom, 4)
@@ -221,8 +218,15 @@ private struct UIUserMessageView : View {
         .padding(.top, 12)
         .padding(.bottom, 8)
         .background(
-            !self.message.viewed ? Color.white.clipShape(CustomCorner(radius: 15, corners: [.topLeft, .bottomLeft])) : nil
+            viewed ? Color.white.clipShape(CustomCorner(radius: 15, corners: [.topLeft, .bottomLeft])) : nil
+        )
+        .background(
+            NavigationLink(destination: UserMessages()
+                            .ignoreDefaultHeaderBar, isActive: $isDetail) { EmptyView() }.hidden()
         )
         .shadow(color: Color(hex: "#778EA5").opacity(0.13), radius: 10, x: 3, y: 5)
+        .onTapGesture {
+            isDetail.toggle()
+        }
     }
 }

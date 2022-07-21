@@ -14,8 +14,19 @@ class MessangerViewModel : ObservableObject {
         ChatModel(id: "b2b7fc9d-d1b5-4787-9190-65f45bf41867", starter: ChatUserModel(id: "b2b7fc9d-d1b5-4787-9190-65f45bf41867", login: "", name: "", avatar: ""), receiver: ChatUserModel(id: "b2b7fc9d-d1b5-4787-9190-65f45bf41867", login: "", name: "", avatar: ""))
     ]
     //MARK: Messages list
-    @Published var messages : [ChatMessageModel] = [
-        ChatMessageModel(id: "", content: "", sender: ChatUserModel(id: "", login: "", name: "", avatar: ""), receiver: ChatUserModel(id: "", login: "", name: "", avatar: ""), attachments: [], createdAt: "", updatedAt: "")
+    @Published var messages : [UserMessageModel] = [
+        UserMessageModel(avatar: "testUserPhoto", login: "Login1", online: true, time: "4", messages: [
+            "tesxt"
+        ], viewed: false),
+        UserMessageModel(avatar: "testUserPhoto", login: "Login1", online: true, time: "4", messages: [
+            "tesxt"
+        ], viewed: false),
+        UserMessageModel(avatar: "testUserPhoto", login: "Login1", online: true, time: "4", messages: [
+            "tesxt"
+        ], viewed: false),
+        UserMessageModel(avatar: "testUserPhoto", login: "Login1", online: true, time: "4", messages: [
+            "tesxt"
+        ], viewed: false),
     ]
     
     private var load : Bool = false
