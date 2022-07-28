@@ -6,18 +6,27 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
+
+
+struct SavePostNotification {
+    var name: String
+    var image: String
+}
 
 struct HomeView: View {
+    @StateObject var toastController: ToastViewModel = ToastViewModel()
+    
     @State var selectedTab = "home"
     @State var upload: Bool = false
     
     @StateObject var notify: NotifyViewModel = NotifyViewModel()
-    
     //MARK: Publication screens
     @StateObject var publicationPresent: PublicationViewModel = PublicationViewModel()
-    
     //MARK: Bottom Sheets present
     @StateObject var bottomSheetViewModel : BottomSheetViewModel = BottomSheetViewModel()
+    
+    
     
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
@@ -33,6 +42,7 @@ struct HomeView: View {
             TabView(selection: $selectedTab){
                 FeedView()
                     .environmentObject(notify)
+                    .environmentObject(toastController)
                     .environmentObject(bottomSheetViewModel)
                     .ignoresSafeArea(SafeAreaRegions.container, edges: .bottom)
                     .ignoreDefaultHeaderBar
@@ -44,10 +54,13 @@ struct HomeView: View {
                 ActivitiesView()
                     .ignoreDefaultHeaderBar
                     .tag("activities")
-                ProfileView(userId: UserDefaults.standard.string(forKey: "userId")!)
+                Text("")
                     .ignoreDefaultHeaderBar
-                    .environmentObject(bottomSheetViewModel)
                     .tag("profile")
+//                ProfileView(userId: UserDefaults.standard.string(forKey: "userId")!)
+//                    .ignoreDefaultHeaderBar
+//                    .environmentObject(bottomSheetViewModel)
+//                    .tag("profile")
             }
             
             ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
@@ -67,18 +80,43 @@ struct HomeView: View {
             }
         }
         .ignoresSafeArea(.all, edges: .bottom)
-        .bottomSheet(isPresented: self.$bottomSheetViewModel.isShareBottomSheet, height: UIScreen.main.bounds.height / 2, topBarCornerRadius: 16, showTopIndicator: true, corners: false) {
-            ShareBottomSheet()
+        //MARK: Notify save post to album
+        .onAppear {
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("save.post"), object: nil, queue: .main) { (notification) in
+                guard let name = notification.userInfo?["name"] as? String else {return}
+                guard let image = notification.userInfo?["image"] as? String else {return}
+                toastController.savedPostAlbumName = name
+                toastController.savedPostAlbumImage = image
+                toastController.isPresentSavedPost.toggle()
+            }
         }
-        .bottomSheet(isPresented: $bottomSheetViewModel.profileSettingsBottomSheet, height: UIScreen.main.bounds.height / 1.6, topBarCornerRadius: 16, corners: true) {
-            ProfileSettinsBottomSheet().environmentObject(bottomSheetViewModel)
-        }
-        .bottomSheet(isPresented: $bottomSheetViewModel.postBottomSheet, height: UIScreen.main.bounds.height / 2, topBarCornerRadius: 16, corners: false) {
-            PostBottomSheetContent().environmentObject(bottomSheetViewModel)
-        }
-        .bottomSheet(isPresented: $bottomSheetViewModel.presentAddPublication, height: UIScreen.main.bounds.height / 2.2, topBarCornerRadius: 16, corners: false) {
-            AddPublicationBottomSheetContent()
-        }
+        //MARK: Toast save post to album
+        .toast(isPresent: $toastController.isPresentSavedPost, content: {
+            HStack {
+                WebImage(url: URL(string: toastController.savedPostAlbumImage))
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 40, height: 40)
+                    .cornerRadius(6)
+                Text("Сохранено в альбом \"\(toastController.savedPostAlbumName)\"")
+            }
+            .onDisappear {
+                toastController.savedPostAlbumImage = String()
+                toastController.savedPostAlbumName = String()
+            }
+        })
+//        .bottomSheet(isPresented: self.$bottomSheetViewModel.isShareBottomSheet, height: UIScreen.main.bounds.height / 2, topBarCornerRadius: 16, showTopIndicator: true, corners: false) {
+//            ShareBottomSheet()
+//        }
+//        .bottomSheet(isPresented: $bottomSheetViewModel.profileSettingsBottomSheet, height: UIScreen.main.bounds.height / 1.6, topBarCornerRadius: 16, corners: true) {
+//            ProfileSettinsBottomSheet().environmentObject(bottomSheetViewModel)
+//        }
+//        .bottomSheet(isPresented: $bottomSheetViewModel.postBottomSheet, height: UIScreen.main.bounds.height / 2, topBarCornerRadius: 16, corners: false) {
+//            PostBottomSheetContent().environmentObject(bottomSheetViewModel)
+//        }
+//        .bottomSheet(isPresented: $bottomSheetViewModel.presentAddPublication, height: UIScreen.main.bounds.height / 2.2, topBarCornerRadius: 16, corners: false) {
+//            AddPublicationBottomSheetContent()
+//        }
     }
 }
 

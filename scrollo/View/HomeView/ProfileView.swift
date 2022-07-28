@@ -135,9 +135,9 @@ struct ProfileView: View {
                                         FollowUserControll(userId: userId).environmentObject(profile)
                                     }
                                     
-                                    StoriesList()
-                                        .padding(.top, 27)
-                                        .environmentObject(self.storyViewModel)
+//                                    StoriesList()
+//                                        .padding(.top, 27)
+//                                        .environmentObject(self.storyViewModel)
                                     HStack(spacing: 0) {
                                         Button(action: {
                                             self.selectedTab = .media
@@ -164,20 +164,20 @@ struct ProfileView: View {
                                         if !profile.loadMdeiaPost {
                                             ProgressView()
                                         } else {
-                                            ForEach(0..<profile.mediaPost.count, id: \.self) {index in
-                                                Layout4(postComposition: $profile.mediaPost[index])
-                                                    .environmentObject(bottomSheetViewModel)
-                                            }
+//                                            ForEach(0..<profile.mediaPost.count, id: \.self) {index in
+//                                                Layout4(postComposition: $profile.mediaPost[index])
+//                                                    .environmentObject(bottomSheetViewModel)
+//                                            }
 //                                            Layout()
 //                                                .environmentObject(bottomSheetViewModel)
 //                                                .environmentObject(profile)
                                         }
                                     } else {
                                         if profile.loadTextPost {
-                                            ForEach(0..<profile.textPost.count, id: \.self) {index in
-                                                UIPostTextView(post: $profile.textPost[index])
-                                                    .environmentObject(bottomSheetViewModel)
-                                            }
+//                                            ForEach(0..<profile.textPost.count, id: \.self) {index in
+//                                                UIPostTextView(post: $profile.textPost[index])
+//                                                    .environmentObject(bottomSheetViewModel)
+//                                            }
                                         } else {
                                             ProgressView()
                                         }
@@ -270,10 +270,10 @@ struct ProfileView: View {
                     .background(backgroundHeader ? Color.white : Color.white.opacity(0))
                 }
                 .background(Color(hex: "#F9F9F9"))
-                .fullScreenCover(isPresented: self.$storyViewModel.showStory) {
-                    StoryView()
-                        .environmentObject(storyViewModel)
-                }
+//                .fullScreenCover(isPresented: self.$storyViewModel.showStory) {
+//                    StoryView()
+//                        .environmentObject(storyViewModel)
+//                }
             } else {
                 ProgressView()
             }

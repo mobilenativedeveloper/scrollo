@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct SavedMediaAlbumView: View {
-    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+   
     @State var selectedTab: String = "photo"
     let headerTitle: String
     let width = (UIScreen.main.bounds.width / 3) - 16
@@ -137,6 +137,7 @@ struct SavedMediaAlbumView: View {
                 .padding(.horizontal, 26)
             }
         }
+
     }
     
     @ViewBuilder

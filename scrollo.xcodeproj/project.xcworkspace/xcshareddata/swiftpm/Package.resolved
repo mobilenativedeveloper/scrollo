@@ -27,6 +27,15 @@
           "revision": "f2616860a41f9d9932da412a8978fec79c06fe24",
           "version": "0.1.4"
         }
+      },
+      {
+        "package": "UISheetPresentationControllerCustomDetent",
+        "repositoryURL": "https://github.com/iMinichrispy/UISheetPresentationControllerCustomDetent",
+        "state": {
+          "branch": null,
+          "revision": "b508240a5b387dfe5e08e958b4bb19002795fd03",
+          "version": "0.9.0"
+        }
       }
     ]
   },
