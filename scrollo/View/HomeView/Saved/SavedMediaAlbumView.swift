@@ -9,17 +9,17 @@ import SwiftUI
 
 struct SavedMediaAlbumView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-   
+    @State var savedPosts: SavedPostsViewModel = SavedPostsViewModel()
+    @State var albumCotroller: AddAlbumViewModel = AddAlbumViewModel()
+    @State var isOptions: Bool = false
     @State var selectedTab: String = "photo"
-    let headerTitle: String
+    var albumId: String
+    var headerTitle: String
+    
     let width = (UIScreen.main.bounds.width / 3) - 16
     
-    init (headerTitle: String = "Идеи для портретов") {
-        self.headerTitle = headerTitle
-    }
-    
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             HStack {
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
@@ -30,16 +30,19 @@ struct SavedMediaAlbumView: View {
                         .frame(width: 24, height: 24)
                 }
                 Spacer(minLength: 0)
-                Text("сохранённое")
+                Text("\(headerTitle)")
                     .font(.system(size: 20))
                     .fontWeight(.bold)
                     .textCase(.uppercase)
                     .foregroundColor(Color(hex: "#1F2128"))
                 Spacer(minLength: 0)
                 Button(action: {
-                    
+                    isOptions.toggle()
                 }) {
-                    Color.clear
+                    Image(systemName: "pencil.line")
+                        .resizable()
+                        .foregroundColor(.black)
+                        .aspectRatio(contentMode: .fill)
                         .frame(width: 24, height: 24)
                 }
             }
@@ -68,76 +71,41 @@ struct SavedMediaAlbumView: View {
             }
             .frame(height: 55)
             ScrollView {
-                VStack(spacing: 0) {
-                    if self.selectedTab == "photo" {
-                        HStack(alignment: .top, spacing: 8) {
-                            VStack(spacing: 8) {
-                                Image("story1")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: width, height: 121)
-                                    .clipped()
-                                    .cornerRadius(6)
-                                Image("story2")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: width, height: 121)
-                                    .clipped()
-                                    .cornerRadius(6)
-                                Image("story3")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: width, height: 189)
-                                    .clipped()
-                                    .cornerRadius(6)
-                            }
-                            VStack(spacing: 8) {
-                                Image("story4")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: width, height: 189)
-                                    .clipped()
-                                    .cornerRadius(6)
-                                Image("story1")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: width, height: 121)
-                                    .clipped()
-                                    .cornerRadius(6)
-                                Image("story2")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: width, height: 189)
-                                    .clipped()
-                                    .cornerRadius(6)
-                            }
-                            VStack(spacing: 8) {
-                                Image("story3")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: width, height: 121)
-                                    .clipped()
-                                    .cornerRadius(6)
-                                Image("story4")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: width, height: 189)
-                                    .clipped()
-                                    .cornerRadius(6)
-                                Image("story1")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: width, height: 121)
-                                    .clipped()
-                                    .cornerRadius(6)
-                            }
-                        }
+                if savedPosts.savedMediaPostsLoad {
+                    VStack(alignment: .leading, spacing: 0) {
+                        PostCompositionView(posts: $savedPosts.savedMediaPosts)
+                    }
+                    .padding(.horizontal, 26)
+                } else {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
                     }
                 }
-                .padding(.horizontal, 26)
             }
         }
-
+        .confirmationDialog("", isPresented: $isOptions, actions: {
+            Button("Удалить подборку", role: .destructive) {
+                albumCotroller.removeAlbum(albumId: albumId)
+            }
+        })
+//        .actionSheet(isPresented: $showLocationOptions) {
+//            ActionSheet(title: Text(""), message: Text("Select a location"), buttons: [
+//
+//            ,
+//            .default(Text(location2)) {  },
+//            .default(Text(location3)) {  },
+//            .default(Text(location4)) {  },
+//            .default(Text(location5)) {  },
+//            .destructive(Text("Отмена")){
+//
+//                }
+//            ])
+//        }
+        .onAppear(perform: {
+            savedPosts.getSavedMediaPosts(albumId: albumId)
+        })
     }
     
     @ViewBuilder
@@ -150,8 +118,8 @@ struct SavedMediaAlbumView: View {
     }
 }
 
-struct SavedMediaAlbumView_Previews: PreviewProvider {
-    static var previews: some View {
-        SavedMediaAlbumView()
-    }
-}
+//struct SavedMediaAlbumView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SavedMediaAlbumView()
+//    }
+//}

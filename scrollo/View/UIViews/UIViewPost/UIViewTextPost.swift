@@ -12,7 +12,7 @@ struct UIViewTextPost: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            PostHeaderView(avatar: post.creator.avatar, login: post.creator.login, place: post.place)
+            PostHeaderView(userId: post.creator.id, avatar: post.creator.avatar, login: post.creator.login, place: post.place)
                 .padding(.bottom, 13)
             
             TruncateTextView(text: post.content)

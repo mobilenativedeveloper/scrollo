@@ -11,7 +11,7 @@ import  SDWebImageSwiftUI
 
 struct EditUserProfile: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @EnvironmentObject var profile: ProfileViewModel
+    @EnvironmentObject var profileController: ProfileViewModel
     @StateObject var edit: EditProfileViewModel = EditProfileViewModel.init()
     
     @State var selectedBackground: UIImage = UIImage()
@@ -56,7 +56,7 @@ struct EditUserProfile: View {
                     Button(action: {
                         if !edit.loadEdit {
                             edit.editProfile(onSuccess: {
-                                profile.getProfile(userId: UserDefaults.standard.string(forKey: "userId")!)
+                                profileController.getProfile(userId: UserDefaults.standard.string(forKey: "userId")!)
                                 edit.alertTitle = "Успех"
                                 edit.alertMessage = "Профиль успешно изменен"
                                 edit.alert.toggle()
@@ -260,7 +260,7 @@ struct EditUserProfile: View {
     }
     
     func textBgColor () -> String {
-        if let background = profile.user!.background {
+        if let background = profileController.user!.background {
             if !background.isEmpty && selectedBackground == nil {
                 return "#ffffff"
             }

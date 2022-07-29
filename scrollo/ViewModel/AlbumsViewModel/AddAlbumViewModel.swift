@@ -47,4 +47,20 @@ class AddAlbumViewModel: ObservableObject {
                 
         
     }
+    
+    func removeAlbum (albumId: String) {
+        guard let url = URL(string: "\(API_URL)\(API_DELETE_ALBUM)\(albumId)") else { return }
+        guard let request = Request(url: url, httpMethod: "DELETE", body: nil) else { return }
+        
+        URLSession.shared.dataTask(with: request) { _, response, _ in
+            guard let response = response as? HTTPURLResponse else { return }
+            
+            print(response.statusCode)
+            if response.statusCode == 200 {
+                DispatchQueue.main.async {
+                    print("true")
+                }
+            }
+        }.resume()
+    }
 }

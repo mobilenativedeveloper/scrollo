@@ -10,8 +10,8 @@ import SwiftUI
 struct Test: View {
     
     var body: some View {
-        VStack(spacing: 0) {
-          
+        ScrollView {
+            
         }
     }
     
@@ -22,5 +22,3 @@ struct Test_Previews: PreviewProvider {
         Test()
     }
 }
-
-

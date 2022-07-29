@@ -10,6 +10,8 @@ import SDWebImageSwiftUI
 
 struct SavedView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @StateObject var savedPosts: SavedPostsViewModel = SavedPostsViewModel()
+    
     @StateObject var albumsController: AlbumsViewModel = AlbumsViewModel(composition: true)
     @StateObject var addAlbumController: AddAlbumViewModel = AddAlbumViewModel()
     
@@ -78,7 +80,19 @@ struct SavedView: View {
                     }
                     .tag("Медиа")
                     VStack {
-                        Text("Текстовые посты")
+                        if savedPosts.savedTextPostsLoad {
+                            ScrollView {
+                                ForEach(0..<savedPosts.savedTextPosts.count, id: \.self) {index in
+                                    UIViewTextPost(post: $savedPosts.savedTextPosts[index])
+                                }
+                            }
+                        } else {
+                            HStack {
+                                Spacer()
+                                ProgressView()
+                                Spacer()
+                            }
+                        }
                     }
                     .tag("Посты")
                 }
@@ -99,6 +113,7 @@ struct SavedView: View {
                 })
             )
         }
+        .onAppear(perform: savedPosts.getSavedTextPosts)
         .onReceive(albumsController.$status) { (value) in
             if value == .error {
                 albumsController.alert = AlertModel(title: "Ошибка", message: "Произошла ошибка, попробуйе еще раз.", show: true)
@@ -126,7 +141,6 @@ struct SavedView: View {
                     RoundedRectangle(cornerRadius: 4)
                         .fill(Color(hex: "#5B86E5").opacity(self.selection == self.tabs[index] ? 1 : 0))
                         .frame(width: (UIScreen.main.bounds.width / CGFloat(self.tabs.count) - 32), height: 3)
-                        .animation(.spring())
                 }
             }
         }
@@ -136,12 +150,12 @@ struct SavedView: View {
     
     @ViewBuilder
     private func SavedItem(album: AlbumModel) -> some View {
-        NavigationLink(destination: SavedMediaAlbumView().ignoreDefaultHeaderBar) {
+        NavigationLink(destination: SavedMediaAlbumView(albumId: album.id, headerTitle: album.name).ignoreDefaultHeaderBar) {
             VStack {
                 VStack(spacing: 1) {
                     HStack(spacing: 1) {
                         if album.preview.count >= 1 {
-                            Image("story1")
+                            WebImage(url: URL(string: "\(API_URL)/uploads/\(album.preview[0])"))
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: savedItemSize / 2, height: savedItemSize / 2)
@@ -153,7 +167,7 @@ struct SavedView: View {
                         }
                         
                         if album.preview.count >= 2 {
-                            Image("story1")
+                            WebImage(url: URL(string: "\(API_URL)/uploads/\(album.preview[1])"))
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: savedItemSize / 2, height: savedItemSize / 2)
@@ -166,7 +180,7 @@ struct SavedView: View {
                     }
                     HStack(spacing: 1) {
                         if album.preview.count >= 3 {
-                            Image("story1")
+                            WebImage(url: URL(string: "\(API_URL)/uploads/\(album.preview[2])"))
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: savedItemSize / 2, height: savedItemSize / 2)
@@ -178,7 +192,7 @@ struct SavedView: View {
                         }
                         
                         if album.preview.count >= 4 {
-                            Image("story1")
+                            WebImage(url: URL(string: "\(API_URL)/uploads/\(album.preview[3])"))
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: savedItemSize / 2, height: savedItemSize / 2)

@@ -46,7 +46,7 @@ struct HalfSheetHelper<SheetView: View> : UIViewControllerRepresentable {
             let sheetController = MediumHostingController(rootView: sheetView)
             sheetController.presentationController?.delegate = context.coordinator
             
-            uiViewController.present(sheetController, animated: true)
+            uiViewController.present(sheetController, animated: true,  completion: nil)
         } else {
             uiViewController.dismiss(animated: true, completion: nil)
         }
@@ -63,7 +63,7 @@ struct HalfSheetHelper<SheetView: View> : UIViewControllerRepresentable {
         
         func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
             parent.isPresent = false
-            
+            parent.isPresent = false
             parent.onEnd()
         }
         
@@ -78,12 +78,15 @@ class MediumHostingController<Content: View>: UIHostingController<Content> {
         if let presentationController = presentationController as? UISheetPresentationController {
             
             presentationController.detents = [
-                .custom(240)
+                .medium()
             ]
             
             presentationController.prefersGrabberVisible = true
         }
     }
 }
+
+
+
 
 

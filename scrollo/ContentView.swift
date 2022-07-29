@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var isPresented: Bool = false
     var body: some View {
         Scrollo()
     }

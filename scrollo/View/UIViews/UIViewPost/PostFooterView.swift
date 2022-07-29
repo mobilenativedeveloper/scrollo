@@ -120,11 +120,22 @@ struct PostFooterView: View {
             Button(action: {
                 if post.type == "STANDART" {
                     if post.inSaved {
-                        savePostController.removeSaveMediaPost(postId: post.id, completed: {
+                        savePostController.removeSavePost(postId: post.id, completed: {
                             post.inSaved = false
                         })
                     } else {
                         savePostController.isPresentListAbums.toggle()
+                    }
+                }
+                if post.type == "TEXT" {
+                    if post.inSaved {
+                        savePostController.removeSavePost(postId: post.id, completed: {
+                            post.inSaved = false
+                        })
+                    } else {
+                        savePostController.saveTextPost(postId: post.id) {
+                            post.inSaved = true
+                        }
                     }
                 }
             }) {

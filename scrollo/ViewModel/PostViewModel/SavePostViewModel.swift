@@ -10,7 +10,7 @@ import SwiftUI
 class SavePostViewModel: ObservableObject {
     @Published var isPresentListAbums: Bool = false
     
-    func removeSaveMediaPost (postId: String, completed: @escaping() -> Void) {
+    func removeSavePost (postId: String, completed: @escaping() -> Void) {
         guard let url = URL(string: "\(API_URL)\(API_SAVE_POST)/\(postId)") else {return}
         guard let request = Request(url: url, httpMethod: "DELETE", body: nil) else { return }
         
@@ -48,6 +48,26 @@ class SavePostViewModel: ObservableObject {
                         ])
                     }
                 }
+                DispatchQueue.main.async {
+                    completed()
+                }
+            } else {
+                //MARK: toast error
+                print("Post saved error")
+            }
+        }.resume()
+    }
+    
+    func saveTextPost (postId: String, completed: @escaping () -> Void) {
+        
+        guard let url = URL(string: "\(API_URL)\(API_SAVE_POST)") else { return }
+        guard let request = Request(url: url, httpMethod: "POST", body: ["postId": postId]) else { return }
+        
+        URLSession.shared.dataTask(with: request) { data, response, _ in
+            guard let response = response as? HTTPURLResponse else { return }
+            guard let data = data else {return}
+            
+            if response.statusCode == 200 {
                 DispatchQueue.main.async {
                     completed()
                 }

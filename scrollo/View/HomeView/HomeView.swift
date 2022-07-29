@@ -54,13 +54,10 @@ struct HomeView: View {
                 ActivitiesView()
                     .ignoreDefaultHeaderBar
                     .tag("activities")
-                Text("")
+                ProfileView(userId: UserDefaults.standard.string(forKey: "userId")!)
+                    .ignoresSafeArea(SafeAreaRegions.container, edges: .bottom)
                     .ignoreDefaultHeaderBar
                     .tag("profile")
-//                ProfileView(userId: UserDefaults.standard.string(forKey: "userId")!)
-//                    .ignoreDefaultHeaderBar
-//                    .environmentObject(bottomSheetViewModel)
-//                    .tag("profile")
             }
             
             ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
@@ -111,9 +108,6 @@ struct HomeView: View {
 //        .bottomSheet(isPresented: $bottomSheetViewModel.profileSettingsBottomSheet, height: UIScreen.main.bounds.height / 1.6, topBarCornerRadius: 16, corners: true) {
 //            ProfileSettinsBottomSheet().environmentObject(bottomSheetViewModel)
 //        }
-//        .bottomSheet(isPresented: $bottomSheetViewModel.postBottomSheet, height: UIScreen.main.bounds.height / 2, topBarCornerRadius: 16, corners: false) {
-//            PostBottomSheetContent().environmentObject(bottomSheetViewModel)
-//        }
 //        .bottomSheet(isPresented: $bottomSheetViewModel.presentAddPublication, height: UIScreen.main.bounds.height / 2.2, topBarCornerRadius: 16, corners: false) {
 //            AddPublicationBottomSheetContent()
 //        }
@@ -126,57 +120,7 @@ struct HomeView_Previews: PreviewProvider {
     }
 }
 
-struct AddPublicationBottomSheetContent: View {
-    let sepparatorGradient: LinearGradient = LinearGradient(colors: [Color(hex: "#C4C4C4").opacity(0), Color(hex: "#C4C4C4"), Color(hex: "#C4C4C4").opacity(0)], startPoint: .leading, endPoint: .trailing)
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 0) {
-                Text("Добавить")
-                    .font(.custom(GothamBold, size: 20))
-                    .foregroundColor(Color(hex: "#2E313C"))
-                    .textCase(.uppercase)
-                Spacer(minLength: 0)
-                Button(action: {}) {
-                    Image("roundedRectanglePlus")
-                }
-            }
-            .padding(.horizontal, 24)
-            .padding(.bottom, 34)
-            self.sepparator()
-            self.addPublicationItem(icon: "publication", title: "публикацию")
-            self.sepparator()
-            self.addPublicationItem(icon: "post", title: "пост")
-            self.sepparator()
-            self.addPublicationItem(icon: "story", title: "историю")
-            self.sepparator()
-            self.addPublicationItem(icon: "actualStory", title: "актуальное из истории")
-            self.sepparator()
-        }
-    }
-    @ViewBuilder
-    private func sepparator() -> some View {
-        Rectangle()
-            .fill(sepparatorGradient)
-            .frame(height: 1)
-    }
-    @ViewBuilder
-    private func addPublicationItem(icon: String, title: String) -> some View {
-        Button(action: {}) {
-            HStack(spacing: 0) {
-                Image(icon)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 23, height: 23)
-                    .padding(.trailing, 14)
-                Text(title)                     .font(.custom(GothamBook, size: 16))
-                    .textCase(.uppercase)
-                    .foregroundColor(.black)
-            }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 24)
-        }
-    }
-}
+
 
 
 struct PostBottomSheetContent: View {
@@ -329,112 +273,6 @@ struct ShareBottomSheet : View {
     }
 }
 
-private struct ProfileSettinsBottomSheet : View {
-    @EnvironmentObject var bottomSheetViewModel: BottomSheetViewModel
-    var body : some View {
-        
-        VStack {
-            Button(action: {}) {
-                HStack {
-                    Image("your_activity")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24, height: 24)
-                    Text("Ваша активность")
-                        .font(.system(size: 14))
-                        .fontWeight(.bold)
-                        .foregroundColor(Color(hex: "#2E313C"))
-                    Spacer(minLength: 0)
-                }
-                .padding()
-            }
-            NavigationLink(destination: SavedView()
-                            .ignoreDefaultHeaderBar) {
-                HStack {
-                    Image("saves")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24, height: 24)
-                    Text("Сохраненное")
-                        .font(.system(size: 14))
-                        .fontWeight(.bold)
-                        .foregroundColor(Color(hex: "#2E313C"))
-                    Spacer(minLength: 0)
-                }
-                .padding()
-            }
-            .simultaneousGesture(TapGesture().onEnded{
-                bottomSheetViewModel.profileSettingsBottomSheet = false
-            })
-            Button(action: {}) {
-                HStack {
-                    Image("favorite")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24, height: 24)
-                    Text("Близкие друзья")
-                        .font(.system(size: 14))
-                        .fontWeight(.bold)
-                        .foregroundColor(Color(hex: "#2E313C"))
-                    Spacer(minLength: 0)
-                }
-                .padding()
-            }
-            Button(action: {}) {
-                HStack {
-                    Image("add_friend")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24, height: 24)
-                    Text("Интересные люди")
-                        .font(.system(size: 14))
-                        .fontWeight(.bold)
-                        .foregroundColor(Color(hex: "#2E313C"))
-                    Spacer(minLength: 0)
-                }
-                .padding()
-            }
-            Button(action: {}) {
-                HStack {
-                    Image("edit_profile")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24, height: 24)
-                    Text("Редактировать профиль")
-                        .font(.system(size: 14))
-                        .fontWeight(.bold)
-                        .foregroundColor(Color(hex: "#2E313C"))
-                    Spacer(minLength: 0)
-                }
-                .padding()
-            }
-            Spacer(minLength: 0)
-            NavigationLink(destination: SettingsView().ignoreDefaultHeaderBar) {
-                VStack(spacing: 0) {
-                    Rectangle()
-                        .fill(Color(hex: "#F2F2F2"))
-                        .frame(height: 1)
-                    HStack {
-                        Image("settings")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 24, height: 24)
-                        Text("Настройки")
-                            .font(.system(size: 14))
-                            .fontWeight(.bold)
-                            .foregroundColor(Color(hex: "#2E313C"))
-                        Spacer(minLength: 0)
-                    }
-                    .padding(.horizontal)
-                    .padding(.top)
-                }
-            }
-            .simultaneousGesture(TapGesture().onEnded{
-                bottomSheetViewModel.profileSettingsBottomSheet = false
-            })
-        }
-    }
-}
 
 struct Tabbar : View {
     @EnvironmentObject var publicationPresent: PublicationViewModel
