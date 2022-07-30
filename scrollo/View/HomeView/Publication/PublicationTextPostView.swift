@@ -37,7 +37,7 @@ struct PublicationTextPostView: View {
                         addPost.publish { post in
                             guard let post = post else {return}
                             
-                            notify.updateFeedPost = post
+                            NotificationCenter.default.post(name: NSNotification.Name("publish.media.post"), object: nil)
                             
                             presentationMode.wrappedValue.dismiss()
                         }

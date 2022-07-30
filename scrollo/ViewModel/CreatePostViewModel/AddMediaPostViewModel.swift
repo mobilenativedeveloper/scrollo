@@ -8,6 +8,8 @@
 import SwiftUI
 import Photos
 import AVKit
+import Foundation
+import UIKit
 
 enum LibraryStatus {
     case denied
@@ -124,102 +126,274 @@ class AddMediaPostViewModel: ObservableObject {
             group.wait()
             
             return avAsset
-        }
-
+    }
     
-    func publish (completion: @escaping (PostModel?) -> Void) -> Void {
-        self.isPublished = true
-        
-        guard let url = URL(string: "\(API_URL)\(API_ADD_POST)") else {return}
-        guard let token = UserDefaults.standard.string(forKey: "token") else {return}
-        
-        let boundary = generateBoundary()
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        request.httpMethod = "POST"
-        
-        var files: [MultipartMedia] = []
-        
-        for photo in self.pickedPhoto {
-            if photo.withUIImage {
-                guard let image = photo.image.jpegData(compressionQuality: 0.7) else {return}
-                let media = MultipartMedia(key: "files", filename: "image.jpg", data: image, mimeType: "image/jpeg")
+    
 
-                files.append(media)
-            } else {
-                if let url = photo.withAVCamera {
-                    if let data = NSData(contentsOf: url) {
-                        let video: Data = Data(data)
-                        files.append(MultipartMedia(key: "files", filename: "video.mp4", data: video, mimeType: "video/mp4"))
-                    }
-                } else {
-                    if photo.asset.mediaType == .video {
-                        let asset = self.requestAVAsset(asset: photo.asset)
-                        if let asset = asset as? AVURLAsset, let data = NSData(contentsOf: asset.url) {
-                            let video: Data = Data(data)
-                            files.append(MultipartMedia(key: "files", filename: "video.mp4", data: video, mimeType: "video/mp4"))
-                        }
-                    }
-                    
-                    if photo.asset.mediaType == .image {
-                        guard let image = photo.image.jpegData(compressionQuality: 0.7) else {return}
-                        let media = MultipartMedia(key: "files", filename: "image.jpg", data: image, mimeType: "image/jpeg")
-
-                        files.append(media)
-                    }
-                }
-            }
-        }
+    func postCreationStart (content: String, files: [PostCreationStartFileModel], completed: @escaping (PostCreationStartResponse?) -> Void) {
        
-        request.httpBody = createDataBody(withParameters: ["content": self.content, "type": "STANDART"], media: files, boundary: boundary)
+        
+        var filesArray: [[String: Any]] = []
+        
+        files.forEach { file in
+            let arr = [
+                "size": file.size,
+                "fileName": file.fileName,
+                "contentType": file.contentType,
+                "identificator": file.identificator
+            ] as [String : Any]
+            filesArray.append(arr)
+        }
+        
+        let data: [String : Any] = ["content": content, "files":filesArray]
+        
+        guard let url = URL(string: "\(API_URL)\(API_POST_CREATION_START)") else {return}
+
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        if let token = UserDefaults.standard.string(forKey: "token") {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
+        } catch let error {
+            print(error.localizedDescription)
+            return
+        }
 
         URLSession.shared.dataTask(with: request) { data, response, _ in
 
             guard let response = response as? HTTPURLResponse else {return}
             guard let data = data else {return}
-            
+
             if response.statusCode == 201 {
-
-                guard let post = try? JSONDecoder().decode(PostModel.self, from: data) else {return}
-
+                guard let responseJson = try? JSONDecoder().decode(PostCreationStartResponse.self, from: data) else {return}
                 DispatchQueue.main.async {
-                    self.isPublished = false
-                    completion(post)
+                    completed(responseJson)
                 }
             } else {
+                print("postCreationStart Error")
+            }
+        }.resume()
+    }
+    
+    func loadPart (postCreationFileId: String, bytesInBase: String, completion: @escaping (Bool?) -> Void) {
+        guard let url = URL(string: "\(API_URL)\(API_POST_CREATION_LOAD_PART)") else { return }
+        guard let request = Request(url: url, httpMethod: "POST", body: ["postCreationFileId": postCreationFileId, "bytesInBase": bytesInBase]) else { return }
+        
+        URLSession.shared.dataTask(with: request) { data, response, _ in
+            guard let response = response as? HTTPURLResponse else { return }
+            guard let data = data else {return}
+            
+            
+            if response.statusCode == 201 {
+                guard let responseJson = try? JSONDecoder().decode(PostCreationStartResponse.PostCreationStartFileResponse.self, from: data) else {return}
                 DispatchQueue.main.async {
-                    self.isPublished = false
-                    self.alert = AlertModel(title: "Ошибка", message: "Не удалось опубликовать пост, попробуйте еще раз.", show: true)
+                    completion(responseJson.state == "FINISHED")
+                }
+            } else {
+                if let log = try? JSONSerialization.jsonObject(with: data, options: []) {
+                    print("LOG")
+                    print(log)
                 }
             }
         }.resume()
     }
-}
-
-extension PHAsset {
-    func getImage() -> UIImage? {
-        let manager = PHCachingImageManager.default
-        let option = PHImageRequestOptions()
-        option.isSynchronous = true
-        var img: UIImage? = nil
-        manager().requestImage(for: self, targetSize: CGSize(width: self.pixelWidth, height: self.pixelHeight), contentMode: .aspectFit, options: nil, resultHandler: {(result, info) -> Void in
-            img = result!
-        })
-        return img
-    }
-
-    func getVideo() -> NSData? {
-        let manager = PHCachingImageManager.default
-        let option = PHImageRequestOptions()
-        option.isSynchronous = true
-        var resultData: NSData? = nil
     
-        manager().requestAVAsset(forVideo: self, options: nil) { (asset, audioMix, info) in
-            if let asset = asset as? AVURLAsset, let data = NSData(contentsOf: asset.url) {
-                resultData = data
-            }
+    func publish (completion: @escaping (PostModel?) -> Void) -> Void {
+        self.isPublished = true
+        
+        var refs: [PostCreationStartFileModel] = []
+        
+        for photo in self.pickedPhoto {
+            guard let image = photo.image.jpegData(compressionQuality: 0.7) else {return}
+            
+            let size = Double(Int64(image.count)) / 1024
+            refs.append(PostCreationStartFileModel(image: image, size: size, fileName: "\(randomString(length: 12)).jpeg", contentType: "image/jpeg", identificator: 0))
         }
-        return resultData
+        
+        self.postCreationStart(content: self.content, files: refs, completed: {response in
+            if let response = response {
+                let start = response.files
+                let files = refs
+                
+                for (index, file) in start.enumerated() {
+                    let chunks = getChunkData(data: files[index].image, part: file.parts)
+                    for (_, chunk) in chunks.enumerated() {
+                        if !chunk.base64EncodedString().isEmpty {
+                            if file.parts != file.loadedParts {
+                                
+                                self.loadPart(postCreationFileId: file.id, bytesInBase: chunk.base64EncodedString(options: .lineLength64Characters), completion: {state in
+                                    if state == true && index == start.count - 1 {
+                                        DispatchQueue.main.async {
+                                            self.isPublished = false
+                                            completion(nil)
+                                            NotificationCenter.default.post(name: NSNotification.Name("publish.media.post"), object: nil, userInfo: [
+                                                "image": UIImage(data: self.pickedPhoto[0].image.jpegData(compressionQuality: 0.7)!)!
+                                            ])
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    }
+                }
+            }
+        })
     }
 }
+
+func getChunkData (data: Data, part: Int) -> [Data] {
+    let dataLen = data.count / 1024
+
+    let chunkSize = dataLen / part
+    let fullChunks = Int(dataLen / chunkSize)
+    let totalChunks = fullChunks + (dataLen % 1024 != 0 ? 1 : 0)
+
+    var chunks:[Data] = [Data]()
+    for chunkCounter in 0..<totalChunks {
+        var chunk:Data
+        let chunkBase = chunkCounter * chunkSize
+        var diff = chunkSize
+        if(chunkCounter == totalChunks - 1) {
+            diff = dataLen - chunkBase
+        }
+
+        let range = chunkBase..<(chunkBase + diff)
+
+        chunk = data.subdata(in: range)
+        chunks.append(chunk)
+    }
+    print(chunks)
+    return chunks
+}
+
+func randomString(length: Int) -> String {
+  let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+  return String((0..<length).map{ _ in letters.randomElement()! })
+}
+
+
+
+
+//self.isPublished = true
+//
+//guard let url = URL(string: "\(API_URL)\(API_ADD_POST)") else {return}
+//guard let token = UserDefaults.standard.string(forKey: "token") else {return}
+//
+//let boundary = generateBoundary()
+//var request = URLRequest(url: url)
+//request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+//request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+//request.httpMethod = "POST"
+//
+//var files: [MultipartMedia] = []
+//
+//for photo in self.pickedPhoto {
+//    if photo.withUIImage {
+//        guard let image = photo.image.jpegData(compressionQuality: 0.7) else {return}
+//        let media = MultipartMedia(key: "files", filename: "image.jpg", data: image, mimeType: "image/jpeg")
+//
+//        files.append(media)
+//    } else {
+//        if let url = photo.withAVCamera {
+//            if let data = NSData(contentsOf: url) {
+//                let video: Data = Data(data)
+//                files.append(MultipartMedia(key: "files", filename: "video.mp4", data: video, mimeType: "video/mp4"))
+//            }
+//        } else {
+//            if photo.asset.mediaType == .video {
+//                let asset = self.requestAVAsset(asset: photo.asset)
+//                if let asset = asset as? AVURLAsset, let data = NSData(contentsOf: asset.url) {
+//                    let video: Data = Data(data)
+//                    files.append(MultipartMedia(key: "files", filename: "video.mp4", data: video, mimeType: "video/mp4"))
+//                }
+//            }
+//
+//            if photo.asset.mediaType == .image {
+//                guard let image = photo.image.jpegData(compressionQuality: 0.7) else {return}
+//                let media = MultipartMedia(key: "files", filename: "image.jpg", data: image, mimeType: "image/jpeg")
+//
+//                files.append(media)
+//            }
+//        }
+//    }
+//}
+//
+//request.httpBody = createDataBody(withParameters: ["content": self.content, "type": "STANDART"], media: files, boundary: boundary)
+//
+//URLSession.shared.dataTask(with: request) { data, response, _ in
+//
+//    guard let response = response as? HTTPURLResponse else {return}
+//    guard let data = data else {return}
+//
+//    if response.statusCode == 201 {
+//
+//        guard let post = try? JSONDecoder().decode(PostModel.self, from: data) else {return}
+//
+//        DispatchQueue.main.async {
+//            self.isPublished = false
+//            completion(post)
+//        }
+//    } else {
+//        DispatchQueue.main.async {
+//            self.isPublished = false
+//            self.alert = AlertModel(title: "Ошибка", message: "Не удалось опубликовать пост, попробуйте еще раз.", show: true)
+//        }
+//    }
+//}.resume()
+
+struct UploadFileStack {
+    var filename: String
+    var data: Data
+    var size: String
+}
+struct PostCreationStartModel: Codable {
+    var content: String
+    var files: [PostCreationStartFileModel]
+}
+
+struct PostCreationStartFileModel: Codable {
+    var image: Data
+    var size: Double
+    var fileName: String
+    var contentType: String
+    var identificator: Int
+}
+
+struct PostCreationStartResponse: Decodable {
+    var id: String
+    var content: String
+    var files: [PostCreationStartFileResponse]
+    
+    enum CodingKeys: CodingKey {
+        case id
+        case files
+        case content
+    }
+    
+    struct PostCreationStartFileResponse: Decodable {
+        var id: String
+        var path: String
+        var size: Int
+        var parts: Int
+        var loadedParts: Int
+        var state: String
+        var identificator: Int
+        
+        enum CodingKeys: CodingKey {
+            case id
+            case path
+            case size
+            case parts
+            case loadedParts
+            case state
+            case identificator
+        }
+    }
+}
+
+

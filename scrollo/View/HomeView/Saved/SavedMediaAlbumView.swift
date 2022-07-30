@@ -75,7 +75,7 @@ struct SavedMediaAlbumView: View {
                     VStack(alignment: .leading, spacing: 0) {
                         PostCompositionView(posts: $savedPosts.savedMediaPosts)
                     }
-                    .padding(.horizontal, 26)
+                    .padding(.horizontal)
                 } else {
                     HStack {
                         Spacer()

@@ -56,7 +56,7 @@ struct SheetPresentationForSwiftUI<Content>: UIViewRepresentable where Content: 
         // Set the presentationController as a UISheetPresentationController
         if let sheetController = viewController.presentationController as? UISheetPresentationController {
             sheetController.detents = detents
-            sheetController.prefersGrabberVisible = true
+            sheetController.prefersGrabberVisible = false
             sheetController.prefersScrollingExpandsWhenScrolledToEdge = false
             sheetController.largestUndimmedDetentIdentifier = .medium
         }

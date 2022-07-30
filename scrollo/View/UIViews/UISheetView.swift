@@ -50,6 +50,8 @@ struct SheetView<Content: View>: UIViewControllerRepresentable {
                 return SettingsHostingController(rootView: content)
             case "publicationHostingController":
                 return PublicationHostingController(rootView: content)
+            case "savePostHostingController":
+                return SavePostHostingController(rootView: content)
             default:
                 return UIHostingController(rootView: content)
         }
@@ -88,6 +90,23 @@ class PublicationHostingController<Content: View>: UIHostingController<Content> 
         }
     }
 }
+
+class SavePostHostingController<Content: View>: UIHostingController<Content> {
+
+    override func viewDidLoad() {
+        view.backgroundColor = .clear
+
+        if let presentationController = presentationController as? UISheetPresentationController {
+
+            presentationController.detents = [
+                .custom(280)
+            ]
+
+            presentationController.prefersGrabberVisible = false
+        }
+    }
+}
+
 
 struct PrefersGrabber: View {
     var body: some View {

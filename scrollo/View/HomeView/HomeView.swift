@@ -47,7 +47,7 @@ struct HomeView: View {
                     .ignoresSafeArea(SafeAreaRegions.container, edges: .bottom)
                     .ignoreDefaultHeaderBar
                     .tag("home")
-                SearchView()
+                Text("SearchView")
                     .environmentObject(bottomSheetViewModel)
                     .ignoreDefaultHeaderBar
                     .tag("search")
@@ -86,7 +86,32 @@ struct HomeView: View {
                 toastController.savedPostAlbumImage = image
                 toastController.isPresentSavedPost.toggle()
             }
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("publish.media.post"), object: nil, queue: .main) { (notification) in
+                if let image = notification.userInfo?["image"] as? UIImage {
+                    toastController.toastPublishedImage = image
+                }
+                toastController.isPresentToastPublishPost.toggle()
+            }
         }
+        .toast(isPresent: $toastController.isPresentToastPublishPost, content: {
+            HStack {
+//                if let image = toastController.toastPublishedImage {
+//                    Image(uiImage: image)
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fill)
+//                        .frame(width: 40, height: 40)
+//                        .cornerRadius(6)
+//                }
+                Text("Публикация загружена.")
+            }
+            .onDisappear {
+                if toastController.toastPublishedImage != nil {
+                    toastController.toastPublishedImage = nil
+                }
+                toastController.isPresentToastPublishPost.toggle()
+            }
+        })
+
         //MARK: Toast save post to album
         .toast(isPresent: $toastController.isPresentSavedPost, content: {
             HStack {

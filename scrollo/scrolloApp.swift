@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-
 @main
 struct scrolloApp: App {
     let persistenceController = PersistenceController.shared

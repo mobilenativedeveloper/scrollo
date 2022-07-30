@@ -25,6 +25,8 @@ struct ProfileView: View {
     @State var settingsSheetPresent: Bool = false
     @State var isPresentSettings: Bool = false
     @State var isPresentSaved: Bool = false
+    @State var isPresentYourActivity: Bool = false
+    @State var isPresentInterestingPeople: Bool = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -219,6 +221,15 @@ struct ProfileView: View {
             NavigationLink(destination: SettingsView().ignoreDefaultHeaderBar, isActive: $isPresentSettings) { EmptyView() }.frame(height: 0)
                 .opacity(0)
         )
+        .background(
+            NavigationLink(destination: YourActivityView().ignoreDefaultHeaderBar, isActive: $isPresentYourActivity) { EmptyView() }.frame(height: 0)
+                .opacity(0)
+        )
+        .background(
+            NavigationLink(destination: InterestingPeople().ignoreDefaultHeaderBar, isActive: $isPresentInterestingPeople) { EmptyView() }.frame(height: 0)
+                .opacity(0)
+        )
+        
         .background(Color(hex: "#F9F9F9").edgesIgnoringSafeArea(.all))
         .onAppear {
             profileController.getProfile(userId: userId)
@@ -226,7 +237,7 @@ struct ProfileView: View {
             postController.getUserTextPosts(userId: userId)
         }
         .sheetView(isPresent: $settingsSheetPresent, uiHostingController: "settingsHostingController") {
-            ProfileSettinsBottomSheet(isPresentSettings: $isPresentSettings, isPresentSaved: $isPresentSaved)
+            ProfileSettinsBottomSheet(isPresentSettings: $isPresentSettings, isPresentSaved: $isPresentSaved, isPresentYourActivity: $isPresentYourActivity, isPresentInterestingPeople: $isPresentInterestingPeople)
         }
         .sheetView(isPresent: $publicationSheetPresent, uiHostingController: "publicationHostingController") {
             AddPublicationBottomSheetContent()
@@ -258,6 +269,8 @@ private struct ProfileSettinsBottomSheet : View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var isPresentSettings: Bool
     @Binding var isPresentSaved: Bool
+    @Binding var isPresentYourActivity: Bool
+    @Binding var isPresentInterestingPeople: Bool
     
     let time: CGFloat = 0.2
     
@@ -267,7 +280,10 @@ private struct ProfileSettinsBottomSheet : View {
             PrefersGrabber()
                 .padding(.bottom, 25)
             Button(action: {
-                print("Tap")
+                presentationMode.wrappedValue.dismiss()
+                DispatchQueue.main.asyncAfter(deadline: .now() + time) {
+                    isPresentYourActivity.toggle()
+                }
             }) {
                 HStack {
                     Image("your_activity")
@@ -315,7 +331,12 @@ private struct ProfileSettinsBottomSheet : View {
                 }
                 .padding()
             }
-            Button(action: {}) {
+            Button(action: {
+                presentationMode.wrappedValue.dismiss()
+                DispatchQueue.main.asyncAfter(deadline: .now() + time) {
+                    isPresentInterestingPeople.toggle()
+                }
+            }) {
                 HStack {
                     Image("add_friend")
                         .resizable()

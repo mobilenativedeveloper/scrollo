@@ -13,4 +13,7 @@ class ToastViewModel: ObservableObject {
     @Published var savedPostAlbumName: String = ""
     @Published var savedPostAlbumImage: String = ""
     
+    // MARK: Succes post published
+    @Published var isPresentToastPublishPost: Bool = false
+    @Published var toastPublishedImage: UIImage? = nil
 }

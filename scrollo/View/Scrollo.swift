@@ -30,6 +30,9 @@ struct Scrollo: View {
             NotificationCenter.default.addObserver(forName: NSNotification.Name("userId"), object: nil, queue: .main) { (_) in
                 self.userId = UserDefaults.standard.value(forKey: "userId") as? String ?? String()
             }
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("logout"), object: nil, queue: .main) { (_) in
+                self.userId = String()
+            }
         }
     }
 }

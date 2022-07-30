@@ -9,6 +9,7 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct SavedPostSheetView: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject var savePostController: SavePostViewModel
     @StateObject var albumsController: AlbumsViewModel = AlbumsViewModel()
     @Binding var post: PostModel
@@ -18,6 +19,7 @@ struct SavedPostSheetView: View {
             Color.white
             
             VStack {
+                PrefersGrabber()
                 Text("Сохранить в")
                     .fontWeight(.bold)
                     .padding(.vertical)
@@ -56,6 +58,13 @@ struct SavedPostSheetView: View {
                             }
                         }
                         .padding(.horizontal)
+                    }
+                    if albumsController.status == .initial || albumsController.status == .load {
+                        HStack{
+                            Spacer()
+                            ProgressView()
+                            Spacer()
+                        }
                     }
                 }
             }

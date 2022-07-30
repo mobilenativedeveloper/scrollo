@@ -75,7 +75,9 @@ struct SettingsView: View {
                             .modifier(RoundedEdge(width: 1, color: Color(hex: "#FF0F82"), cornerRadius: 15))
                     )
                     .padding(.bottom)
-                    Button(action: {}) {
+                    Button(action: {
+                        self.logout()
+                    }) {
                         Text("Войти под другим аккаунтом")
                             .font(.system(size: 12))
                             .fontWeight(Font.Weight.semibold)
@@ -86,6 +88,13 @@ struct SettingsView: View {
             }
             .ignoreDefaultHeaderBar
         }
+    }
+    
+    func logout() {
+        UserDefaults.standard.removeObject(forKey: "token")
+        UserDefaults.standard.removeObject(forKey: "userId")
+        
+        NotificationCenter.default.post(name: NSNotification.Name("logout"), object: nil)
     }
     
     @ViewBuilder
@@ -105,11 +114,6 @@ struct SettingsView: View {
         .padding(.vertical)
     }
     
-    func logout () -> Void {
-        UserDefaults.standard.removeObject(forKey: "token")
-        UserDefaults.standard.removeObject(forKey: "userId")
-        NotificationCenter.default.post(name: NSNotification.Name("userId"), object: nil)
-    }
 }
 
 struct SettingsView_Previews: PreviewProvider {

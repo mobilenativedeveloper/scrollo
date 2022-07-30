@@ -6,6 +6,35 @@
 //
 
 import SwiftUI
+import Photos
+import AVKit
+
+extension PHAsset {
+    func getImage() -> UIImage? {
+        let manager = PHCachingImageManager.default
+        let option = PHImageRequestOptions()
+        option.isSynchronous = true
+        var img: UIImage? = nil
+        manager().requestImage(for: self, targetSize: CGSize(width: self.pixelWidth, height: self.pixelHeight), contentMode: .aspectFit, options: nil, resultHandler: {(result, info) -> Void in
+            img = result!
+        })
+        return img
+    }
+
+    func getVideo() -> NSData? {
+        let manager = PHCachingImageManager.default
+        let option = PHImageRequestOptions()
+        option.isSynchronous = true
+        var resultData: NSData? = nil
+    
+        manager().requestAVAsset(forVideo: self, options: nil) { (asset, audioMix, info) in
+            if let asset = asset as? AVURLAsset, let data = NSData(contentsOf: asset.url) {
+                resultData = data
+            }
+        }
+        return resultData
+    }
+}
 
 extension Color {
     init(hex: String) {

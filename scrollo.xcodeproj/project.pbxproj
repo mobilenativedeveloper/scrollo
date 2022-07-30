@@ -52,6 +52,8 @@
 		ACBE7A7128926D2000F76D93 /* AlbumModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBE7A7028926D2000F76D93 /* AlbumModel.swift */; };
 		ACC1DE1C28946A73008A3932 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC1DE1B28946A73008A3932 /* Constants.swift */; };
 		ACC1DE1E289485DC008A3932 /* SavedPostsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC1DE1D289485DC008A3932 /* SavedPostsViewModel.swift */; };
+		ACC1DE232895070A008A3932 /* YourActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC1DE2228950709008A3932 /* YourActivityView.swift */; };
+		ACC1DE2528951483008A3932 /* InterestingPeople.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC1DE2428951483008A3932 /* InterestingPeople.swift */; };
 		ACC21A5D2862EC9400AF8B0D /* scrolloApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC21A5C2862EC9400AF8B0D /* scrolloApp.swift */; };
 		ACC21A5F2862EC9400AF8B0D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC21A5E2862EC9400AF8B0D /* ContentView.swift */; };
 		ACC21A612862EC9B00AF8B0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACC21A602862EC9B00AF8B0D /* Assets.xcassets */; };
@@ -208,6 +210,8 @@
 		ACBE7A7028926D2000F76D93 /* AlbumModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumModel.swift; sourceTree = "<group>"; };
 		ACC1DE1B28946A73008A3932 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		ACC1DE1D289485DC008A3932 /* SavedPostsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedPostsViewModel.swift; sourceTree = "<group>"; };
+		ACC1DE2228950709008A3932 /* YourActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourActivityView.swift; sourceTree = "<group>"; };
+		ACC1DE2428951483008A3932 /* InterestingPeople.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestingPeople.swift; sourceTree = "<group>"; };
 		ACC21A592862EC9400AF8B0D /* scrollo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = scrollo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACC21A5C2862EC9400AF8B0D /* scrolloApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = scrolloApp.swift; sourceTree = "<group>"; };
 		ACC21A5E2862EC9400AF8B0D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -684,6 +688,8 @@
 				ACEB903E2893E2440096110D /* FollowInfoView.swift */,
 				ACEB90402893E29A0096110D /* UserInfoView.swift */,
 				ACEB904D28943D780096110D /* FollowUserControll.swift */,
+				ACC1DE2228950709008A3932 /* YourActivityView.swift */,
+				ACC1DE2428951483008A3932 /* InterestingPeople.swift */,
 			);
 			path = ProfileView;
 			sourceTree = "<group>";
@@ -913,6 +919,7 @@
 				ACC21A9D28630FA200AF8B0D /* SignInViewModel.swift in Sources */,
 				AC10101E2878497C0014E13B /* SafetyView.swift in Sources */,
 				AC5F9029289298DF00D05254 /* HalfSheet.swift in Sources */,
+				ACC1DE2528951483008A3932 /* InterestingPeople.swift in Sources */,
 				ACC21AC7286327AD00AF8B0D /* FeedView.swift in Sources */,
 				ACEB90012892D61D0096110D /* ToastViewModel.swift in Sources */,
 				AC2A07812866F28500BB1C6D /* MessangerViewModel.swift in Sources */,
@@ -969,6 +976,7 @@
 				AC2CAB072874137500BEEB3C /* CommentsViewModel.swift in Sources */,
 				ACDB88F02879D6A000C6F1B2 /* AddMediaPostViewModel.swift in Sources */,
 				AC10102C2878624A0014E13B /* ConfidentialityViewModel.swift in Sources */,
+				ACC1DE232895070A008A3932 /* YourActivityView.swift in Sources */,
 				AC10101828783E390014E13B /* SettingsView.swift in Sources */,
 				AC101015287835F70014E13B /* ImagePickerView.swift in Sources */,
 				ACEB9046289439820096110D /* PostCompositionView.swift in Sources */,
@@ -1135,7 +1143,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"scrollo/Preview Content\"";
 				DEVELOPMENT_TEAM = 2R48RT3S99;
 				ENABLE_PREVIEWS = YES;
@@ -1176,7 +1184,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"scrollo/Preview Content\"";
 				DEVELOPMENT_TEAM = 2R48RT3S99;
 				ENABLE_PREVIEWS = YES;

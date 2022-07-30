@@ -388,13 +388,12 @@ struct AddMediaPostView: View {
                 Spacer(minLength: 0)
                 Button(action: {
                     mediaPost.publish { post in
-                        guard let post = post else {return}
-                        
-                        notify.updateFeedPost = post
+//                        guard let post = post else {return}
                         
                         isPresent.toggle()
                         mediaPost.pickedPhoto = [mediaPost.allPhotos[0][0]]
                         mediaPost.selection = mediaPost.allPhotos[0][0]
+
                         publicationPresent.presentPublicationMediaPostView = false
                     }
                 }) {
