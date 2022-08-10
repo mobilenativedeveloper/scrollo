@@ -47,8 +47,7 @@ struct HomeView: View {
                     .ignoresSafeArea(SafeAreaRegions.container, edges: .bottom)
                     .ignoreDefaultHeaderBar
                     .tag("home")
-                Text("SearchView")
-                    .environmentObject(bottomSheetViewModel)
+                SearchView()
                     .ignoreDefaultHeaderBar
                     .tag("search")
                 ActivitiesView()
@@ -90,6 +89,7 @@ struct HomeView: View {
                 if let image = notification.userInfo?["image"] as? UIImage {
                     toastController.toastPublishedImage = image
                 }
+                print("toast")
                 toastController.isPresentToastPublishPost.toggle()
             }
         }
@@ -108,7 +108,6 @@ struct HomeView: View {
                 if toastController.toastPublishedImage != nil {
                     toastController.toastPublishedImage = nil
                 }
-                toastController.isPresentToastPublishPost.toggle()
             }
         })
 

@@ -9,9 +9,8 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct SearchView: View {
-    @EnvironmentObject var bottomSheetViewModel: BottomSheetViewModel
-    @ObservedObject var searchViewModel : SearchViewModel = SearchViewModel()
-    @ObservedObject var searchHistoryViewModel : SearchHistoryViewModel = SearchHistoryViewModel()
+    @StateObject var searchViewModel : SearchViewModel = SearchViewModel()
+    @StateObject var searchHistoryViewModel : SearchHistoryViewModel = SearchHistoryViewModel()
     @FocusState private var isSearch : Bool
     @State private var searchTextFieldOnLongPressColor : Color = Color.primary.opacity(0.06)
     
@@ -141,7 +140,6 @@ struct SearchView: View {
                     }
                     if self.searchHistoryViewModel.isSearch {
                         SearchLayer()
-                            .environmentObject(bottomSheetViewModel)
                             .environmentObject(self.searchViewModel)
                             .environmentObject(self.searchHistoryViewModel)
                     }
@@ -192,7 +190,7 @@ private struct HashTagButtom : View {
 }
 
 private struct SearchUserItem: View {
-    @EnvironmentObject var bottomSheetViewModel: BottomSheetViewModel
+    @State var isPresetProfile: Bool = false
     private let user: UserModel.User
 
     init (user: UserModel.User) {
@@ -200,8 +198,9 @@ private struct SearchUserItem: View {
     }
     
     var body: some View {
-        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
-            
+        Button(action: {
+            isPresetProfile.toggle()
+        }) {
             HStack(alignment: .center, spacing: 0) {
                     if let avatar = self.user.avatar {
                         WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
@@ -224,24 +223,22 @@ private struct SearchUserItem: View {
                         .foregroundColor(Color(hex: "#828796"))
                 }
                 Spacer(minLength: 0)
+                Button(action: {
+                    print("User hide")
+                }) {
+                    Image("circle.xmark")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 16, height: 16)
+                }
             }
-            Button(action: {
-                print("User hide")
-            }) {
-                Image("circle.xmark")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 16, height: 16)
-            }
+            
         }
         .padding(.horizontal, 15)
         .padding(.bottom, 28)
-        .overlay(
-            NavigationLink(destination: ProfileView(userId:user.id)
-                            .ignoreDefaultHeaderBar
-                            .environmentObject(bottomSheetViewModel)) {
-                EmptyView()
-            }
+        .buttonStyle(FlatLinkStyle())
+        .background(
+            NavigationLink(destination: ProfileView(userId:user.id).ignoreDefaultHeaderBar, isActive: $isPresetProfile) { EmptyView() }.frame(height: 0)
                 .opacity(0)
         )
     }
@@ -294,7 +291,6 @@ struct UserSearchHistoryView : View {
 }
 
 private struct SearchLayer : View {
-    @EnvironmentObject var bottomSheetViewModel: BottomSheetViewModel
     @EnvironmentObject var searchViewModel : SearchViewModel
     @EnvironmentObject var searchHistoryViewModel : SearchHistoryViewModel
     @State private var animated : Bool = false
@@ -314,7 +310,6 @@ private struct SearchLayer : View {
                             if searchViewModel.searchText.count > 0 {
                                 ForEach(0..<self.searchViewModel.users.count, id: \.self) {index in
                                     SearchUserItem(user: self.searchViewModel.users[index])
-                                        .environmentObject(bottomSheetViewModel)
                                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                         .listRowBackground(Color.clear)
                                         .listRowSeparatorTint(.clear)

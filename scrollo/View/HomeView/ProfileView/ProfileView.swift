@@ -174,7 +174,7 @@ struct ProfileView: View {
                             })
                         } else {
                             Button(action: {
-
+                                presentation.wrappedValue.dismiss()
                             }) {
                                 Image(backgroundHeader ? "big_arrow_left_black" : "big_arrow_left_white")
                                     .resizable()

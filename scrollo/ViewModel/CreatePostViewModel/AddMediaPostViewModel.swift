@@ -214,23 +214,23 @@ class AddMediaPostViewModel: ObservableObject {
             let size = Double(Int64(image.count)) / 1024
             refs.append(PostCreationStartFileModel(image: image, size: size, fileName: "\(randomString(length: 12)).jpeg", contentType: "image/jpeg", identificator: 0))
         }
-        
         self.postCreationStart(content: self.content, files: refs, completed: {response in
             if let response = response {
                 let start = response.files
                 let files = refs
-                
+
                 for (index, file) in start.enumerated() {
                     let chunks = getChunkData(data: files[index].image, part: file.parts)
                     for (_, chunk) in chunks.enumerated() {
                         if !chunk.base64EncodedString().isEmpty {
                             if file.parts != file.loadedParts {
-                                
-                                self.loadPart(postCreationFileId: file.id, bytesInBase: chunk.base64EncodedString(options: .lineLength64Characters), completion: {state in
+                                self.loadPart(postCreationFileId: file.id, bytesInBase: chunk.base64EncodedString(), completion: {state in
+                                    print("loadPart")
                                     if state == true && index == start.count - 1 {
                                         DispatchQueue.main.async {
                                             self.isPublished = false
                                             completion(nil)
+                                            
                                             NotificationCenter.default.post(name: NSNotification.Name("publish.media.post"), object: nil, userInfo: [
                                                 "image": UIImage(data: self.pickedPhoto[0].image.jpegData(compressionQuality: 0.7)!)!
                                             ])
@@ -247,8 +247,7 @@ class AddMediaPostViewModel: ObservableObject {
 }
 
 func getChunkData (data: Data, part: Int) -> [Data] {
-    let dataLen = data.count / 1024
-
+    let dataLen = data.count
     let chunkSize = dataLen / part
     let fullChunks = Int(dataLen / chunkSize)
     let totalChunks = fullChunks + (dataLen % 1024 != 0 ? 1 : 0)
@@ -267,7 +266,6 @@ func getChunkData (data: Data, part: Int) -> [Data] {
         chunk = data.subdata(in: range)
         chunks.append(chunk)
     }
-    print(chunks)
     return chunks
 }
 
