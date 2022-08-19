@@ -38,7 +38,8 @@ struct HomeView: View {
                             .environmentObject(notify)
                             .environmentObject(publicationPresent).ignoreDefaultHeaderBar, isActive: $publicationPresent.presentPublicationMediaPostView) { EmptyView() }
             
-            NavigationLink(destination: Text("presentPublicationStoryView").ignoreDefaultHeaderBar, isActive: $publicationPresent.presentPublicationStoryView) { EmptyView() }
+            NavigationLink(destination: AddStoryView().ignoreDefaultHeaderBar, isActive: $publicationPresent.presentPublicationStoryView) { EmptyView() }
+            
             TabView(selection: $selectedTab){
                 FeedView()
                     .environmentObject(notify)
@@ -453,7 +454,8 @@ struct UploadView : View {
                             UploadButtonView(icon: "message_icon", title: "Пост")
                         }
                         Button(action: {
-                            
+                            self.show = false
+                            publicationPresent.presentPublicationStoryView = true
                         }) {
                             UploadButtonView(icon: "video_icon", title: "История")
                         }

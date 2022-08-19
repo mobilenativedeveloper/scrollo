@@ -31,6 +31,8 @@
 		AC1F7C1E2876B53D009227CB /* ProfileViewModelOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1F7C1D2876B53C009227CB /* ProfileViewModelOld.swift */; };
 		AC1F7C202876C064009227CB /* EditUserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1F7C1F2876C064009227CB /* EditUserProfile.swift */; };
 		AC1F7C222876C900009227CB /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1F7C212876C900009227CB /* EditProfileViewModel.swift */; };
+		AC1FF2CC28AF75BE00806CC0 /* AddStoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1FF2CB28AF75BE00806CC0 /* AddStoryView.swift */; };
+		AC1FF2CE28AF9AF800806CC0 /* AddStoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1FF2CD28AF9AF700806CC0 /* AddStoryViewModel.swift */; };
 		AC2A077F2866E0DA00BB1C6D /* MessangerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A077E2866E0DA00BB1C6D /* MessangerView.swift */; };
 		AC2A07812866F28500BB1C6D /* MessangerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A07802866F28500BB1C6D /* MessangerViewModel.swift */; };
 		AC2A07832866F2A400BB1C6D /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A07822866F2A400BB1C6D /* MessageModel.swift */; };
@@ -190,6 +192,8 @@
 		AC1F7C1D2876B53C009227CB /* ProfileViewModelOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModelOld.swift; sourceTree = "<group>"; };
 		AC1F7C1F2876C064009227CB /* EditUserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserProfile.swift; sourceTree = "<group>"; };
 		AC1F7C212876C900009227CB /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
+		AC1FF2CB28AF75BE00806CC0 /* AddStoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStoryView.swift; sourceTree = "<group>"; };
+		AC1FF2CD28AF9AF700806CC0 /* AddStoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStoryViewModel.swift; sourceTree = "<group>"; };
 		AC2A077E2866E0DA00BB1C6D /* MessangerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessangerView.swift; sourceTree = "<group>"; };
 		AC2A07802866F28500BB1C6D /* MessangerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessangerViewModel.swift; sourceTree = "<group>"; };
 		AC2A07822866F2A400BB1C6D /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
@@ -366,6 +370,14 @@
 			path = Saved;
 			sourceTree = "<group>";
 		};
+		AC1FF2CA28AF75A800806CC0 /* AddStoryView */ = {
+			isa = PBXGroup;
+			children = (
+				AC1FF2CB28AF75BE00806CC0 /* AddStoryView.swift */,
+			);
+			path = AddStoryView;
+			sourceTree = "<group>";
+		};
 		AC5F902528928AA300D05254 /* AlbumsViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -498,6 +510,7 @@
 				ACE44F60287A6BD6002D0BB1 /* NotifyViewModel.swift */,
 				AC01EB22287B1BB90026FC29 /* VideoRecordingView.swift */,
 				ACEB90002892D61D0096110D /* ToastViewModel.swift */,
+				AC1FF2CD28AF9AF700806CC0 /* AddStoryViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -549,6 +562,7 @@
 		ACC21AAC28631DAE00AF8B0D /* HomeView */ = {
 			isa = PBXGroup;
 			children = (
+				AC1FF2CA28AF75A800806CC0 /* AddStoryView */,
 				ACEB90362893DD8C0096110D /* ProfileView */,
 				ACEB902D289352850096110D /* CommentsView */,
 				ACEB9022289332590096110D /* PostDetailView */,
@@ -886,6 +900,7 @@
 				AC1010312878690F0014E13B /* SavedView.swift in Sources */,
 				ACEB902C289351180096110D /* SheetPresentation.swift in Sources */,
 				ACC21AB028631DF900AF8B0D /* StoryView.swift in Sources */,
+				AC1FF2CE28AF9AF800806CC0 /* AddStoryViewModel.swift in Sources */,
 				AC5F90302892C14200D05254 /* SavePostViewModel.swift in Sources */,
 				ACEB900C2892FADC0096110D /* PostMediaCarouselView.swift in Sources */,
 				ACEB901A289300FA0096110D /* ProbablyFamiliarView.swift in Sources */,
@@ -963,6 +978,7 @@
 				AC4039222870387900B9A762 /* Test.swift in Sources */,
 				ACC21AC52863235200AF8B0D /* Fonts.swift in Sources */,
 				AC2CAB0C2874569700BEEB3C /* BottomSheetViewModel.swift in Sources */,
+				AC1FF2CC28AF75BE00806CC0 /* AddStoryView.swift in Sources */,
 				ACACBDF0287A41A300DF7171 /* AssetModel.swift in Sources */,
 				AC2A07832866F2A400BB1C6D /* MessageModel.swift in Sources */,
 				AC10102028784A150014E13B /* ChangePassword.swift in Sources */,
