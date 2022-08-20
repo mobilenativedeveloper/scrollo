@@ -29,218 +29,62 @@ struct HomeView: View {
     
     
     var body: some View {
-        ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-            //MARK: Publication screens view
-            NavigationLink(destination: PublicationTextPostView()
-                            .environmentObject(notify).ignoreDefaultHeaderBar, isActive: $publicationPresent.presentPublicationTextPostView) { EmptyView() }
-            
-            NavigationLink(destination: PublicationMediaPostView()
-                            .environmentObject(notify)
-                            .environmentObject(publicationPresent).ignoreDefaultHeaderBar, isActive: $publicationPresent.presentPublicationMediaPostView) { EmptyView() }
-            
-            NavigationLink(destination: AddStoryView().ignoreDefaultHeaderBar, isActive: $publicationPresent.presentPublicationStoryView) { EmptyView() }
-            
-            TabView(selection: $selectedTab){
-                FeedView()
-                    .environmentObject(notify)
-                    .environmentObject(toastController)
-                    .environmentObject(bottomSheetViewModel)
-                    .ignoresSafeArea(SafeAreaRegions.container, edges: .bottom)
-                    .ignoreDefaultHeaderBar
-                    .tag("home")
-                SearchView()
-                    .ignoreDefaultHeaderBar
-                    .tag("search")
-                ActivitiesView()
-                    .ignoreDefaultHeaderBar
-                    .tag("activities")
-                ProfileView(userId: UserDefaults.standard.string(forKey: "userId")!)
-                    .ignoresSafeArea(SafeAreaRegions.container, edges: .bottom)
-                    .ignoreDefaultHeaderBar
-                    .tag("profile")
-            }
-            
+        AppNotificationCenter {
             ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
-                if self.upload {
-                    BlurView(style: .light)
-                        .opacity(0.8)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .ignoresSafeArea(.all, edges: .all)
-                        .onTapGesture {
-                            withAnimation {
-                                self.upload = false
+                //MARK: Publication screens view
+                NavigationLink(destination: PublicationTextPostView()
+                                .environmentObject(notify).ignoreDefaultHeaderBar, isActive: $publicationPresent.presentPublicationTextPostView) { EmptyView() }
+                
+                NavigationLink(destination: PublicationMediaPostView()
+                                .environmentObject(notify)
+                                .environmentObject(publicationPresent).ignoreDefaultHeaderBar, isActive: $publicationPresent.presentPublicationMediaPostView) { EmptyView() }
+                
+                NavigationLink(destination: AddStoryView().ignoreDefaultHeaderBar, isActive: $publicationPresent.presentPublicationStoryView) { EmptyView() }
+                
+                TabView(selection: $selectedTab){
+                    FeedView()
+                        .environmentObject(notify)
+                        .environmentObject(toastController)
+                        .environmentObject(bottomSheetViewModel)
+                        .ignoresSafeArea(SafeAreaRegions.container, edges: .bottom)
+                        .ignoreDefaultHeaderBar
+                        .tag("home")
+                    SearchView()
+                        .ignoreDefaultHeaderBar
+                        .tag("search")
+                    ActivitiesView()
+                        .ignoreDefaultHeaderBar
+                        .tag("activities")
+                    ProfileView(userId: UserDefaults.standard.string(forKey: "userId")!)
+                        .ignoresSafeArea(SafeAreaRegions.container, edges: .bottom)
+                        .ignoreDefaultHeaderBar
+                        .tag("profile")
+                }
+                
+                ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)) {
+                    if self.upload {
+                        BlurView(style: .light)
+                            .opacity(0.8)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .ignoresSafeArea(.all, edges: .all)
+                            .onTapGesture {
+                                withAnimation {
+                                    self.upload = false
+                                }
                             }
-                        }
+                    }
+                    Tabbar(selectedTab: $selectedTab, upload: self.$upload)
+                        .environmentObject(publicationPresent)
                 }
-                Tabbar(selectedTab: $selectedTab, upload: self.$upload)
-                    .environmentObject(publicationPresent)
             }
+            .ignoresSafeArea(.all, edges: .bottom)
         }
-        .ignoresSafeArea(.all, edges: .bottom)
-        //MARK: Notify save post to album
-        .onAppear {
-            NotificationCenter.default.addObserver(forName: NSNotification.Name("save.post"), object: nil, queue: .main) { (notification) in
-                guard let name = notification.userInfo?["name"] as? String else {return}
-                guard let image = notification.userInfo?["image"] as? String else {return}
-                toastController.savedPostAlbumName = name
-                toastController.savedPostAlbumImage = image
-                toastController.isPresentSavedPost.toggle()
-            }
-            NotificationCenter.default.addObserver(forName: NSNotification.Name("publish.media.post"), object: nil, queue: .main) { (notification) in
-                if let image = notification.userInfo?["image"] as? UIImage {
-                    toastController.toastPublishedImage = image
-                }
-                print("toast")
-                toastController.isPresentToastPublishPost.toggle()
-            }
-        }
-        .toast(isPresent: $toastController.isPresentToastPublishPost, content: {
-            HStack {
-//                if let image = toastController.toastPublishedImage {
-//                    Image(uiImage: image)
-//                        .resizable()
-//                        .aspectRatio(contentMode: .fill)
-//                        .frame(width: 40, height: 40)
-//                        .cornerRadius(6)
-//                }
-                Text("Публикация загружена.")
-            }
-            .onDisappear {
-                if toastController.toastPublishedImage != nil {
-                    toastController.toastPublishedImage = nil
-                }
-            }
-        })
-
-        //MARK: Toast save post to album
-        .toast(isPresent: $toastController.isPresentSavedPost, content: {
-            HStack {
-                WebImage(url: URL(string: toastController.savedPostAlbumImage))
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 40, height: 40)
-                    .cornerRadius(6)
-                Text("Сохранено в альбом \"\(toastController.savedPostAlbumName)\"")
-            }
-            .onDisappear {
-                toastController.savedPostAlbumImage = String()
-                toastController.savedPostAlbumName = String()
-            }
-        })
-//        .bottomSheet(isPresented: self.$bottomSheetViewModel.isShareBottomSheet, height: UIScreen.main.bounds.height / 2, topBarCornerRadius: 16, showTopIndicator: true, corners: false) {
-//            ShareBottomSheet()
-//        }
-//        .bottomSheet(isPresented: $bottomSheetViewModel.profileSettingsBottomSheet, height: UIScreen.main.bounds.height / 1.6, topBarCornerRadius: 16, corners: true) {
-//            ProfileSettinsBottomSheet().environmentObject(bottomSheetViewModel)
-//        }
-//        .bottomSheet(isPresented: $bottomSheetViewModel.presentAddPublication, height: UIScreen.main.bounds.height / 2.2, topBarCornerRadius: 16, corners: false) {
-//            AddPublicationBottomSheetContent()
-//        }
     }
 }
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         ShareBottomSheet()
-    }
-}
-
-
-
-
-struct PostBottomSheetContent: View {
-    var postId: String
-    var body: some View {
-        VStack {
-            HStack(spacing: 10) {
-                CustomButtonPostSheet(title: "поделиться", image: "share_bottom_sheet")
-                CustomButtonPostSheet(title: "ссылка", image: "link_bottom_sheet")
-                CustomButtonPostSheet(title: "пожаловаться", image: "report_bottom_sheet")
-            }
-            .padding(.bottom)
-            VStack {
-                Spacer(minLength: 0)
-                Button(action: {}) {
-                    VStack(spacing: 0) {
-                        Text("Добавить в избранное")
-                            .font(.system(size: 12))
-                            .foregroundColor(.black)
-                            .padding(.bottom, 15)
-                        Rectangle()
-                            .fill(Color(hex: "#D8D2E5").opacity(0.25))
-                            .frame(width: UIScreen.main.bounds.width - 42, height: 1)
-                    }
-                }
-                .padding(.bottom, 13)
-                Button(action: {}) {
-                    VStack(spacing: 0) {
-                        Text("Скрыть")
-                            .font(.system(size: 12))
-                            .foregroundColor(.black)
-                            .padding(.bottom, 15)
-                        Rectangle()
-                            .fill(Color(hex: "#D8D2E5").opacity(0.25))
-                            .frame(width: UIScreen.main.bounds.width - 42, height: 1)
-                    }
-                }
-                .padding(.bottom, 13)
-                Button(action: {}) {
-                    VStack(spacing: 0) {
-                        Text("Отменить подписку")
-                            .font(.system(size: 12))
-                            .foregroundColor(.black)
-                            .padding(.bottom, 15)
-                        Rectangle()
-                            .fill(Color(hex: "#D8D2E5").opacity(0.25))
-                            .frame(width: UIScreen.main.bounds.width - 42, height: 1)
-                    }
-                }
-                .padding(.bottom, 13)
-                Button(action: {
-                    print(postId)
-                }) {
-                    VStack(spacing: 0) {
-                        Text("Удалить")
-                            .font(.system(size: 12))
-                            .foregroundColor(Color(hex: "#EB5757"))
-                            .padding(.bottom, 15)
-                        Rectangle()
-                            .fill(Color(hex: "#D8D2E5").opacity(0.25))
-                            .frame(width: UIScreen.main.bounds.width - 42, height: 1)
-                    }
-                }
-                Spacer(minLength: 0)
-            }
-            .frame(width: (UIScreen.main.bounds.width - 42))
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color(hex: "#FAFAFA"))
-                    .modifier(RoundedEdge(width: 1, color: Color(hex: "#DFDFDF"), cornerRadius: 10))
-            )
-        }
-        .padding(.bottom, 24)
-        .padding(.top, 43)
-    }
-    @ViewBuilder
-    func CustomButtonPostSheet(title: String, image: String) -> some View {
-        Button(action: {}) {
-            VStack {
-                Image(image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 18, height: 18)
-                    .padding(.bottom, 1)
-                Text(title)
-                    .font(.system(size: 12))
-                    .foregroundColor(.black)
-            }
-        }
-        .frame(width: (UIScreen.main.bounds.width - 42) / 3.2, height: ((UIScreen.main.bounds.width - 78) / 3) / 1.5, alignment: .center)
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color(hex: "#FAFAFA"))
-                .modifier(RoundedEdge(width: 1, color: Color(hex: "#DFDFDF"), cornerRadius: 10))
-        )
     }
 }
 

@@ -19,7 +19,7 @@ struct SavedPostSheetView: View {
             Color.white
             
             VStack {
-                PrefersGrabber()
+//                PrefersGrabber()
                 Text("Сохранить в")
                     .fontWeight(.bold)
                     .padding(.vertical)

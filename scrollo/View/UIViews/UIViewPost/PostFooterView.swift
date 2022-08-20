@@ -154,12 +154,12 @@ struct PostFooterView: View {
             }
             .buttonStyle(PlainButtonStyle())
         }
-        .sheetWithDetents(isPresented: $savePostController.isPresentListAbums, detents: [.custom(240)]) {
-            
-        } content: {
-            SavedPostSheetView(post: $post)
-                .environmentObject(savePostController)
-        }
+//        .sheetWithDetents(isPresented: $savePostController.isPresentListAbums, detents: [.custom(240)]) {
+//            
+//        } content: {
+//            SavedPostSheetView(post: $post)
+//                .environmentObject(savePostController)
+//        }
     }
 }
 

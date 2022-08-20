@@ -15,6 +15,7 @@ struct PostHeaderView: View {
     var avatar: String?
     var login: String
     var place: PostModel.Place?
+    var postId: String
     
     var body: some View {
         HStack(spacing: 0) {
@@ -64,20 +65,15 @@ struct PostHeaderView: View {
             .buttonStyle(FlatLinkStyle())
             Spacer()
             Button(action: {
-                isPresentSheet.toggle()
+                NotificationCenter.default.post(name: NSNotification.Name(openPostActionsSheet), object: nil, userInfo: [
+                    "postId": postId
+                ])
             }) {
                 Image("menu")
             }
             .frame(width: 50, height: 50)
-            .background(Color.red)
             .cornerRadius(50)
             .offset(x: 14)
-            .buttonStyle(FlatLinkStyle())
-        }
-        .sheetWithDetents(isPresented: $isPresentSheet, detents: [.medium()]) {
-            
-        } content: {
-            PostBottomSheetContent()
         }
     }
 }

@@ -236,12 +236,12 @@ struct ProfileView: View {
             postController.getUserMediaPosts(userId: userId)
             postController.getUserTextPosts(userId: userId)
         }
-        .sheetView(isPresent: $settingsSheetPresent, uiHostingController: "settingsHostingController") {
-            ProfileSettinsBottomSheet(isPresentSettings: $isPresentSettings, isPresentSaved: $isPresentSaved, isPresentYourActivity: $isPresentYourActivity, isPresentInterestingPeople: $isPresentInterestingPeople)
-        }
-        .sheetView(isPresent: $publicationSheetPresent, uiHostingController: "publicationHostingController") {
-            AddPublicationBottomSheetContent()
-        }
+//        .sheetView(isPresent: $settingsSheetPresent, uiHostingController: "settingsHostingController") {
+//            ProfileSettinsBottomSheet(isPresentSettings: $isPresentSettings, isPresentSaved: $isPresentSaved, isPresentYourActivity: $isPresentYourActivity, isPresentInterestingPeople: $isPresentInterestingPeople)
+//        }
+//        .sheetView(isPresent: $publicationSheetPresent, uiHostingController: "publicationHostingController") {
+//            AddPublicationBottomSheetContent()
+//        }
     }
     
     @ViewBuilder
@@ -277,8 +277,8 @@ private struct ProfileSettinsBottomSheet : View {
     var body : some View {
         
         VStack {
-            PrefersGrabber()
-                .padding(.bottom, 25)
+//            PrefersGrabber()
+//                .padding(.bottom, 25)
             Button(action: {
                 presentationMode.wrappedValue.dismiss()
                 DispatchQueue.main.asyncAfter(deadline: .now() + time) {
@@ -406,8 +406,8 @@ private struct AddPublicationBottomSheetContent: View {
             Color.white
             
             VStack {
-                PrefersGrabber()
-                    .padding(.bottom, 25)
+//                PrefersGrabber()
+//                    .padding(.bottom, 25)
                 VStack(alignment: .leading, spacing: 0) {
                     HStack(spacing: 0) {
                         Text("Добавить")

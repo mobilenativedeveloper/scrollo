@@ -15,4 +15,10 @@ class BottomSheetViewModel: ObservableObject {
     @Published var postDetailBottomSheet: Bool = false
     @Published var profileSettingsBottomSheet: Bool = false
     @Published var presentAddPublication: Bool = false
+    
+    
+    //MARK: New sheets
+    @Published var postActionsSheet: Bool = false
+    @Published var postActionsSheetPostId: String = ""
+    @Published var postRemoveConfirmation: Bool = false
 }

@@ -12,7 +12,7 @@ struct UIViewStandartPost: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0){
-            PostHeaderView(userId: post.creator.id, avatar: post.creator.avatar, login: post.creator.login, place: post.place)
+            PostHeaderView(userId: post.creator.id, avatar: post.creator.avatar, login: post.creator.login, place: post.place, postId: post.id)
                 .padding(.bottom, 13)
             PostMediaCarouselView(images: post.files)
                 .padding(.bottom, 16)

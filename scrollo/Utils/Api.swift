@@ -44,3 +44,5 @@ let API_SAVE_MEDIA_POSTS_ALBUM = "/api/v1/post/saved-album/posts/"
 let API_DELETE_ALBUM = "/api/v1/post/saved-album/"
 let API_POST_CREATION_START = "/api/v1/post-creation/start"
 let API_POST_CREATION_LOAD_PART = "/api/v1/post-creation/load-part"
+
+let API_REMOVE_POST = "/api/v1/post/"

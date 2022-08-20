@@ -16,7 +16,7 @@ struct PostDetailView: View {
         VStack(alignment: .leading) {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading) {
-                    PostHeaderView(userId: post.creator.id, avatar: post.creator.avatar, login: post.creator.login, place: post.place)
+                    PostHeaderView(userId: post.creator.id, avatar: post.creator.avatar, login: post.creator.login, place: post.place, postId: post.id)
                         .padding(.horizontal)
                         .padding(.top, UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0)
                         .background(Color.white)
