@@ -149,6 +149,7 @@ struct HomeView_Previews: PreviewProvider {
 
 
 struct PostBottomSheetContent: View {
+    var postId: String
     var body: some View {
         VStack {
             HStack(spacing: 10) {
@@ -188,6 +189,20 @@ struct PostBottomSheetContent: View {
                         Text("Отменить подписку")
                             .font(.system(size: 12))
                             .foregroundColor(.black)
+                            .padding(.bottom, 15)
+                        Rectangle()
+                            .fill(Color(hex: "#D8D2E5").opacity(0.25))
+                            .frame(width: UIScreen.main.bounds.width - 42, height: 1)
+                    }
+                }
+                .padding(.bottom, 13)
+                Button(action: {
+                    print(postId)
+                }) {
+                    VStack(spacing: 0) {
+                        Text("Удалить")
+                            .font(.system(size: 12))
+                            .foregroundColor(Color(hex: "#EB5757"))
                             .padding(.bottom, 15)
                         Rectangle()
                             .fill(Color(hex: "#D8D2E5").opacity(0.25))

@@ -66,12 +66,10 @@ struct PostHeaderView: View {
             Button(action: {
                 isPresentSheet.toggle()
             }) {
-                VStack {
-                    Image("menu")
-                }
-                .frame(width: 50, height: 50)
+                Image("menu")
             }
             .frame(width: 50, height: 50)
+            .background(Color.red)
             .cornerRadius(50)
             .offset(x: 14)
             .buttonStyle(FlatLinkStyle())
@@ -83,9 +81,3 @@ struct PostHeaderView: View {
         }
     }
 }
-
-//struct PostHeaderView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        PostHeaderView()
-//    }
-//}

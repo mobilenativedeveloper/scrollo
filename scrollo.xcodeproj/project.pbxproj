@@ -49,6 +49,7 @@
 		AC5F90302892C14200D05254 /* SavePostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5F902F2892C14200D05254 /* SavePostViewModel.swift */; };
 		AC5F90322892C40600D05254 /* UIVIewToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5F90312892C40600D05254 /* UIVIewToast.swift */; };
 		AC6DCDEB2867652D0051106B /* UIUserStory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6DCDEA2867652C0051106B /* UIUserStory.swift */; };
+		AC8E24F328B0BBD8001486FC /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8E24F228B0BBD8001486FC /* CameraController.swift */; };
 		ACACBDF0287A41A300DF7171 /* AssetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACACBDEF287A41A300DF7171 /* AssetModel.swift */; };
 		ACBE7A6F28926CC800F76D93 /* AddAlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBE7A6E28926CC800F76D93 /* AddAlbumViewModel.swift */; };
 		ACBE7A7128926D2000F76D93 /* AlbumModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBE7A7028926D2000F76D93 /* AlbumModel.swift */; };
@@ -209,6 +210,7 @@
 		AC5F90312892C40600D05254 /* UIVIewToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIVIewToast.swift; sourceTree = "<group>"; };
 		AC6DCDEA2867652C0051106B /* UIUserStory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUserStory.swift; sourceTree = "<group>"; };
 		AC75B632287D858C00BA1875 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AC8E24F228B0BBD8001486FC /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		ACACBDEF287A41A300DF7171 /* AssetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetModel.swift; sourceTree = "<group>"; };
 		ACBE7A6E28926CC800F76D93 /* AddAlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAlbumViewModel.swift; sourceTree = "<group>"; };
 		ACBE7A7028926D2000F76D93 /* AlbumModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumModel.swift; sourceTree = "<group>"; };
@@ -511,6 +513,7 @@
 				AC01EB22287B1BB90026FC29 /* VideoRecordingView.swift */,
 				ACEB90002892D61D0096110D /* ToastViewModel.swift */,
 				AC1FF2CD28AF9AF700806CC0 /* AddStoryViewModel.swift */,
+				AC8E24F228B0BBD8001486FC /* CameraController.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -905,6 +908,7 @@
 				ACEB900C2892FADC0096110D /* PostMediaCarouselView.swift in Sources */,
 				ACEB901A289300FA0096110D /* ProbablyFamiliarView.swift in Sources */,
 				AC10101C287843560014E13B /* AccountViewModel.swift in Sources */,
+				AC8E24F328B0BBD8001486FC /* CameraController.swift in Sources */,
 				ACC1DE1E289485DC008A3932 /* SavedPostsViewModel.swift in Sources */,
 				AC2A077F2866E0DA00BB1C6D /* MessangerView.swift in Sources */,
 				ACEB90042892F6FD0096110D /* UIViewStandartPost.swift in Sources */,
