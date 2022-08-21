@@ -65,7 +65,6 @@ private struct CoverView: View {
     var body: some View {
         VStack {
             ZStack {
-                
                 Circle()
                     .fill(Color.gray.opacity(0.2))
                     .frame(width: 150, height: 150)
@@ -82,7 +81,7 @@ private struct CoverView: View {
                     .scaledToFit()
                 
             }
-            Button(action: {}) {
+            NavigationLink(destination: ActualStoryCoverCropperView().ignoreDefaultHeaderBar) {
                 Text("Редактировать обложку")
             }
         }
