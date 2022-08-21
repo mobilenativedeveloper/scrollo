@@ -12,7 +12,6 @@ struct AddStoryView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @StateObject var addStoryController: AddStoryViewModel = AddStoryViewModel()
     @State var mediaAlbum: Bool = false
-    let data: [Int] = [1,2,3,4,5,6,7,8]
     private let columns = 3
     private let size = (UIScreen.main.bounds.width / 3) - 12
     

@@ -25,12 +25,15 @@ struct FeedPostsView: View {
                 ForEach(0..<feedController.posts.count, id:\.self) {index in
                     if feedController.posts[index].type == "STANDART" {
                         UIViewStandartPost(post: $feedController.posts[index])
+                            .transition(.opacity)
                     }
                     if feedController.posts[index].type == "TEXT" {
                         UIViewTextPost(post: $feedController.posts[index])
+                            .transition(.opacity)
                     }
                     if index % 2 == 0 {
                         ProbablyFamiliarView()
+                            .transition(.opacity)
                     }
                     if index == feedController.posts.count - 1 && !feedController.canLoadMorePages {
                         HStack {
@@ -54,12 +57,10 @@ struct FeedPostsView: View {
                 }
                 NotificationCenter.default.addObserver(forName: NSNotification.Name(addTextPostToFeed), object: nil, queue: .main) { (notification) in
                     guard let post = notification.userInfo?["post"] as? PostModel else {return}
-                    withAnimation(.default) {
-                        var newFeed: [PostModel] = []
-                        newFeed.append(post)
-                        newFeed += feedController.posts
-                        feedController.posts = newFeed
-                    }
+                    var newFeed: [PostModel] = []
+                    newFeed.append(post)
+                    newFeed += feedController.posts
+                    feedController.posts = newFeed
                 }
             }
         }

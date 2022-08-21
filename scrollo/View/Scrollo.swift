@@ -22,7 +22,7 @@ struct Scrollo: View {
                 LoginView()
                     .ignoreDefaultHeaderBar
             } else {
-                HomeView()
+                DashboardView()
                     .ignoreDefaultHeaderBar
             }
         }

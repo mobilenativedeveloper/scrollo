@@ -35,9 +35,9 @@ struct PostHeaderView: View {
                         .padding(.trailing, 7)
                 }
             }
-            .background(NavigationLink(destination: ProfileView(userId: userId).ignoreDefaultHeaderBar, isActive: $isPresentProfile, label: {
-                EmptyView()
-            }).buttonStyle(PlainButtonStyle()).frame(height: 0).opacity(0).hidden())
+//            .background(NavigationLink(destination: ProfileView(userId: userId).ignoreDefaultHeaderBar, isActive: $isPresentProfile, label: {
+//                EmptyView()
+//            }).buttonStyle(PlainButtonStyle()).frame(height: 0).opacity(0).hidden())
             .buttonStyle(FlatLinkStyle())
             Button(action: {
                 isPresentProfile.toggle()
@@ -59,9 +59,9 @@ struct PostHeaderView: View {
                     }
                 }
             }
-            .background(NavigationLink(destination: ProfileView(userId: userId).ignoreDefaultHeaderBar, isActive: $isPresentProfile, label: {
-                EmptyView()
-            }).buttonStyle(PlainButtonStyle()).frame(height: 0).opacity(0).hidden())
+//            .background(NavigationLink(destination: ProfileView(userId: userId).ignoreDefaultHeaderBar, isActive: $isPresentProfile, label: {
+//                EmptyView()
+//            }).buttonStyle(PlainButtonStyle()).frame(height: 0).opacity(0).hidden())
             .buttonStyle(FlatLinkStyle())
             Spacer()
             Button(action: {

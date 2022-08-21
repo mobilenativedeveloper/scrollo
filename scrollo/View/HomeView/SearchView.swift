@@ -237,10 +237,10 @@ private struct SearchUserItem: View {
         .padding(.horizontal, 15)
         .padding(.bottom, 28)
         .buttonStyle(FlatLinkStyle())
-        .background(
-            NavigationLink(destination: ProfileView(userId:user.id).ignoreDefaultHeaderBar, isActive: $isPresetProfile) { EmptyView() }.frame(height: 0)
-                .opacity(0)
-        )
+//        .background(
+//            NavigationLink(destination: ProfileView(userId:user.id).ignoreDefaultHeaderBar, isActive: $isPresetProfile) { EmptyView() }.frame(height: 0)
+//                .opacity(0)
+//        )
     }
 }
 
