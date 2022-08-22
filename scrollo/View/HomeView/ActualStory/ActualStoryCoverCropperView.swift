@@ -24,7 +24,8 @@ struct ActualStoryCoverCropperView: View {
     
     @State var cropperFrameRect: CGRect = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width - 40, height: UIScreen.main.bounds.width - 40)
     
-    @State var imageCoordinate: CGPoint = CGPoint(x: 0, y: 0)
+    @State private var imageCoordinate: CGPoint = CGPoint(x: 0, y: 0)
+    @State private var cropFrameCoordinate: CGPoint = CGPoint(x: 0, y: 0)
     
     var body: some View {
         ZStack (alignment: Alignment(horizontal: .center, vertical: .top)){
@@ -35,43 +36,86 @@ struct ActualStoryCoverCropperView: View {
                             }
                             .onEnded { value in
                                 
-                                let startLocation = value.startLocation
+                                print("imageCoordinate: \(imageCoordinate)")
+                                print("cropFrameCoordinate: \(cropFrameCoordinate)")
+                                print("currentPosition: \(self.currentPosition)")
                                 
-                                let left = CGPoint(
-                                    x: self.cropperFrameRect.minX,
-                                    y: self.cropperFrameRect.minY + (self.cropperFrameRect.height / 2)
-                                )
-                                let right = CGPoint(
-                                    x: self.cropperFrameRect.minX + self.cropperFrameRect.width,
-                                    y: self.cropperFrameRect.minY + (self.cropperFrameRect.height / 2)
-                                )
-                                let top = CGPoint(
-                                    x: self.cropperFrameRect.minX + (self.cropperFrameRect.width / 2),
-                                    y: self.cropperFrameRect.minY
-                                )
-                                let bottom = CGPoint(
-                                    x: self.cropperFrameRect.minX + (self.cropperFrameRect.width / 2),
-                                    y: self.cropperFrameRect.minY + (self.cropperFrameRect.height / 2)
-                                )
-                                print("self.imageCoordinate.y; \(self.imageCoordinate.y)")
-                                print("top: \(top.y)")
-                                if self.currentPosition.width > left.x {
+                                //MARK: Limit top leading angle
+                                if self.imageCoordinate.x > self.cropFrameCoordinate.x && self.imageCoordinate.y > self.cropFrameCoordinate.y {
                                     withAnimation(.default) {
-                                        self.currentPosition.width = left.x
+                                        print("Limit top leading angle")
+                                        self.currentPosition.width = self.cropFrameCoordinate.x
+                                        self.currentPosition.height = self.currentPosition.height - (self.imageCoordinate.y - self.cropFrameCoordinate.y)
                                     }
-                                } else if self.currentPosition.width < -left.x {
-                                    withAnimation(.default) {
-                                        self.currentPosition.width = -left.x
-                                    }
-                                } else if self.imageCoordinate.y > top.y {
-                                    withAnimation(.default) {
-                                        self.currentPosition.height = top.y
-                                    }
-                                } else {
                                     self.newPosition = self.currentPosition
+                                    return
                                 }
-                                
-                                
+                                //MARK: Limit top trailing angle
+                                if self.imageCoordinate.x < (-self.cropFrameCoordinate.x) && self.imageCoordinate.y > self.cropFrameCoordinate.y {
+                                    withAnimation(.default) {
+                                        print("Limit top trailing angle")
+                                        self.currentPosition.width = -self.cropFrameCoordinate.x
+                                        self.currentPosition.height = self.currentPosition.height - (self.imageCoordinate.y - self.cropFrameCoordinate.y)
+                                    }
+                                    self.newPosition = self.currentPosition
+                                    return
+                                }
+                                //MARK: Limit bottom trailing angle
+                                if self.imageCoordinate.x < (-self.cropFrameCoordinate.x) && self.imageCoordinate.y > (-self.cropFrameCoordinate.y) {
+                                    withAnimation(.default) {
+                                        print("Limit bottom trailing angle")
+                                        self.currentPosition.width = -self.cropFrameCoordinate.x
+                                        self.currentPosition.height = -(self.currentPosition.height - (self.imageCoordinate.y - self.cropFrameCoordinate.y))
+                                    }
+                                    self.newPosition = self.currentPosition
+                                    return
+                                }
+                                //MARK: Limit bottom leading angle
+                                if self.imageCoordinate.x > self.cropFrameCoordinate.x && self.imageCoordinate.y > (-self.cropFrameCoordinate.y) {
+                                    withAnimation(.default) {
+                                        print("Limit bottom leading angle")
+                                        self.currentPosition.width = self.cropFrameCoordinate.x
+                                        self.currentPosition.height = -(self.currentPosition.height - (self.imageCoordinate.y - self.cropFrameCoordinate.y))
+                                    }
+                                    self.newPosition = self.currentPosition
+                                    return
+                                }
+                                //MARK: Limit left edge
+                                if self.imageCoordinate.x > self.cropFrameCoordinate.x {
+                                    print("Limit left edge")
+                                    withAnimation(.default) {
+                                        self.currentPosition.width = self.cropFrameCoordinate.x
+                                    }
+                                    self.newPosition = self.currentPosition
+                                    return
+                                }
+                                //MARK: Limit right edge
+                                if self.imageCoordinate.x < (-self.cropFrameCoordinate.x) {
+                                    print("Limit right edge")
+                                    withAnimation(.default) {
+                                        self.currentPosition.width = -self.cropFrameCoordinate.x
+                                    }
+                                    self.newPosition = self.currentPosition
+                                    return
+                                }
+                                //MARK: Limit top edge
+                                if self.imageCoordinate.y > self.cropFrameCoordinate.y {
+                                    print("Limit top edge")
+                                    withAnimation(.default) {
+                                        self.currentPosition.height = self.currentPosition.height - (self.imageCoordinate.y - self.cropFrameCoordinate.y)
+                                    }
+                                    self.newPosition = self.currentPosition
+                                    return
+                                }
+                                //MARK: Limit bottom edge
+                                if self.imageCoordinate.y > (-self.cropFrameCoordinate.y) {
+                                    print("Limit bottom edge")
+                                    withAnimation(.default) {
+                                        self.currentPosition.height = -(self.currentPosition.height - (self.imageCoordinate.y - self.cropFrameCoordinate.y))
+                                    }
+                                    self.newPosition = self.currentPosition
+                                    return
+                                }
                                 
                             }
                 
@@ -88,43 +132,11 @@ struct ActualStoryCoverCropperView: View {
                 ZStack(alignment: Alignment(horizontal: .center, vertical: .center)) {
                     BluredBackground()
                     CropImageView(currentPosition: currentPosition, scale: scale, image: self.image!, imageCoordinate: $imageCoordinate)
-                    CropMask(cropperFrameRect: $cropperFrameRect)
-                    
-                    Circle()
-                        .fill(Color.red)
-                        .frame(width: 10, height: 10)
-                        .position(
-                            x: self.cropperFrameRect.minX,
-                            y: self.cropperFrameRect.minY + (self.cropperFrameRect.height / 2)
-                        )
-                    
-                    Circle()
-                        .fill(Color.red)
-                        .frame(width: 10, height: 10)
-                        .position(
-                            x: self.cropperFrameRect.minX + self.cropperFrameRect.width,
-                            y: self.cropperFrameRect.minY + (self.cropperFrameRect.height / 2)
-                        )
-                    
-                    Circle()
-                        .fill(Color.red)
-                        .frame(width: 10, height: 10)
-                        .position(
-                            x: self.cropperFrameRect.minX + (self.cropperFrameRect.width / 2),
-                            y: self.cropperFrameRect.minY
-                        )
-                    
-                    Circle()
-                        .fill(Color.red)
-                        .frame(width: 10, height: 10)
-                        .position(
-                            x: self.cropperFrameRect.minX + (self.cropperFrameRect.width / 2),
-                            y: self.cropperFrameRect.minY + self.cropperFrameRect.height
-                        )
+                    CropMask(cropperFrameRect: $cropperFrameRect, cropFrameCoordinate: $cropFrameCoordinate)
                 }
                 .coordinateSpace(name: "cropper.space")
                 .gesture(drag)
-                .gesture(pinchScale)
+//                .gesture(pinchScale)
             } else {
                 ProgressView()
             }
@@ -133,7 +145,7 @@ struct ActualStoryCoverCropperView: View {
         .clipped()
         .edgesIgnoringSafeArea(.bottom)
         .onAppear {
-            self.downloadImage(from: URL(string: "https://picsum.photos/200/300?random=1")!)
+            self.downloadImage(from: URL(string: "https://picsum.photos/1200/1200?random=1")!)
         }
     }
     
@@ -200,11 +212,20 @@ private struct BluredBackground: View {
 
 private struct CropMask: View {
     @Binding var cropperFrameRect: CGRect
+    @Binding var cropFrameCoordinate: CGPoint
     var body: some View {
         Rectangle()
             .fill(Color.white.opacity(0.7))
+            .overlay(
+                GeometryReader{reader in
+                    Circle()
+                        .fill(Color.red)
+                        .frame(width: 10, height: 10)
+                        .position(x: cropFrameCoordinate.x, y: cropFrameCoordinate.y)
+                }
+            )
             .mask(
-                CropFrameOverlay(cropperFrameRect: $cropperFrameRect)
+                CropFrameOverlay(cropperFrameRect: $cropperFrameRect, cropFrameCoordinate: $cropFrameCoordinate)
                 .fill(style: FillStyle(eoFill: true))
             )
     }
@@ -219,13 +240,12 @@ private struct VisualEffectView: UIViewRepresentable {
 
 private struct CropFrameOverlay: Shape {
     @Binding var cropperFrameRect: CGRect
+    @Binding var cropFrameCoordinate: CGPoint
     func path(in rect: CGRect) -> Path {
         DispatchQueue.main.async {
-            cropperFrameRect = CGRect(
+            cropFrameCoordinate = CGPoint(
                 x: (rect.width / 2) - ((rect.width - 40) / 2),
-                y: (rect.height / 2) - ((rect.width - 40) / 2),
-                width: rect.width - 40,
-                height: rect.width - 40
+                y: (rect.height / 2) - ((rect.width - 40) / 2)
             )
         }
         var shape = Rectangle().path(in: CGRect(
