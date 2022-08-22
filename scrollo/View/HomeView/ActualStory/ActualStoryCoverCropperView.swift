@@ -9,134 +9,26 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct ActualStoryCoverCropperView: View {
-    
-    @State var image: UIImage?
-    
-    @State var imageSize: CGSize = CGSize()
-    
-    @State private var currentPosition: CGSize = .zero
-    @State private var newPosition: CGSize = .zero
-    
-    let maxScale: CGFloat = 3.0
-    let minScale: CGFloat = 1.0
-    @State var scale: CGFloat = 1.0
-    @State var lastValue: CGFloat = 1.0
-    
-    @State var cropperFrameRect: CGRect = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width - 40, height: UIScreen.main.bounds.width - 40)
-    
-    @State private var imageCoordinate: CGPoint = CGPoint(x: 0, y: 0)
-    @State private var cropFrameCoordinate: CGPoint = CGPoint(x: 0, y: 0)
+    @StateObject private var imageCropperDelegate: ImageCropperViewModel = ImageCropperViewModel()
     
     var body: some View {
         ZStack (alignment: Alignment(horizontal: .center, vertical: .top)){
-            if self.image != nil {
-                let drag = DragGesture()
-                            .onChanged { (value) in
-                                self.currentPosition = CGSize(width: value.translation.width + self.newPosition.width, height: value.translation.height + self.newPosition.height)
-                            }
-                            .onEnded { value in
-                                
-                                print("imageCoordinate: \(imageCoordinate)")
-                                print("cropFrameCoordinate: \(cropFrameCoordinate)")
-                                print("currentPosition: \(self.currentPosition)")
-                                
-                                //MARK: Limit top leading angle
-                                if self.imageCoordinate.x > self.cropFrameCoordinate.x && self.imageCoordinate.y > self.cropFrameCoordinate.y {
-                                    withAnimation(.default) {
-                                        print("Limit top leading angle")
-                                        self.currentPosition.width = self.cropFrameCoordinate.x
-                                        self.currentPosition.height = self.currentPosition.height - (self.imageCoordinate.y - self.cropFrameCoordinate.y)
-                                    }
-                                    self.newPosition = self.currentPosition
-                                    return
-                                }
-                                //MARK: Limit top trailing angle
-                                if self.imageCoordinate.x < (-self.cropFrameCoordinate.x) && self.imageCoordinate.y > self.cropFrameCoordinate.y {
-                                    withAnimation(.default) {
-                                        print("Limit top trailing angle")
-                                        self.currentPosition.width = -self.cropFrameCoordinate.x
-                                        self.currentPosition.height = self.currentPosition.height - (self.imageCoordinate.y - self.cropFrameCoordinate.y)
-                                    }
-                                    self.newPosition = self.currentPosition
-                                    return
-                                }
-                                //MARK: Limit bottom trailing angle
-                                if self.imageCoordinate.x < (-self.cropFrameCoordinate.x) && self.imageCoordinate.y > (-self.cropFrameCoordinate.y) {
-                                    withAnimation(.default) {
-                                        print("Limit bottom trailing angle")
-                                        self.currentPosition.width = -self.cropFrameCoordinate.x
-                                        self.currentPosition.height = -(self.currentPosition.height - (self.imageCoordinate.y - self.cropFrameCoordinate.y))
-                                    }
-                                    self.newPosition = self.currentPosition
-                                    return
-                                }
-                                //MARK: Limit bottom leading angle
-                                if self.imageCoordinate.x > self.cropFrameCoordinate.x && self.imageCoordinate.y > (-self.cropFrameCoordinate.y) {
-                                    withAnimation(.default) {
-                                        print("Limit bottom leading angle")
-                                        self.currentPosition.width = self.cropFrameCoordinate.x
-                                        self.currentPosition.height = -(self.currentPosition.height - (self.imageCoordinate.y - self.cropFrameCoordinate.y))
-                                    }
-                                    self.newPosition = self.currentPosition
-                                    return
-                                }
-                                //MARK: Limit left edge
-                                if self.imageCoordinate.x > self.cropFrameCoordinate.x {
-                                    print("Limit left edge")
-                                    withAnimation(.default) {
-                                        self.currentPosition.width = self.cropFrameCoordinate.x
-                                    }
-                                    self.newPosition = self.currentPosition
-                                    return
-                                }
-                                //MARK: Limit right edge
-                                if self.imageCoordinate.x < (-self.cropFrameCoordinate.x) {
-                                    print("Limit right edge")
-                                    withAnimation(.default) {
-                                        self.currentPosition.width = -self.cropFrameCoordinate.x
-                                    }
-                                    self.newPosition = self.currentPosition
-                                    return
-                                }
-                                //MARK: Limit top edge
-                                if self.imageCoordinate.y > self.cropFrameCoordinate.y {
-                                    print("Limit top edge")
-                                    withAnimation(.default) {
-                                        self.currentPosition.height = self.currentPosition.height - (self.imageCoordinate.y - self.cropFrameCoordinate.y)
-                                    }
-                                    self.newPosition = self.currentPosition
-                                    return
-                                }
-                                //MARK: Limit bottom edge
-                                if self.imageCoordinate.y > (-self.cropFrameCoordinate.y) {
-                                    print("Limit bottom edge")
-                                    withAnimation(.default) {
-                                        self.currentPosition.height = -(self.currentPosition.height - (self.imageCoordinate.y - self.cropFrameCoordinate.y))
-                                    }
-                                    self.newPosition = self.currentPosition
-                                    return
-                                }
-                                
-                            }
-                
-                let pinchScale = MagnificationGesture(minimumScaleDelta: 0.1)
-                                    .onChanged { value in
-                                        let resolvedDelta = value / self.lastValue
-                                        self.lastValue = value
-                                        let newScale = self.scale * resolvedDelta
-                                        self.scale = min(self.maxScale, max(self.minScale, newScale))
-                                    }
-                                    .onEnded { value in
-                                        self.lastValue = 1.0
-                                    }
+            if imageCropperDelegate.image != nil {
                 ZStack(alignment: Alignment(horizontal: .center, vertical: .center)) {
                     BluredBackground()
-                    CropImageView(currentPosition: currentPosition, scale: scale, image: self.image!, imageCoordinate: $imageCoordinate)
-                    CropMask(cropperFrameRect: $cropperFrameRect, cropFrameCoordinate: $cropFrameCoordinate)
+                    CropImageView(
+                        currentPosition: imageCropperDelegate.currentPosition,
+                        scale: imageCropperDelegate.scale,
+                        image: imageCropperDelegate.image!,
+                        imageCoordinate: $imageCropperDelegate.imageCoordinate
+                    )
+                    CropMask(
+                        cropperFrameRect: $imageCropperDelegate.cropperFrameRect,
+                        cropFrameCoordinate: $imageCropperDelegate.cropFrameCoordinate
+                    )
                 }
                 .coordinateSpace(name: "cropper.space")
-                .gesture(drag)
-//                .gesture(pinchScale)
+                .gesture(imageCropperDelegate.dragController())
             } else {
                 ProgressView()
             }
@@ -161,7 +53,7 @@ struct ActualStoryCoverCropperView: View {
             print("Download Finished")
             // always update the UI from the main thread
             DispatchQueue.main.async() {
-                self.image = UIImage(data: data)
+                imageCropperDelegate.image = UIImage(data: data)
             }
         }
     }
