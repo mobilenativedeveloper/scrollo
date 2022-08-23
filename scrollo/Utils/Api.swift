@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-let API_URL = "http://scrollo.matreshkavpn.com"
+let API_URL = "http://5.161.142.191:8080" ///http://scrollo.matreshkavpn.com
 let API_AUTH = "/api/v1/auth/login/email"
 let API_SEND_CONFIRM_CODE = "/api/v1/auth/email-confirmation/start"
 let API_CHECK_EMAIL = "/api/v1/user/check-email/"

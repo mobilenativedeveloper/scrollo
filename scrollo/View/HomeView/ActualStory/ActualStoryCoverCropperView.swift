@@ -9,150 +9,41 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct ActualStoryCoverCropperView: View {
-    @StateObject private var imageCropperDelegate: ImageCropperViewModel = ImageCropperViewModel()
+    @StateObject var cropperDelegate: CropperDelegate = CropperDelegate()
     
     var body: some View {
-        ZStack (alignment: Alignment(horizontal: .center, vertical: .top)){
-            if imageCropperDelegate.image != nil {
-                ZStack(alignment: Alignment(horizontal: .center, vertical: .center)) {
-                    BluredBackground()
-                    CropImageView(
-                        currentPosition: imageCropperDelegate.currentPosition,
-                        scale: imageCropperDelegate.scale,
-                        image: imageCropperDelegate.image!,
-                        imageCoordinate: $imageCropperDelegate.imageCoordinate
-                    )
-                    CropMask(
-                        cropperFrameRect: $imageCropperDelegate.cropperFrameRect,
-                        cropFrameCoordinate: $imageCropperDelegate.cropFrameCoordinate
-                    )
+        ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
+            ZStack(alignment: .center){
+                if cropperDelegate.originalImage == nil {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                } else {
+                    GeometryReader{proxy in
+                        ZStack {
+                            BluredBackground(image: cropperDelegate.originalImage!)
+                            ScrollView.init([.vertical,.horizontal], showsIndicators: false) {
+                                Image(uiImage: cropperDelegate.originalImage!)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .scaleEffect(cropperDelegate.scale)
+                                    .gesture(cropperDelegate.scaleController())
+                            }
+                            .frame(width: cropperDelegate.cropSize.width, height: cropperDelegate.cropSize.height, alignment: .center)
+                            .clipShape(Circle())
+                        }
+                        .frame(width:proxy.size.width,height: proxy.size.height)
+                    }
                 }
-                .coordinateSpace(name: "cropper.space")
-                .gesture(imageCropperDelegate.dragController())
-            } else {
-                ProgressView()
             }
             HeaderBar()
         }
-        .clipped()
-        .edgesIgnoringSafeArea(.bottom)
+        .edgesIgnoringSafeArea(.all)
         .onAppear {
-            self.downloadImage(from: URL(string: "https://picsum.photos/1200/1200?random=1")!)
-        }
-    }
-    
-    func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
-        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
-    }
-    
-    func downloadImage(from url: URL) {
-        print("Download Started")
-        getData(from: url) { data, response, error in
-            guard let data = data, error == nil else { return }
-            print(response?.suggestedFilename ?? url.lastPathComponent)
-            print("Download Finished")
-            // always update the UI from the main thread
-            DispatchQueue.main.async() {
-                imageCropperDelegate.image = UIImage(data: data)
+            cropperDelegate.downloadImage(from: URL(string: "https://picsum.photos/700/700.jpg")!) { image in
+                cropperDelegate.originalImage = image
             }
         }
-    }
-}
-
-private struct CropImageView: View {
-    var currentPosition: CGSize
-    var scale: CGFloat
-    var image: UIImage
-    @Binding var imageCoordinate: CGPoint
-    var body: some View {
-        Image(uiImage: image)
-            .resizable()
-            .aspectRatio(1, contentMode: .fit)
-            .background(
-                GeometryReader{reader in
-                    Circle()
-                        .fill(Color.blue)
-                        .frame(width: 10, height: 10)
-                        .position(x: 0, y: 0)
-                }
-            )
-            .background(
-                GeometryReader{reader -> Color in
-                    let rect = reader.frame(in: .named("cropper.space"))
-                    DispatchQueue.main.async {
-                        imageCoordinate = rect.origin
-                    }
-                    return Color.clear
-                }
-            )
-            .scaleEffect(scale)
-            .offset(currentPosition)
-            
-    }
-}
-
-private struct BluredBackground: View {
-    var body: some View {
-        ZStack(alignment: Alignment(horizontal: .center, vertical: .center)) {
-            WebImage(url: URL(string: "https://picsum.photos/200/300?random=1")!)
-                .resizable()
-            VisualEffectView(effect: UIBlurEffect(style: .light))
-        }
-        .edgesIgnoringSafeArea(.all)
-    }
-}
-
-private struct CropMask: View {
-    @Binding var cropperFrameRect: CGRect
-    @Binding var cropFrameCoordinate: CGPoint
-    var body: some View {
-        Rectangle()
-            .fill(Color.white.opacity(0.7))
-            .overlay(
-                GeometryReader{reader in
-                    Circle()
-                        .fill(Color.red)
-                        .frame(width: 10, height: 10)
-                        .position(x: cropFrameCoordinate.x, y: cropFrameCoordinate.y)
-                }
-            )
-            .mask(
-                CropFrameOverlay(cropperFrameRect: $cropperFrameRect, cropFrameCoordinate: $cropFrameCoordinate)
-                .fill(style: FillStyle(eoFill: true))
-            )
-    }
-}
-
-
-private struct VisualEffectView: UIViewRepresentable {
-    var effect: UIVisualEffect?
-    func makeUIView(context: UIViewRepresentableContext<Self>) -> UIVisualEffectView { UIVisualEffectView() }
-    func updateUIView(_ uiView: UIVisualEffectView, context: UIViewRepresentableContext<Self>) { uiView.effect = effect }
-}
-
-private struct CropFrameOverlay: Shape {
-    @Binding var cropperFrameRect: CGRect
-    @Binding var cropFrameCoordinate: CGPoint
-    func path(in rect: CGRect) -> Path {
-        DispatchQueue.main.async {
-            cropFrameCoordinate = CGPoint(
-                x: (rect.width / 2) - ((rect.width - 40) / 2),
-                y: (rect.height / 2) - ((rect.width - 40) / 2)
-            )
-        }
-        var shape = Rectangle().path(in: CGRect(
-                x: 0,
-                y: 0,
-                width: rect.width,
-                height: rect.height
-            ))
-            shape.addPath(Circle().path(in: CGRect(
-                x: (rect.width / 2) - ((rect.width - 40) / 2),
-                y: (rect.height / 2) - ((rect.width - 40) / 2),
-                width: rect.width - 40,
-                height: rect.width - 40
-            )))
-        return shape
     }
 }
 
@@ -186,52 +77,65 @@ private struct HeaderBar: View {
             }
         }
         .padding(.horizontal, 23)
-        .padding(.vertical)
-        .background(Color.white)
+        .padding(.bottom)
+        .padding(.top, UIApplication.shared.windows.first?.safeAreaInsets.top)
+        .background(VisualEffectView(effect: UIBlurEffect(style: .light)))
     }
 }
 
-extension UIImageView {
-    func load(url: URL) {
-        DispatchQueue.global().async { [weak self] in
-            if let data = try? Data(contentsOf: url) {
-                if let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        self?.image = image
-                    }
-                }
-            }
+private struct VisualEffectView: UIViewRepresentable {
+    var effect: UIVisualEffect?
+    func makeUIView(context: UIViewRepresentableContext<Self>) -> UIVisualEffectView { UIVisualEffectView() }
+    func updateUIView(_ uiView: UIVisualEffectView, context: UIViewRepresentableContext<Self>) { uiView.effect = effect }
+}
+
+private struct BluredBackground: View {
+    var image: UIImage
+    var body: some View {
+        ZStack(alignment: Alignment(horizontal: .center, vertical: .center)) {
+            Image(uiImage: image)
+                .resizable()
+            VisualEffectView(effect: UIBlurEffect(style: .light))
         }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
-
-extension View {
-// This function changes our View to UIView, then calls another function
-// to convert the newly-made UIView to a UIImage.
-    public func asUIImage() -> UIImage {
-        let controller = UIHostingController(rootView: self)
-        
-        controller.view.frame = CGRect(x: 0, y: CGFloat(Int.max), width: 1, height: 1)
-        UIApplication.shared.windows.first!.rootViewController?.view.addSubview(controller.view)
-        
-        let size = controller.sizeThatFits(in: UIScreen.main.bounds.size)
-        controller.view.bounds = CGRect(origin: .zero, size: size)
-        controller.view.sizeToFit()
-        
-// here is the call to the function that converts UIView to UIImage: `.asUIImage()`
-        let image = controller.view.asUIImage()
-        controller.view.removeFromSuperview()
-        return image
+class CropperDelegate: ObservableObject {
+    @Published var originalImage: UIImage?
+    
+    @Published var scale: CGFloat = 1.0
+    @Published var lastScale: CGFloat = 1.0
+    @Published var maximumScale: CGFloat = 2.0
+    @Published var minimumScale: CGFloat = 1.0
+    
+    @Published var cropSize: CGSize = CGSize(
+        width: UIScreen.main.bounds.width,
+        height: UIScreen.main.bounds.width
+    )
+    
+    func scaleController () -> some Gesture {
+        return MagnificationGesture(minimumScaleDelta: 0.1)
+            .onChanged { value in
+                let resolvedDelta = value / self.lastScale
+                self.lastScale = value
+                let newScale = self.scale * resolvedDelta
+                self.scale = min(self.maximumScale, max(self.minimumScale, newScale))
+            }.onEnded { value in
+                self.lastScale = 1.0
+            }
     }
-}
-
-extension UIView {
-// This is the function to convert UIView to UIImage
-    public func asUIImage() -> UIImage {
-        let renderer = UIGraphicsImageRenderer(bounds: bounds)
-        return renderer.image { rendererContext in
-            layer.render(in: rendererContext.cgContext)
+    
+    func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
+    }
+    
+    func downloadImage(from url: URL, onDownloaded: @escaping (UIImage) -> Void) {
+        getData(from: url) { data, response, error in
+            guard let data = data, error == nil else { return }
+            DispatchQueue.main.async() {
+                onDownloaded(UIImage(data: data)!)
+            }
         }
     }
 }

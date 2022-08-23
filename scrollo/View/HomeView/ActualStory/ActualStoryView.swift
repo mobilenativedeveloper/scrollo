@@ -17,39 +17,42 @@ struct ActualStoryView: View {
     let countStories = 31
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image("circle_close")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .aspectRatio(contentMode: .fill)
+        NavigationView {
+            VStack(spacing: 0) {
+                HStack(spacing: 0) {
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Image("circle_close")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .aspectRatio(contentMode: .fill)
+                    }
+                    Spacer(minLength: 0)
+                    Text(selectedStories.count > 0 ? "Выбрано: \(selectedStories.count)" : "Истории")
+                        .font(.system(size: 20))
+                        .fontWeight(.bold)
+                        .textCase(.uppercase)
+                        .foregroundColor(Color(hex: "#2E313C"))
+                    Spacer(minLength: 0)
+                    NavigationLink(destination: ActualStoryCoverView().ignoreDefaultHeaderBar) {
+                        Image("circle.right.arrow")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .aspectRatio(contentMode: .fill)
+                    }
                 }
-                Spacer(minLength: 0)
-                Text(selectedStories.count > 0 ? "Выбрано: \(selectedStories.count)" : "Истории")
-                    .font(.system(size: 20))
-                    .fontWeight(.bold)
-                    .textCase(.uppercase)
-                    .foregroundColor(Color(hex: "#2E313C"))
-                Spacer(minLength: 0)
-                NavigationLink(destination: ActualStoryCoverView().ignoreDefaultHeaderBar) {
-                    Image("circle.right.arrow")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .aspectRatio(contentMode: .fill)
+                .padding(.horizontal, 23)
+                .padding(.bottom)
+                
+                ScrollView(showsIndicators: false) {
+                    makeGrid()
                 }
+                Spacer()
             }
-            .padding(.horizontal, 23)
-            .padding(.bottom)
-            
-            ScrollView(showsIndicators: false) {
-                makeGrid()
-            }
-            Spacer()
+            .edgesIgnoringSafeArea(.bottom)
+            .ignoreDefaultHeaderBar
         }
-        .edgesIgnoringSafeArea(.bottom)
     }
     
     private func makeGrid() -> some View {

@@ -10,7 +10,7 @@ import SDWebImageSwiftUI
 
 struct ActualStoryCoverView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
+    @State var cropperPresent: Bool = false
     let characterLimit: Int = 15
     @State var name: String = ""
     
@@ -43,7 +43,7 @@ struct ActualStoryCoverView: View {
             .padding(.bottom)
             
             VStack {
-                CoverView()
+                CoverView(cropperPresent: $cropperPresent)
                     .padding(.top, 100)
                     .padding(.bottom)
                 TextField("Актуальное", text: $name)
@@ -62,6 +62,7 @@ struct ActualStoryCoverView: View {
 }
 
 private struct CoverView: View {
+    @Binding var cropperPresent: Bool
     var body: some View {
         VStack {
             ZStack {
@@ -81,9 +82,16 @@ private struct CoverView: View {
                     .scaledToFit()
                 
             }
-            NavigationLink(destination: ActualStoryCoverCropperView().ignoreDefaultHeaderBar) {
-                Text("Редактировать обложку")
+            .onTapGesture {
+                cropperPresent.toggle()
             }
+            Text("Редактировать обложку")
+                .onTapGesture {
+                    cropperPresent.toggle()
+                }
+        }
+        .fullScreenCover(isPresented: $cropperPresent, onDismiss: {}) {
+            ActualStoryCoverCropperView()
         }
     }
 }

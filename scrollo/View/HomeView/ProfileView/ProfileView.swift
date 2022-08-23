@@ -27,8 +27,9 @@ struct ProfileView: View {
     @State var sheet: Bool = false
     @State var sheetContent: SheetContent = .publication
     
-    let userId: String
+    @State var isPresentActualStoryView: Bool = false
     
+    let userId: String
     
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
@@ -235,19 +236,22 @@ struct ProfileView: View {
             
         }
         .background(Color(hex: "#F9F9F9").edgesIgnoringSafeArea(.all))
-//        .sheetView(
-//            isPresent: $sheet,
-//            backgroundColor: Color.clear,
-//            prefersGrabberVisible: sheetContent == .publication ? true : false,
-//            detents: sheetContent == .publication ? [
-//                .custom(549)
-//            ] : [
-//                .custom(440)
-//            ],
-//            content: {
-//                getSheetContent()
-//            }
-//        )
+        .fullScreenCover(isPresented: $isPresentActualStoryView, onDismiss: {}, content: {
+            ActualStoryView()
+        })
+        .sheetView(
+            isPresent: $sheet,
+            backgroundColor: Color.clear,
+            prefersGrabberVisible: sheetContent == .publication ? true : false,
+            detents: sheetContent == .publication ? [
+                .custom(549)
+            ] : [
+                .custom(440)
+            ],
+            content: {
+                getSheetContent()
+            }
+        )
         .onAppear {
             profileController.getProfile(userId: userId)
             postController.getUserMediaPosts(userId: userId)
@@ -256,13 +260,13 @@ struct ProfileView: View {
     }
 
 //    
-//    @ViewBuilder
-//    func getSheetContent () -> some View {
-//        if sheetContent == .publication {
-//            AddPublicationSheet()
-//        } else {
-//            SettingsSheet()
-//        }
-//    }
+    @ViewBuilder
+    func getSheetContent () -> some View {
+        if sheetContent == .publication {
+            AddPublicationSheet(isPresentActualStoryView: $isPresentActualStoryView)
+        } else {
+            SettingsSheet()
+        }
+    }
 }
 

@@ -11,8 +11,6 @@ struct ContentView: View {
     @State var isPresented: Bool = false
     
     var body: some View {
-        NavigationView {
-            ActualStoryView().ignoreDefaultHeaderBar
-        } //Scrollo()
+        Scrollo()
     }
 }

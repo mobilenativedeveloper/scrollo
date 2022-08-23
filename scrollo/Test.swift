@@ -6,19 +6,15 @@
 //
 
 import SwiftUI
+import UIKit
+import SDWebImageSwiftUI
 
 struct Test: View {
-    
     var body: some View {
-        ScrollView {
+        ZStack {
             
         }
     }
-    
 }
 
-struct Test_Previews: PreviewProvider {
-    static var previews: some View {
-        Test()
-    }
-}
+

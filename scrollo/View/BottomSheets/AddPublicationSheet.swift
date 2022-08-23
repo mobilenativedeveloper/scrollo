@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct AddPublicationSheet: View {
-    
-    
+    @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
+    @Binding var isPresentActualStoryView: Bool
     var body: some View {
         ZStack(alignment: .top) {
             Color.white
@@ -35,7 +35,13 @@ struct AddPublicationSheet: View {
                     Sepparator()
                     AddPublicationItem(icon: "story", title: "историю")
                     Sepparator()
-                    AddPublicationItem(icon: "actualStory", title: "актуальное из истории")
+                    Button(action: {
+                        presentation.wrappedValue.dismiss()
+                        
+                        self.isPresentActualStoryView.toggle()
+                    }) {
+                        AddPublicationItem(icon: "actualStory", title: "актуальное из истории")
+                    }
                     Sepparator()
                 }
             }
@@ -51,20 +57,18 @@ private struct AddPublicationItem: View {
     var title: String
     
     var body: some View {
-        Button(action: {}) {
-            HStack(spacing: 0) {
-                Image(icon)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 23, height: 23)
-                    .padding(.trailing, 14)
-                Text(title)                     .font(.custom(GothamBook, size: 16))
-                    .textCase(.uppercase)
-                    .foregroundColor(.black)
-            }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 24)
+        HStack(spacing: 0) {
+            Image(icon)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 23, height: 23)
+                .padding(.trailing, 14)
+            Text(title)                     .font(.custom(GothamBook, size: 16))
+                .textCase(.uppercase)
+                .foregroundColor(.black)
         }
+        .padding(.vertical, 16)
+        .padding(.horizontal, 24)
     }
 }
 
