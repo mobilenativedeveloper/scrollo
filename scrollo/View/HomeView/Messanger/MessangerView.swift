@@ -6,19 +6,18 @@
 //
 
 import SwiftUI
+import Introspect
 
 struct MessangerView: View {
     
     @StateObject var messangerViewModel : MessangerViewModel = MessangerViewModel()
     @State private var searchText : String = String()
-    
+    @State var isShowing: Bool = false
     
     var body: some View {
         VStack(spacing: 0) {
             HeaderBar()
-            List {
-                
-                //MARK: Search chat View
+            VStack {
                 HStack(spacing: 0) {
                     Image(systemName: "magnifyingglass")
                         .font(.title3)
@@ -33,17 +32,13 @@ struct MessangerView: View {
                 .padding(.horizontal)
                 .padding(.top, 25)
                 .padding(.bottom, 30)
-                .ignoreListAppearance()
                 
-                //MARK: Favorites contacts
                 VStack(alignment: .leading, spacing: 0) {
-                    
                     Text("Избранные контакты")
                         .font(.custom(GothamMedium, size: 16))
                         .foregroundColor(Color(hex: "#4F4F4F"))
                         .padding(.horizontal)
                         .padding(.bottom, 15)
-                    
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 20) {
                             ForEach(0..<12, id: \.self) {_ in
@@ -54,9 +49,7 @@ struct MessangerView: View {
                     }
                 }
                 .padding(.bottom, 35)
-                .ignoreListAppearance()
                 
-                //MARK: Chat list
                 VStack(spacing: 13) {
                     ForEach(0..<8, id: \.self) {index in
                         UIUserMessageView(online: true, login: "login", viewed: true, time: "4")
@@ -65,10 +58,19 @@ struct MessangerView: View {
                     }
                 }
                 .padding(.horizontal)
-                .ignoreListAppearance()
             }
-            .listStyle(.plain)
-            
+            .refreshableCompat(
+                showsIndicators: false, onRefresh: { done in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        done()
+                    }
+                },
+                progress: { state in
+                    RefreshActivityIndicator(isAnimating: state == .loading) {
+                        $0.hidesWhenStopped = false
+                    }
+                }
+            )
         }
         .background(Color(hex: "#F9F9F9").edgesIgnoringSafeArea(.all))
     }

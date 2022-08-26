@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Introspect
 
 struct CreateNewChatView: View {
     var body: some View {
