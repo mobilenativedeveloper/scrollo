@@ -199,6 +199,7 @@ private struct UIUserMessageView : View {
 
 private struct HeaderBar: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @State var newChat: Bool = false
     var body: some View{
         HStack {
             Button(action: {
@@ -221,12 +222,19 @@ private struct HeaderBar: View {
                     .foregroundColor(Color(hex: "#2E313C"))
             }
             Spacer(minLength: 0)
-            Image("new.message")
-                .resizable()
-                .frame(width: 24, height: 24)
-                .aspectRatio(contentMode: .fill)
+            Button(action: {
+                newChat.toggle()
+            }) {
+                Image("new.message")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .aspectRatio(contentMode: .fill)
+            }
         }
         .padding(.horizontal)
         .padding(.bottom)
+        .fullScreenCover(isPresented: $newChat, onDismiss: {}) {
+            CreateNewChatView()
+        }
     }
 }

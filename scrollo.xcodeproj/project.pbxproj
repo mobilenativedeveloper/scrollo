@@ -43,6 +43,7 @@
 		AC2CAB072874137500BEEB3C /* CommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2CAB062874137400BEEB3C /* CommentsViewModel.swift */; };
 		AC2CAB0C2874569700BEEB3C /* BottomSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2CAB0B2874569700BEEB3C /* BottomSheetViewModel.swift */; };
 		AC3756CE28B8E8EF00C678B6 /* CreateNewChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3756CD28B8E8EF00C678B6 /* CreateNewChatView.swift */; };
+		AC3756D028B8F9B900C678B6 /* ActivitiesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3756CF28B8F9B900C678B6 /* ActivitiesViewModel.swift */; };
 		AC4039222870387900B9A762 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC4039212870387900B9A762 /* Test.swift */; };
 		AC43BEF128717F16006BCFCC /* UIDefaultAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC43BEF028717F16006BCFCC /* UIDefaultAvatar.swift */; };
 		AC54C2FB28B3661900D8CF2C /* ImageCropperViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC54C2FA28B3661900D8CF2C /* ImageCropperViewModel.swift */; };
@@ -215,6 +216,7 @@
 		AC2CAB062874137400BEEB3C /* CommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewModel.swift; sourceTree = "<group>"; };
 		AC2CAB0B2874569700BEEB3C /* BottomSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewModel.swift; sourceTree = "<group>"; };
 		AC3756CD28B8E8EF00C678B6 /* CreateNewChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewChatView.swift; sourceTree = "<group>"; };
+		AC3756CF28B8F9B900C678B6 /* ActivitiesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesViewModel.swift; sourceTree = "<group>"; };
 		AC4039212870387900B9A762 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		AC43BEF028717F16006BCFCC /* UIDefaultAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDefaultAvatar.swift; sourceTree = "<group>"; };
 		AC54C2FA28B3661900D8CF2C /* ImageCropperViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropperViewModel.swift; sourceTree = "<group>"; };
@@ -558,6 +560,7 @@
 				ACEB90002892D61D0096110D /* ToastViewModel.swift */,
 				AC1FF2CD28AF9AF700806CC0 /* AddStoryViewModel.swift */,
 				AC8E24F228B0BBD8001486FC /* CameraController.swift */,
+				AC3756CF28B8F9B900C678B6 /* ActivitiesViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -978,6 +981,7 @@
 				ACC21A662862EC9B00AF8B0D /* Persistence.swift in Sources */,
 				ACEB9018289300280096110D /* FeedPostsView.swift in Sources */,
 				AC1F7C222876C900009227CB /* EditProfileViewModel.swift in Sources */,
+				AC3756D028B8F9B900C678B6 /* ActivitiesViewModel.swift in Sources */,
 				ACDB88E72879C04800C6F1B2 /* PublicationTextPostView.swift in Sources */,
 				ACEB90062892F7120096110D /* PostHeaderView.swift in Sources */,
 				AC101028287857F30014E13B /* NotifyView.swift in Sources */,

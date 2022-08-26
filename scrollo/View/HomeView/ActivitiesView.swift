@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ActivitiesView: View {
+    @StateObject var activities: ActivitiesViewModel = ActivitiesViewModel()
     @State private var selection: String = "Вы"
     private let tabs: [String] = ["Вы", "Запросы"]
     

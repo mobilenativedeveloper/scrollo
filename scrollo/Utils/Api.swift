@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-let API_URL = "http://5.161.142.191:8080" ///http://scrollo.matreshkavpn.com
+let API_URL = "http://5.161.142.191:8080"
 let API_AUTH = "/api/v1/auth/login/email"
 let API_SEND_CONFIRM_CODE = "/api/v1/auth/email-confirmation/start"
 let API_CHECK_EMAIL = "/api/v1/user/check-email/"
@@ -44,5 +44,5 @@ let API_SAVE_MEDIA_POSTS_ALBUM = "/api/v1/post/saved-album/posts/"
 let API_DELETE_ALBUM = "/api/v1/post/saved-album/"
 let API_POST_CREATION_START = "/api/v1/post-creation/start"
 let API_POST_CREATION_LOAD_PART = "/api/v1/post-creation/load-part"
-
 let API_REMOVE_POST = "/api/v1/post/"
+let API_GET_ACTIONS = "/api/v1/action/"
