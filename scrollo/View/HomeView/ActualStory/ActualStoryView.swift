@@ -10,15 +10,13 @@ import SDWebImageSwiftUI
 
 struct ActualStoryView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @State var selectedStories: [Int] = []
-    private let columns = 3
-    private let size = (UIScreen.main.bounds.width / 3) - 12
     
-    let countStories = 31
+    @StateObject var actualStoryViewModel: ActualStoryViewModel = ActualStoryViewModel()
+    @State var actualStoryCoverView: Bool = false
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 0) {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
@@ -29,13 +27,17 @@ struct ActualStoryView: View {
                             .aspectRatio(contentMode: .fill)
                     }
                     Spacer(minLength: 0)
-                    Text(selectedStories.count > 0 ? "Выбрано: \(selectedStories.count)" : "Истории")
+                    Text(actualStoryViewModel.selectedStories.count > 0 ? "Выбрано: \(actualStoryViewModel.selectedStories.count)" : "Истории")
                         .font(.system(size: 20))
                         .fontWeight(.bold)
                         .textCase(.uppercase)
                         .foregroundColor(Color(hex: "#2E313C"))
                     Spacer(minLength: 0)
-                    NavigationLink(destination: ActualStoryCoverView().ignoreDefaultHeaderBar) {
+                    Button(action: {
+                        if actualStoryViewModel.selectedStories.count > 0 {
+                            actualStoryCoverView.toggle()
+                        }
+                    }) {
                         Image("circle.right.arrow")
                             .resizable()
                             .frame(width: 24, height: 24)
@@ -51,54 +53,61 @@ struct ActualStoryView: View {
                 Spacer()
             }
             .edgesIgnoringSafeArea(.bottom)
+            .background(
+                NavigationLink(destination: ActualStoryCoverView(
+                    covers: actualStoryViewModel.actualStories
+                ).ignoreDefaultHeaderBar, isActive: $actualStoryCoverView, label: {
+                    EmptyView()
+                }).hidden()
+            )
             .ignoreDefaultHeaderBar
         }
     }
     
     private func makeGrid() -> some View {
-        let count = countStories
-        let rows = count / columns + (count % columns == 0 ? 0 : 1)
+        let count = actualStoryViewModel.actualStories.count
+        let rows = count / actualStoryViewModel.columns + (count % actualStoryViewModel.columns == 0 ? 0 : 1)
             
         return VStack(alignment: .leading, spacing: 9) {
             ForEach(0..<rows) { row in
                 HStack(spacing: 9) {
-                    ForEach(0..<self.columns) {column in
-                        let index = row * self.columns + column
+                    ForEach(0..<actualStoryViewModel.columns) {column in
+                        let index = row * actualStoryViewModel.columns + column
                         if index < count {
                             Button(action: {
-                                if let index = selectedStories.firstIndex(where: {$0 == index}) {
-                                    selectedStories.remove(at: index)
+                                if let index = actualStoryViewModel.selectedStories.firstIndex(where: {$0.id == actualStoryViewModel.actualStories[index].id}) {
+                                    actualStoryViewModel.selectedStories.remove(at: index)
                                 } else {
-                                    
-                                    selectedStories.append(index)
+                                    actualStoryViewModel.selectedStories.append(actualStoryViewModel.actualStories[index])
                                 }
                             }) {
-                                StoryCardPreviewView(selectedStories: $selectedStories, image: "https://picsum.photos/200/300?random=\(index)", index: index, size: size)
+                                StoryCardPreviewView(selectedStories: actualStoryViewModel.selectedStories, story: actualStoryViewModel.actualStories[index], index: index, size: actualStoryViewModel.size)
                             }
                             .buttonStyle(FlatLinkStyle())
                         } else {
                             AnyView(EmptyView())
-                                .frame(width: size, height: 180)
+                                .frame(width: actualStoryViewModel.size, height: 180)
                         }
                     }
                 }
             }
         }
         .padding(.top, 10)
+        .padding(.horizontal, 9)
     }
 }
 
 
 private struct StoryCardPreviewView: View {
-    @Binding var selectedStories: [Int]
-    var image: String
+    var selectedStories: [ActualStoryModel]
+    var story: ActualStoryModel
     var index: Int
     var size: CGFloat
     
     var body: some View {
         ZStack(alignment: .topLeading) {
             ZStack(alignment: .topTrailing) {
-                WebImage(url: URL(string: image)!)
+                WebImage(url: URL(string: story.url)!)
                     .resizable()
                     .indicator(.activity)
                     .transition(.fade(duration: 0.5))
@@ -131,17 +140,17 @@ private struct StoryCardPreviewView: View {
             }
             if (index + 4) % 2 == 0  || index == 0{
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.black)
+                    .fill(Color.white)
                     .frame(width: 38, height: 38)
                     .overlay(
                         VStack(spacing: 0){
                             Text("\(index + 1)")
                                 .font(.system(size: 15))
                                 .fontWeight(.semibold)
-                                .foregroundColor(.white)
+                                .foregroundColor(.black)
                             Text("марта")
                                 .font(.system(size: 9))
-                                .foregroundColor(.white)
+                                .foregroundColor(.black)
                         }
                     )
                     .offset(x: 10, y: 10)
@@ -151,7 +160,7 @@ private struct StoryCardPreviewView: View {
     
     func getNumber () -> Int {
         
-        if let i = selectedStories.firstIndex(where: { $0 == index}) {
+        if let i = selectedStories.firstIndex(where: { $0.id == story.id}) {
             
             return i + 1
         } else {
@@ -161,7 +170,7 @@ private struct StoryCardPreviewView: View {
     }
     func checkSelect () -> Bool {
         
-        if let _ = selectedStories.firstIndex(where: { $0 == index}) {
+        if let _ = selectedStories.firstIndex(where: { $0.id == story.id}) {
             
             return true
         } else {
@@ -169,4 +178,19 @@ private struct StoryCardPreviewView: View {
             return false
         }
     }
+}
+
+struct ActualStoryModel {
+    var id = UUID().uuidString
+    var url: String
+}
+
+class ActualStoryViewModel: ObservableObject {
+    @Published var selectedStories: [ActualStoryModel] = []
+    let actualStories: [ActualStoryModel] = [
+        ActualStoryModel(url: "https://images.unsplash.com/photo-1660570153201-adf2c9b87a72?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"),
+        ActualStoryModel(url: "https://images.unsplash.com/photo-1660554969989-99b47174f499?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80")
+    ]
+    let columns = 3
+    let size = (UIScreen.main.bounds.width / 3) - 12
 }

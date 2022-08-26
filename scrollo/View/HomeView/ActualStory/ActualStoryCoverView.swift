@@ -9,41 +9,16 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct ActualStoryCoverView: View {
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State var cropperPresent: Bool = false
-    let characterLimit: Int = 15
     @State var name: String = ""
+    var covers: [ActualStoryModel]
+    let characterLimit: Int = 15
     
     var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image("circle.left.arrow")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .aspectRatio(contentMode: .fill)
-                }
-                Spacer(minLength: 0)
-                Text("Название")
-                    .font(.system(size: 20))
-                    .fontWeight(.bold)
-                    .textCase(.uppercase)
-                    .foregroundColor(Color(hex: "#2E313C"))
-                Spacer(minLength: 0)
-                Button(action: {}) {
-                    Image("circle.right.arrow")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .aspectRatio(contentMode: .fill)
-                }
-            }
-            .padding(.horizontal, 23)
-            .padding(.bottom)
-            
+            HeaderBar()
             VStack {
-                CoverView(cropperPresent: $cropperPresent)
+                CoverView(cropperPresent: $cropperPresent, covers: covers)
                     .padding(.top, 100)
                     .padding(.bottom)
                 TextField("Актуальное", text: $name)
@@ -53,7 +28,7 @@ struct ActualStoryCoverView: View {
                     .onReceive(name.publisher.collect()) {
                         name = String($0.prefix(15))
                     }
-                
+
                 Spacer()
             }
         }
@@ -63,6 +38,7 @@ struct ActualStoryCoverView: View {
 
 private struct CoverView: View {
     @Binding var cropperPresent: Bool
+    var covers: [ActualStoryModel]
     var body: some View {
         VStack {
             ZStack {
@@ -72,7 +48,7 @@ private struct CoverView: View {
                 Circle()
                     .fill(Color.white)
                     .frame(width: 147, height: 147)
-                WebImage(url: URL(string: "https://picsum.photos/200/300?random=1")!)
+                WebImage(url: URL(string: covers[0].url)!)
                     .resizable()
                     .indicator(.activity)
                     .transition(.fade(duration: 0.5))
@@ -91,7 +67,39 @@ private struct CoverView: View {
                 }
         }
         .fullScreenCover(isPresented: $cropperPresent, onDismiss: {}) {
-            ActualStoryCoverCropperView()
+            ActualStoryCoverCropperView(covers: covers)
         }
+    }
+}
+
+private struct HeaderBar: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            Button(action: {
+                presentationMode.wrappedValue.dismiss()
+            }) {
+                Image("circle.left.arrow")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .aspectRatio(contentMode: .fill)
+            }
+            Spacer(minLength: 0)
+            Text("Название")
+                .font(.system(size: 20))
+                .fontWeight(.bold)
+                .textCase(.uppercase)
+                .foregroundColor(Color(hex: "#2E313C"))
+            Spacer(minLength: 0)
+            Button(action: {}) {
+                Image("circle.right.arrow")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .aspectRatio(contentMode: .fill)
+            }
+        }
+        .padding(.horizontal, 23)
+        .padding(.bottom)
     }
 }

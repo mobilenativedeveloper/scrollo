@@ -40,14 +40,16 @@ struct ProfileView: View {
                         WebImage(url: URL(string: "\(API_URL)/uploads/\(background)")!)
                             .resizable()
                             .scaledToFill()
-                            .frame(width: reader.size.width, height: 150)
+                            .frame(width: reader.size.width, height: 150 + (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0))
+                            .edgesIgnoringSafeArea(.top)
                     }
                 } else {
                     LinearGradient(colors: [
                         Color(hex: "#5B86E5"),
                         Color(hex: "#36DCD8")
                     ], startPoint: .trailing, endPoint: .leading)
-                        .frame(width: UIScreen.main.bounds.width, height: 150)
+                        .frame(width: UIScreen.main.bounds.width, height: 150 + (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0))
+                        .edgesIgnoringSafeArea(.top)
                 }
                 
                 GeometryReader{reader in
@@ -76,8 +78,6 @@ struct ProfileView: View {
                                 .frame(height: 0)
                                 FollowInfoView(followersCount: user.followersCount, followingCount: user.followingCount)
                                 UserInfoView(login: user.login ?? "", career: user.career, personal: user.personal)
-                                Text("publicationSheet \(publicationSheet ? "true" : "false")")
-                                Text("settingsSheet \(settingsSheet ? "true" : "false")")
                                 if self.userId == UserDefaults.standard.string(forKey: "userId") {
                                     NavigationLink(destination: EditUserProfile().environmentObject(profileController).ignoreDefaultHeaderBar) {
                                         HStack {

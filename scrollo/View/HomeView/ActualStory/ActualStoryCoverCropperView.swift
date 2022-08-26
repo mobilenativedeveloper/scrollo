@@ -10,7 +10,8 @@ import SDWebImageSwiftUI
 
 struct ActualStoryCoverCropperView: View {
     @StateObject var cropperDelegate: CropperDelegate = CropperDelegate()
-    
+    @StateObject var UIState: UIStateModel = UIStateModel()
+    var covers: [ActualStoryModel]
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
             ZStack(alignment: .center){
@@ -23,7 +24,7 @@ struct ActualStoryCoverCropperView: View {
                         ZStack {
                             BluredBackground(image: cropperDelegate.originalImage!)
                             ScrollView.init([.vertical,.horizontal], showsIndicators: false) {
-                                Image(uiImage: cropperDelegate.originalImage!)
+                                WebImage(url: URL(string: covers[UIState.activeCard].url)!)
                                     .resizable()
                                     .scaledToFill()
                                     .scaleEffect(cropperDelegate.scale)
@@ -33,6 +34,13 @@ struct ActualStoryCoverCropperView: View {
                             .clipShape(Circle())
                         }
                         .frame(width:proxy.size.width,height: proxy.size.height)
+                        .overlay(
+                            CoverCollectionView(covers: covers)
+                                .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                                .offset(y: -90)
+                                .environmentObject(UIState)
+                            ,alignment: Alignment(horizontal: .center, vertical: .bottom)
+                        )
                     }
                 }
             }
@@ -46,6 +54,121 @@ struct ActualStoryCoverCropperView: View {
         }
     }
 }
+
+class UIStateModel: ObservableObject {
+    @Published var activeCard: Int = 0
+    @Published var screenDrag: Float = 0.0
+}
+
+
+private struct CoverCollectionView: View {
+    @EnvironmentObject var UIState: UIStateModel
+    let spacing: CGFloat = 16
+    let widthOfHiddenCards: CGFloat = 150
+    let cardHeight: CGFloat = 50
+    let covers: [ActualStoryModel]
+    
+    var body: some View {
+        CollectionView(
+            numberOfItems: CGFloat(covers.count),
+            spacing: spacing,
+            widthOfHiddenCards: widthOfHiddenCards
+        ) {
+            ForEach(0..<covers.count, id: \.self) { index in
+                WebImage(url: URL(string: covers[index].url)!)
+                    .resizable()
+                    .frame(
+                        width: (UIScreen.main.bounds.width - (widthOfHiddenCards*2) - (spacing*2)) / 2,
+                        height: (UIScreen.main.bounds.width - (widthOfHiddenCards*2) - (spacing*2)) / 2,
+                        alignment: .center
+                    )
+                    .transition(AnyTransition.slide)
+                    .animation(.default)
+            }
+        }
+        .overlay(
+            Rectangle()
+                .stroke(Color.white, lineWidth: 2)
+            
+                .frame(width: (UIScreen.main.bounds.width - (widthOfHiddenCards*2) - (spacing*2)) / 2, height: (UIScreen.main.bounds.width - (widthOfHiddenCards*2) - (spacing*2)) / 2)
+            ,alignment: .center
+        )
+        .environmentObject(UIState)
+    }
+}
+
+
+struct CollectionView<Items : View>: View {
+    @EnvironmentObject var UIState: UIStateModel
+    @GestureState var isDetectingLongPress = false
+    let items: Items
+    let numberOfItems: CGFloat //= 8
+    let spacing: CGFloat //= 16
+    let widthOfHiddenCards: CGFloat //= 32
+    let totalSpacing: CGFloat
+    let cardWidth: CGFloat
+    
+    init(
+        numberOfItems: CGFloat,
+        spacing: CGFloat,
+        widthOfHiddenCards: CGFloat,
+        @ViewBuilder _ items: () -> Items
+    ) {
+        self.items = items()
+        self.numberOfItems = numberOfItems
+        self.spacing = spacing
+        self.widthOfHiddenCards = widthOfHiddenCards
+        self.totalSpacing = (numberOfItems - 1) * spacing
+        self.cardWidth = (UIScreen.main.bounds.width - (widthOfHiddenCards*2) - (spacing*2)) / 2 //279
+    }
+    
+    func dragGesture () -> some Gesture {
+        return DragGesture().updating($isDetectingLongPress) { currentState, gestureState, transaction in
+            self.UIState.screenDrag = Float(currentState.translation.width)
+            
+        }.onEnded { value in
+            self.UIState.screenDrag = 0
+            
+            if (value.translation.width < -50 && (self.UIState.activeCard < Int(self.numberOfItems - 1))) {
+                
+                self.UIState.activeCard = self.UIState.activeCard + 1
+                let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                impactMed.impactOccurred()
+                
+            }
+            
+            if (value.translation.width > 50 && self.UIState.activeCard > 0) {
+                print(self.UIState.activeCard)
+                self.UIState.activeCard = self.UIState.activeCard - 1
+                let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                impactMed.impactOccurred()
+            }
+        }
+    }
+    
+    var body: some View{
+        let totalCanvasWidth: CGFloat = (cardWidth * numberOfItems) + totalSpacing
+        let xOffsetToShift = ((totalCanvasWidth - UIScreen.main.bounds.width) / 2) + self.cardWidth / 2
+        let leftPadding = widthOfHiddenCards + spacing
+        let totalMovement = cardWidth + spacing
+        
+        let activeOffset = xOffsetToShift + (leftPadding) - (totalMovement * CGFloat(UIState.activeCard))
+        let nextOffset = xOffsetToShift + (leftPadding) - (totalMovement * CGFloat(UIState.activeCard) + 1)
+        
+        var calcOffset = Float(activeOffset)
+                
+        if (calcOffset != Float(nextOffset)) {
+            calcOffset = Float(activeOffset) + UIState.screenDrag
+        }
+        
+        return HStack(alignment: .center, spacing: spacing) {
+            items
+        }
+        .offset(x: CGFloat(calcOffset), y: 0)
+        .gesture(dragGesture())
+    }
+}
+
 
 private struct HeaderBar: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
