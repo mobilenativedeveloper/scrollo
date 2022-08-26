@@ -11,8 +11,7 @@ import SDWebImageSwiftUI
 struct ActualStoryView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @StateObject var actualStoryViewModel: ActualStoryViewModel = ActualStoryViewModel()
-    @State var actualStoryCoverView: Bool = false
+    @StateObject var actualStoryDelegate: ActualStoryDelegate = ActualStoryDelegate()
     
     var body: some View {
         NavigationView {
@@ -27,15 +26,15 @@ struct ActualStoryView: View {
                             .aspectRatio(contentMode: .fill)
                     }
                     Spacer(minLength: 0)
-                    Text(actualStoryViewModel.selectedStories.count > 0 ? "Выбрано: \(actualStoryViewModel.selectedStories.count)" : "Истории")
+                    Text(actualStoryDelegate.selectedStories.count > 0 ? "Выбрано: \(actualStoryDelegate.selectedStories.count)" : "Истории")
                         .font(.system(size: 20))
                         .fontWeight(.bold)
                         .textCase(.uppercase)
                         .foregroundColor(Color(hex: "#2E313C"))
                     Spacer(minLength: 0)
                     Button(action: {
-                        if actualStoryViewModel.selectedStories.count > 0 {
-                            actualStoryCoverView.toggle()
+                        if actualStoryDelegate.selectedStories.count > 0 {
+                            actualStoryDelegate.actualStoryCoverView.toggle()
                         }
                     }) {
                         Image("circle.right.arrow")
@@ -46,7 +45,6 @@ struct ActualStoryView: View {
                 }
                 .padding(.horizontal, 23)
                 .padding(.bottom)
-                
                 ScrollView(showsIndicators: false) {
                     makeGrid()
                 }
@@ -54,9 +52,9 @@ struct ActualStoryView: View {
             }
             .edgesIgnoringSafeArea(.bottom)
             .background(
-                NavigationLink(destination: ActualStoryCoverView(
-                    covers: actualStoryViewModel.actualStories
-                ).ignoreDefaultHeaderBar, isActive: $actualStoryCoverView, label: {
+                NavigationLink(destination: ActualStoryCoverView()
+                                .environmentObject(actualStoryDelegate)
+                                .ignoreDefaultHeaderBar, isActive: $actualStoryDelegate.actualStoryCoverView, label: {
                     EmptyView()
                 }).hidden()
             )
@@ -65,28 +63,28 @@ struct ActualStoryView: View {
     }
     
     private func makeGrid() -> some View {
-        let count = actualStoryViewModel.actualStories.count
-        let rows = count / actualStoryViewModel.columns + (count % actualStoryViewModel.columns == 0 ? 0 : 1)
+        let count = actualStoryDelegate.actualStories.count
+        let rows = count / actualStoryDelegate.columns + (count % actualStoryDelegate.columns == 0 ? 0 : 1)
             
         return VStack(alignment: .leading, spacing: 9) {
             ForEach(0..<rows) { row in
                 HStack(spacing: 9) {
-                    ForEach(0..<actualStoryViewModel.columns) {column in
-                        let index = row * actualStoryViewModel.columns + column
+                    ForEach(0..<actualStoryDelegate.columns) {column in
+                        let index = row * actualStoryDelegate.columns + column
                         if index < count {
                             Button(action: {
-                                if let index = actualStoryViewModel.selectedStories.firstIndex(where: {$0.id == actualStoryViewModel.actualStories[index].id}) {
-                                    actualStoryViewModel.selectedStories.remove(at: index)
+                                if let index = actualStoryDelegate.selectedStories.firstIndex(where: {$0.id == actualStoryDelegate.actualStories[index].id}) {
+                                    actualStoryDelegate.selectedStories.remove(at: index)
                                 } else {
-                                    actualStoryViewModel.selectedStories.append(actualStoryViewModel.actualStories[index])
+                                    actualStoryDelegate.selectedStories.append(actualStoryDelegate.actualStories[index])
                                 }
                             }) {
-                                StoryCardPreviewView(selectedStories: actualStoryViewModel.selectedStories, story: actualStoryViewModel.actualStories[index], index: index, size: actualStoryViewModel.size)
+                                StoryCardPreviewView(selectedStories: actualStoryDelegate.selectedStories, story: actualStoryDelegate.actualStories[index], index: index, size: actualStoryDelegate.size)
                             }
                             .buttonStyle(FlatLinkStyle())
                         } else {
                             AnyView(EmptyView())
-                                .frame(width: actualStoryViewModel.size, height: 180)
+                                .frame(width: actualStoryDelegate.size, height: 180)
                         }
                     }
                 }
@@ -185,12 +183,31 @@ struct ActualStoryModel {
     var url: String
 }
 
-class ActualStoryViewModel: ObservableObject {
-    @Published var selectedStories: [ActualStoryModel] = []
+class ActualStoryDelegate: ObservableObject {
     let actualStories: [ActualStoryModel] = [
         ActualStoryModel(url: "https://images.unsplash.com/photo-1660570153201-adf2c9b87a72?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"),
-        ActualStoryModel(url: "https://images.unsplash.com/photo-1660554969989-99b47174f499?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80")
+        ActualStoryModel(url: "https://images.unsplash.com/photo-1660554969989-99b47174f499?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"),
+        ActualStoryModel(url: "https://images.unsplash.com/photo-1661010854342-acfc962a0352?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"),
+        ActualStoryModel(url: "https://images.unsplash.com/photo-1648240925834-7cd64180fff0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"),
+        ActualStoryModel(url: "https://images.unsplash.com/photo-1660866838212-df428c885827?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"),
+        ActualStoryModel(url: "https://images.unsplash.com/photo-1660645341155-7b15047325ff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"),
+        ActualStoryModel(url: "https://images.unsplash.com/photo-1554797589-7241bb691973?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=436&q=80"),
+        ActualStoryModel(url: "https://images.unsplash.com/photo-1601823984263-b87b59798b70?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"),
+        ActualStoryModel(url: "https://images.unsplash.com/photo-1522383225653-ed111181a951?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=876&q=80"),
+        ActualStoryModel(url: "https://images.unsplash.com/photo-1542931287-023b922fa89b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"),
+        ActualStoryModel(url: "https://images.unsplash.com/photo-1505069446780-4ef442b5207f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80")
     ]
+    
     let columns = 3
     let size = (UIScreen.main.bounds.width / 3) - 12
+    
+    @Published var selectedStories: [ActualStoryModel] = []
+    
+    @Published var name: String = ""
+    let characterLimit: Int = 15
+    
+    @Published var selectedCover: ActualStoryModel?
+    
+    @Published var cropperPresent: Bool = false
+    @Published var actualStoryCoverView: Bool = false
 }

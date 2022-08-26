@@ -9,39 +9,36 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct ActualStoryCoverCropperView: View {
+    @EnvironmentObject var actualStory: ActualStoryDelegate
     @StateObject var cropperDelegate: CropperDelegate = CropperDelegate()
     @StateObject var UIState: UIStateModel = UIStateModel()
-    var covers: [ActualStoryModel]
+    
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
             ZStack(alignment: .center){
-                if cropperDelegate.originalImage == nil {
-                    Spacer()
-                    ProgressView()
-                    Spacer()
-                } else {
-                    GeometryReader{proxy in
-                        ZStack {
-                            BluredBackground(image: cropperDelegate.originalImage!)
-                            ScrollView.init([.vertical,.horizontal], showsIndicators: false) {
-                                WebImage(url: URL(string: covers[UIState.activeCard].url)!)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .scaleEffect(cropperDelegate.scale)
-                                    .gesture(cropperDelegate.scaleController())
-                            }
-                            .frame(width: cropperDelegate.cropSize.width, height: cropperDelegate.cropSize.height, alignment: .center)
-                            .clipShape(Circle())
+                GeometryReader{proxy in
+                    ZStack {
+                        BluredBackground(image: actualStory.selectedCover!.url)
+                        ScrollView.init([.vertical,.horizontal], showsIndicators: false) {
+                            WebImage(url: URL(string: actualStory.selectedCover!.url)!)
+                                .resizable()
+                                .scaledToFill()
+                                .scaleEffect(cropperDelegate.scale)
+                                .gesture(cropperDelegate.scaleController())
                         }
-                        .frame(width:proxy.size.width,height: proxy.size.height)
-                        .overlay(
-                            CoverCollectionView(covers: covers)
-                                .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-                                .offset(y: -90)
-                                .environmentObject(UIState)
-                            ,alignment: Alignment(horizontal: .center, vertical: .bottom)
-                        )
+                        .frame(width: cropperDelegate.cropSize.width, height: cropperDelegate.cropSize.height, alignment: .center)
+                        .clipShape(Circle())
                     }
+                    .frame(width:proxy.size.width,height: proxy.size.height)
+                    .overlay(
+                        CoverCollectionView(covers: actualStory.selectedStories)
+                            .offset(y: -90)
+                            .environmentObject(UIState)
+                            .onChange(of: UIState.activeCard, perform: { newValue in
+                                actualStory.selectedCover = actualStory.selectedStories[UIState.activeCard - 1]
+                            })
+                        ,alignment: Alignment(horizontal: .center, vertical: .bottom)
+                    )
                 }
             }
             HeaderBar()
@@ -56,10 +53,9 @@ struct ActualStoryCoverCropperView: View {
 }
 
 class UIStateModel: ObservableObject {
-    @Published var activeCard: Int = 0
+    @Published var activeCard: Int = 1
     @Published var screenDrag: Float = 0.0
 }
-
 
 private struct CoverCollectionView: View {
     @EnvironmentObject var UIState: UIStateModel
@@ -70,10 +66,24 @@ private struct CoverCollectionView: View {
     
     var body: some View {
         CollectionView(
-            numberOfItems: CGFloat(covers.count),
+            numberOfItems: CGFloat(covers.count) + 1,
             spacing: spacing,
             widthOfHiddenCards: widthOfHiddenCards
         ) {
+           
+            Button(action: {}) {
+                Image(systemName: "photo")
+                    .resizable()
+                    .frame(width: 20, height: 18)
+                    .foregroundColor(.white)
+            }
+            .frame(
+                width: (UIScreen.main.bounds.width - (widthOfHiddenCards*2) - (spacing*2)) / 2,
+                height: (UIScreen.main.bounds.width - (widthOfHiddenCards*2) - (spacing*2)) / 2,
+                alignment: .center
+            )
+            .transition(AnyTransition.slide)
+            .animation(.default)
             ForEach(0..<covers.count, id: \.self) { index in
                 WebImage(url: URL(string: covers[index].url)!)
                     .resizable()
@@ -89,7 +99,6 @@ private struct CoverCollectionView: View {
         .overlay(
             Rectangle()
                 .stroke(Color.white, lineWidth: 2)
-            
                 .frame(width: (UIScreen.main.bounds.width - (widthOfHiddenCards*2) - (spacing*2)) / 2, height: (UIScreen.main.bounds.width - (widthOfHiddenCards*2) - (spacing*2)) / 2)
             ,alignment: .center
         )
@@ -137,7 +146,7 @@ struct CollectionView<Items : View>: View {
                 
             }
             
-            if (value.translation.width > 50 && self.UIState.activeCard > 0) {
+            if (value.translation.width > 50 && self.UIState.activeCard > 1) {
                 print(self.UIState.activeCard)
                 self.UIState.activeCard = self.UIState.activeCard - 1
                 let impactMed = UIImpactFeedbackGenerator(style: .medium)
@@ -164,6 +173,7 @@ struct CollectionView<Items : View>: View {
         return HStack(alignment: .center, spacing: spacing) {
             items
         }
+        .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
         .offset(x: CGFloat(calcOffset), y: 0)
         .gesture(dragGesture())
     }
@@ -213,10 +223,10 @@ private struct VisualEffectView: UIViewRepresentable {
 }
 
 private struct BluredBackground: View {
-    var image: UIImage
+    var image: String
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .center, vertical: .center)) {
-            Image(uiImage: image)
+            WebImage(url: URL(string: image)!)
                 .resizable()
             VisualEffectView(effect: UIBlurEffect(style: .light))
         }

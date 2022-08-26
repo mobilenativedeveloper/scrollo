@@ -9,36 +9,41 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct ActualStoryCoverView: View {
-    @State var cropperPresent: Bool = false
+    @EnvironmentObject var actualStoryDelegate: ActualStoryDelegate
+    
     @State var name: String = ""
-    var covers: [ActualStoryModel]
-    let characterLimit: Int = 15
     
     var body: some View {
         VStack(spacing: 0) {
             HeaderBar()
-            VStack {
-                CoverView(cropperPresent: $cropperPresent, covers: covers)
-                    .padding(.top, 100)
-                    .padding(.bottom)
-                TextField("Актуальное", text: $name)
-                    .font(Font.headline.weight(.bold))
-                    .frame(width: 200)
-                    .multilineTextAlignment(.center)
-                    .onReceive(name.publisher.collect()) {
-                        name = String($0.prefix(15))
-                    }
-
-                Spacer()
+            if actualStoryDelegate.selectedCover == nil {
+                ProgressView()
+            } else {
+                VStack {
+                    CoverView()
+                        .padding(.top, 100)
+                        .padding(.bottom)
+                        .environmentObject(actualStoryDelegate)
+                    TextField("Актуальное", text: $name)
+                        .font(Font.headline.weight(.bold))
+                        .frame(width: 200)
+                        .multilineTextAlignment(.center)
+                        .onReceive(name.publisher.collect()) {
+                            name = String($0.prefix(15))
+                        }
+                    Spacer()
+                }
             }
         }
         .edgesIgnoringSafeArea(.bottom)
+        .onAppear {
+            actualStoryDelegate.selectedCover = actualStoryDelegate.selectedStories[0]
+        }
     }
 }
 
 private struct CoverView: View {
-    @Binding var cropperPresent: Bool
-    var covers: [ActualStoryModel]
+    @EnvironmentObject var actualStoryDelegate: ActualStoryDelegate
     var body: some View {
         VStack {
             ZStack {
@@ -48,7 +53,7 @@ private struct CoverView: View {
                 Circle()
                     .fill(Color.white)
                     .frame(width: 147, height: 147)
-                WebImage(url: URL(string: covers[0].url)!)
+                WebImage(url: URL(string: actualStoryDelegate.selectedCover!.url)!)
                     .resizable()
                     .indicator(.activity)
                     .transition(.fade(duration: 0.5))
@@ -59,15 +64,16 @@ private struct CoverView: View {
                 
             }
             .onTapGesture {
-                cropperPresent.toggle()
+                actualStoryDelegate.cropperPresent.toggle()
             }
             Text("Редактировать обложку")
                 .onTapGesture {
-                    cropperPresent.toggle()
+                    actualStoryDelegate.cropperPresent.toggle()
                 }
         }
-        .fullScreenCover(isPresented: $cropperPresent, onDismiss: {}) {
-            ActualStoryCoverCropperView(covers: covers)
+        .fullScreenCover(isPresented: $actualStoryDelegate.cropperPresent, onDismiss: {}) {
+            ActualStoryCoverCropperView()
+                .environmentObject(actualStoryDelegate)
         }
     }
 }
