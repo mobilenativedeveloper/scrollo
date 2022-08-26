@@ -8,44 +8,14 @@
 import SwiftUI
 
 struct MessangerView: View {
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     @StateObject var messangerViewModel : MessangerViewModel = MessangerViewModel()
     @State private var searchText : String = String()
     
     
     var body: some View {
         VStack(spacing: 0) {
-            //fix nav
-            //MARK: HeaderBar
-            HStack {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Image("circle.left.arrow")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .aspectRatio(contentMode: .fill)
-                }
-                Spacer(minLength: 0)
-                VStack(spacing: 4) {
-                    Text("lana_smith")
-                        .font(.system(size: 12))
-                        .foregroundColor(Color(hex: "#828796"))
-                    Text("Сообщения")
-                        .font(.system(size: 20))
-                        .fontWeight(.bold)
-                        .textCase(.uppercase)
-                        .foregroundColor(Color(hex: "#2E313C"))
-                }
-                Spacer(minLength: 0)
-                Image("new.message")
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .aspectRatio(contentMode: .fill)
-            }
-            .padding(.horizontal)
-            .padding(.bottom)
-            
+            HeaderBar()
             List {
                 
                 //MARK: Search chat View
@@ -101,12 +71,6 @@ struct MessangerView: View {
             
         }
         .background(Color(hex: "#F9F9F9").edgesIgnoringSafeArea(.all))
-    }
-}
-
-struct MessangerView_Previews: PreviewProvider {
-    static var previews: some View {
-        MessangerView()
     }
 }
 
@@ -228,5 +192,39 @@ private struct UIUserMessageView : View {
         .onTapGesture {
             isDetail.toggle()
         }
+    }
+}
+
+private struct HeaderBar: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    var body: some View{
+        HStack {
+            Button(action: {
+                presentationMode.wrappedValue.dismiss()
+            }) {
+                Image("circle.left.arrow")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .aspectRatio(contentMode: .fill)
+            }
+            Spacer(minLength: 0)
+            VStack(spacing: 4) {
+                Text("lana_smith")
+                    .font(.system(size: 12))
+                    .foregroundColor(Color(hex: "#828796"))
+                Text("Сообщения")
+                    .font(.system(size: 20))
+                    .fontWeight(.bold)
+                    .textCase(.uppercase)
+                    .foregroundColor(Color(hex: "#2E313C"))
+            }
+            Spacer(minLength: 0)
+            Image("new.message")
+                .resizable()
+                .frame(width: 24, height: 24)
+                .aspectRatio(contentMode: .fill)
+        }
+        .padding(.horizontal)
+        .padding(.bottom)
     }
 }

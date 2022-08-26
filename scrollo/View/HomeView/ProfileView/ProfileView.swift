@@ -244,7 +244,7 @@ struct ProfileView: View {
             backgroundColor: Color.clear,
             prefersGrabberVisible: sheetContent == .publication ? true : false,
             detents: sheetContent == .publication ? [
-                .custom(549)
+                .custom(350)
             ] : [
                 .custom(440)
             ],
