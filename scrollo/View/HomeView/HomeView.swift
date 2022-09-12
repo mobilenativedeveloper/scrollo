@@ -8,9 +8,6 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-
-
-
 struct ShareBottomSheet : View {
     @State var searchText: String = ""
     var body : some View {

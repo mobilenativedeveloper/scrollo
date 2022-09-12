@@ -9,6 +9,7 @@ import SwiftUI
 import Introspect
 
 struct CreateNewChatView: View {
+    @StateObject var messangerViewModel : MessangerViewModel = MessangerViewModel()
     @State var findUser: String = ""
     
     var body: some View {

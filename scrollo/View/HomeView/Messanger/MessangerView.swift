@@ -51,11 +51,19 @@ struct MessangerView: View {
                 .padding(.bottom, 35)
                 
                 VStack(spacing: 13) {
-                    ForEach(0..<8, id: \.self) {index in
-                        UIUserMessageView(online: true, login: "login", viewed: true, time: "4")
-                        UIUserMessageView(online: true, login: "login", viewed: true, time: "1")
-                        UIUserMessageView(online: false, login: "login", viewed: false, time: "7")
-                    }
+//                    ForEach(0..<8, id: \.self) {index in
+//                        NavigationLink(destination: UserMessages().ignoreDefaultHeaderBar) {
+//                            UIUserMessageView(online: true, login: "login", viewed: true, time: "4")
+//                        }
+//                        NavigationLink(destination:  UserMessages().ignoreDefaultHeaderBar) {
+//                            UIUserMessageView(online: true, login: "login", viewed: true, time: "1")
+//                        }
+//                        NavigationLink(destination: UserMessages().ignoreDefaultHeaderBar) {
+//                            UIUserMessageView(online: false, login: "login", viewed: false, time: "7")
+//                        }
+//                        
+//                        
+//                    }
                 }
                 .padding(.horizontal)
             }

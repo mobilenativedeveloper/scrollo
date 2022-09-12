@@ -22,7 +22,7 @@ struct DashboardView: View {
                 SearchView()
                     .ignoreDefaultHeaderBar
                     .tag("search")
-                ActivitiesView()
+                ActionsView()
                     .ignoreDefaultHeaderBar
                     .tag("activities")
                 ProfileView(userId: UserDefaults.standard.string(forKey: "userId")!)

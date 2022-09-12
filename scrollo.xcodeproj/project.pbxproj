@@ -43,7 +43,7 @@
 		AC2CAB072874137500BEEB3C /* CommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2CAB062874137400BEEB3C /* CommentsViewModel.swift */; };
 		AC2CAB0C2874569700BEEB3C /* BottomSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2CAB0B2874569700BEEB3C /* BottomSheetViewModel.swift */; };
 		AC3756CE28B8E8EF00C678B6 /* CreateNewChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3756CD28B8E8EF00C678B6 /* CreateNewChatView.swift */; };
-		AC3756D028B8F9B900C678B6 /* ActivitiesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3756CF28B8F9B900C678B6 /* ActivitiesViewModel.swift */; };
+		AC3756D028B8F9B900C678B6 /* ActionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3756CF28B8F9B900C678B6 /* ActionViewModel.swift */; };
 		AC4039222870387900B9A762 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC4039212870387900B9A762 /* Test.swift */; };
 		AC43BEF128717F16006BCFCC /* UIDefaultAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC43BEF028717F16006BCFCC /* UIDefaultAvatar.swift */; };
 		AC54C2FB28B3661900D8CF2C /* ImageCropperViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC54C2FA28B3661900D8CF2C /* ImageCropperViewModel.swift */; };
@@ -53,6 +53,7 @@
 		AC5F90302892C14200D05254 /* SavePostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5F902F2892C14200D05254 /* SavePostViewModel.swift */; };
 		AC5F90322892C40600D05254 /* UIVIewToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5F90312892C40600D05254 /* UIVIewToast.swift */; };
 		AC6DCDEB2867652D0051106B /* UIUserStory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6DCDEA2867652C0051106B /* UIUserStory.swift */; };
+		AC8D392428CBB2E400B24D69 /* ActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8D392328CBB2E400B24D69 /* ActionModel.swift */; };
 		AC8E24F328B0BBD8001486FC /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8E24F228B0BBD8001486FC /* CameraController.swift */; };
 		AC8E24F528B0DA60001486FC /* AppNotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8E24F428B0DA60001486FC /* AppNotificationCenter.swift */; };
 		AC8E24F828B0DAE0001486FC /* PostActionsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8E24F728B0DAE0001486FC /* PostActionsSheet.swift */; };
@@ -93,7 +94,7 @@
 		ACC21AAA2863113D00AF8B0D /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC21AA92863113D00AF8B0D /* UserModel.swift */; };
 		ACC21AAE28631DC700AF8B0D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC21AAD28631DC600AF8B0D /* HomeView.swift */; };
 		ACC21AB028631DF900AF8B0D /* StoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC21AAF28631DF900AF8B0D /* StoryView.swift */; };
-		ACC21AB22863219B00AF8B0D /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC21AB12863219B00AF8B0D /* ActivitiesView.swift */; };
+		ACC21AB22863219B00AF8B0D /* ActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC21AB12863219B00AF8B0D /* ActionsView.swift */; };
 		ACC21ABC2863230200AF8B0D /* gotham_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ACC21AB42863230200AF8B0D /* gotham_medium.ttf */; };
 		ACC21ABD2863230200AF8B0D /* gotham_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ACC21AB52863230200AF8B0D /* gotham_bold.ttf */; };
 		ACC21ABE2863230200AF8B0D /* gotham_book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ACC21AB62863230200AF8B0D /* gotham_book.ttf */; };
@@ -124,6 +125,8 @@
 		ACDB88EB2879CAFB00C6F1B2 /* PublicationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDB88EA2879CAFB00C6F1B2 /* PublicationViewModel.swift */; };
 		ACDB88EE2879D68800C6F1B2 /* PublicationMediaPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDB88ED2879D68800C6F1B2 /* PublicationMediaPostView.swift */; };
 		ACDB88F02879D6A000C6F1B2 /* AddMediaPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDB88EF2879D6A000C6F1B2 /* AddMediaPostViewModel.swift */; };
+		ACDF531428CF1DBB006B3EF0 /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF531328CF1DBB006B3EF0 /* WaveformView.swift */; };
+		ACDF531728CF3829006B3EF0 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = ACDF531628CF3829006B3EF0 /* SwiftUICharts */; };
 		ACE44F61287A6BD6002D0BB1 /* NotifyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE44F60287A6BD6002D0BB1 /* NotifyViewModel.swift */; };
 		ACEB90012892D61D0096110D /* ToastViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEB90002892D61D0096110D /* ToastViewModel.swift */; };
 		ACEB90042892F6FD0096110D /* UIViewStandartPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEB90032892F6FD0096110D /* UIViewStandartPost.swift */; };
@@ -216,7 +219,7 @@
 		AC2CAB062874137400BEEB3C /* CommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewModel.swift; sourceTree = "<group>"; };
 		AC2CAB0B2874569700BEEB3C /* BottomSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewModel.swift; sourceTree = "<group>"; };
 		AC3756CD28B8E8EF00C678B6 /* CreateNewChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewChatView.swift; sourceTree = "<group>"; };
-		AC3756CF28B8F9B900C678B6 /* ActivitiesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesViewModel.swift; sourceTree = "<group>"; };
+		AC3756CF28B8F9B900C678B6 /* ActionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewModel.swift; sourceTree = "<group>"; };
 		AC4039212870387900B9A762 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		AC43BEF028717F16006BCFCC /* UIDefaultAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDefaultAvatar.swift; sourceTree = "<group>"; };
 		AC54C2FA28B3661900D8CF2C /* ImageCropperViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropperViewModel.swift; sourceTree = "<group>"; };
@@ -225,6 +228,7 @@
 		AC5F90312892C40600D05254 /* UIVIewToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIVIewToast.swift; sourceTree = "<group>"; };
 		AC6DCDEA2867652C0051106B /* UIUserStory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUserStory.swift; sourceTree = "<group>"; };
 		AC75B632287D858C00BA1875 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AC8D392328CBB2E400B24D69 /* ActionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionModel.swift; sourceTree = "<group>"; };
 		AC8E24F228B0BBD8001486FC /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		AC8E24F428B0DA60001486FC /* AppNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotificationCenter.swift; sourceTree = "<group>"; };
 		AC8E24F728B0DAE0001486FC /* PostActionsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostActionsSheet.swift; sourceTree = "<group>"; };
@@ -268,7 +272,7 @@
 		ACC21AA92863113D00AF8B0D /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		ACC21AAD28631DC600AF8B0D /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		ACC21AAF28631DF900AF8B0D /* StoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryView.swift; sourceTree = "<group>"; };
-		ACC21AB12863219B00AF8B0D /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
+		ACC21AB12863219B00AF8B0D /* ActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsView.swift; sourceTree = "<group>"; };
 		ACC21AB42863230200AF8B0D /* gotham_medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gotham_medium.ttf; sourceTree = "<group>"; };
 		ACC21AB52863230200AF8B0D /* gotham_bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gotham_bold.ttf; sourceTree = "<group>"; };
 		ACC21AB62863230200AF8B0D /* gotham_book.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = gotham_book.ttf; sourceTree = "<group>"; };
@@ -297,6 +301,7 @@
 		ACDB88EA2879CAFB00C6F1B2 /* PublicationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicationViewModel.swift; sourceTree = "<group>"; };
 		ACDB88ED2879D68800C6F1B2 /* PublicationMediaPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicationMediaPostView.swift; sourceTree = "<group>"; };
 		ACDB88EF2879D6A000C6F1B2 /* AddMediaPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMediaPostViewModel.swift; sourceTree = "<group>"; };
+		ACDF531328CF1DBB006B3EF0 /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		ACE44F60287A6BD6002D0BB1 /* NotifyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyViewModel.swift; sourceTree = "<group>"; };
 		ACEB90002892D61D0096110D /* ToastViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewModel.swift; sourceTree = "<group>"; };
 		ACEB90032892F6FD0096110D /* UIViewStandartPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewStandartPost.swift; sourceTree = "<group>"; };
@@ -344,6 +349,7 @@
 				AC5F902E2892BDC800D05254 /* UISheetPresentationControllerCustomDetentObjc in Frameworks */,
 				ACC21ACE28632EE700AF8B0D /* SDWebImageSwiftUI in Frameworks */,
 				ACC21ADC2863503100AF8B0D /* Introspect in Frameworks */,
+				ACDF531728CF3829006B3EF0 /* SwiftUICharts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,6 +426,7 @@
 				AC2A077E2866E0DA00BB1C6D /* MessangerView.swift */,
 				AC2A07842866FAD000BB1C6D /* UserMessages.swift */,
 				AC3756CD28B8E8EF00C678B6 /* CreateNewChatView.swift */,
+				ACDF531328CF1DBB006B3EF0 /* WaveformView.swift */,
 			);
 			path = Messanger;
 			sourceTree = "<group>";
@@ -560,7 +567,7 @@
 				ACEB90002892D61D0096110D /* ToastViewModel.swift */,
 				AC1FF2CD28AF9AF700806CC0 /* AddStoryViewModel.swift */,
 				AC8E24F228B0BBD8001486FC /* CameraController.swift */,
-				AC3756CF28B8F9B900C678B6 /* ActivitiesViewModel.swift */,
+				AC3756CF28B8F9B900C678B6 /* ActionViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -577,6 +584,7 @@
 				AC101036287983860014E13B /* AlertModel.swift */,
 				ACACBDEF287A41A300DF7171 /* AssetModel.swift */,
 				ACBE7A7028926D2000F76D93 /* AlbumModel.swift */,
+				AC8D392328CBB2E400B24D69 /* ActionModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -625,7 +633,7 @@
 				AC6DCDE8286763D00051106B /* Messanger */,
 				ACC21AAD28631DC600AF8B0D /* HomeView.swift */,
 				ACC21AAF28631DF900AF8B0D /* StoryView.swift */,
-				ACC21AB12863219B00AF8B0D /* ActivitiesView.swift */,
+				ACC21AB12863219B00AF8B0D /* ActionsView.swift */,
 				ACC21AE12863914400AF8B0D /* SearchView.swift */,
 				ACC21AEC2864834200AF8B0D /* RecentUserSearchQueries.swift */,
 				AC1F7C1F2876C064009227CB /* EditUserProfile.swift */,
@@ -800,6 +808,7 @@
 				ACC21ADB2863503100AF8B0D /* Introspect */,
 				AC5F902B2892BDC800D05254 /* UISheetPresentationControllerCustomDetent */,
 				AC5F902D2892BDC800D05254 /* UISheetPresentationControllerCustomDetentObjc */,
+				ACDF531628CF3829006B3EF0 /* SwiftUICharts */,
 			);
 			productName = scrollo;
 			productReference = ACC21A592862EC9400AF8B0D /* scrollo.app */;
@@ -877,6 +886,7 @@
 				ACC21ACC28632EE700AF8B0D /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				ACC21ADA2863503000AF8B0D /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 				AC5F902A2892BDC800D05254 /* XCRemoteSwiftPackageReference "UISheetPresentationControllerCustomDetent" */,
+				ACDF531528CF3829006B3EF0 /* XCRemoteSwiftPackageReference "SwiftUICharts" */,
 			);
 			productRefGroup = ACC21A5A2862EC9400AF8B0D /* Products */;
 			projectDirPath = "";
@@ -951,6 +961,7 @@
 				ACC1DE1C28946A73008A3932 /* Constants.swift in Sources */,
 				ACDB88E92879C0A400C6F1B2 /* AddTextPostViewModel.swift in Sources */,
 				ACC21AD928634CDE00AF8B0D /* UIRefreshable.swift in Sources */,
+				ACDF531428CF1DBB006B3EF0 /* WaveformView.swift in Sources */,
 				AC1010312878690F0014E13B /* SavedView.swift in Sources */,
 				ACC21AB028631DF900AF8B0D /* StoryView.swift in Sources */,
 				AC1FF2CE28AF9AF800806CC0 /* AddStoryViewModel.swift in Sources */,
@@ -970,7 +981,7 @@
 				AC10101A287841D00014E13B /* AccountView.swift in Sources */,
 				AC8E24FC28B10045001486FC /* UIBottomSheet.swift in Sources */,
 				AC101037287983860014E13B /* AlertModel.swift in Sources */,
-				ACC21AB22863219B00AF8B0D /* ActivitiesView.swift in Sources */,
+				ACC21AB22863219B00AF8B0D /* ActionsView.swift in Sources */,
 				ACEB90412893E29A0096110D /* UserInfoView.swift in Sources */,
 				ACEB903B2893DE170096110D /* ProfileViewModel.swift in Sources */,
 				AC8E250328B1270E001486FC /* AddPublicationSheet.swift in Sources */,
@@ -981,7 +992,7 @@
 				ACC21A662862EC9B00AF8B0D /* Persistence.swift in Sources */,
 				ACEB9018289300280096110D /* FeedPostsView.swift in Sources */,
 				AC1F7C222876C900009227CB /* EditProfileViewModel.swift in Sources */,
-				AC3756D028B8F9B900C678B6 /* ActivitiesViewModel.swift in Sources */,
+				AC3756D028B8F9B900C678B6 /* ActionViewModel.swift in Sources */,
 				ACDB88E72879C04800C6F1B2 /* PublicationTextPostView.swift in Sources */,
 				ACEB90062892F7120096110D /* PostHeaderView.swift in Sources */,
 				AC101028287857F30014E13B /* NotifyView.swift in Sources */,
@@ -1052,6 +1063,7 @@
 				ACC21AD22863344B00AF8B0D /* PostModel.swift in Sources */,
 				ACEB9048289439D10096110D /* CompositionStack.swift in Sources */,
 				ACEB901D289311D50096110D /* StoriesListView.swift in Sources */,
+				AC8D392428CBB2E400B24D69 /* ActionModel.swift in Sources */,
 				ACC21AA62863107B00AF8B0D /* Api.swift in Sources */,
 				AC2CAB072874137500BEEB3C /* CommentsViewModel.swift in Sources */,
 				ACDB88F02879D6A000C6F1B2 /* AddMediaPostViewModel.swift in Sources */,
@@ -1440,6 +1452,14 @@
 				minimumVersion = 0.1.4;
 			};
 		};
+		ACDF531528CF3829006B3EF0 /* XCRemoteSwiftPackageReference "SwiftUICharts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/willdale/SwiftUICharts.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1462,6 +1482,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = ACC21ADA2863503000AF8B0D /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
 			productName = Introspect;
+		};
+		ACDF531628CF3829006B3EF0 /* SwiftUICharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ACDF531528CF3829006B3EF0 /* XCRemoteSwiftPackageReference "SwiftUICharts" */;
+			productName = SwiftUICharts;
 		};
 /* End XCSwiftPackageProductDependency section */
 

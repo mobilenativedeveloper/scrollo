@@ -46,21 +46,22 @@ struct UserMessages: View {
             .padding(.bottom)
             
             
-            List {
-                ForEach(0..<30, id: \.self) {index in
-                    
-                    UIFromMessage()
-                        .ignoreListAppearance()
-                    UIFromMessage()
-                        .ignoreListAppearance()
-                    UIFromMessage()
-                        .ignoreListAppearance()
-                    UIToMessage()
-                        .ignoreListAppearance()
+            ScrollView(showsIndicators: false) {
+                VStack {
+                    Spacer()
+                    .frame(minWidth: 0, maxWidth: .infinity, minHeight:0, maxHeight: .infinity, alignment: Alignment.topLeading)
+                    ForEach(0..<30, id: \.self) {index in
+                        
+                        UIFromMessage()
+                        WaveformView()
+                        
+                        UIToMessage()
+                    }
                 }
+                .padding(.horizontal)
+                .rotationEffect(Angle(degrees: 180))
             }
-            .listStyle(.plain)
-            .padding(.horizontal)
+            .rotationEffect(Angle(degrees: 180))
             
             Spacer(minLength: 0)
             
@@ -129,7 +130,7 @@ private struct UIFromMessage : View {
     var body : some View {
         
         HStack(spacing: 0) {
-            Spacer(minLength: 0)
+            Spacer()
             Text("While more and more services and products are evolving into digital products.How to represent a brand in your UI becomes a")
                 .font(.custom(GothamBook, size: 12))
                 .foregroundColor(.white)
@@ -139,7 +140,6 @@ private struct UIFromMessage : View {
                 .clipShape(CustomCorner(radius: 10, corners: [.topLeft, .bottomLeft, .bottomRight]))
         }
         .padding(.vertical, 8)
-        .padding(.horizontal)
     }
 }
 
@@ -167,10 +167,43 @@ private struct UIToMessage : View {
                 }
                 .padding(.all, 11)
             }
-            Spacer(minLength: 0)
+            Spacer()
         }
         .padding(.vertical, 8)
-        .frame(maxWidth: UIScreen.main.bounds.width - 100)
-        .padding(.horizontal)
+        .frame(maxWidth: UIScreen.main.bounds.width - 50)
+    }
+}
+
+private struct WaveformView: View {
+    let waveformPixelsPerWindow = Int(3000 / UIScreen.main.bounds.width)
+    var body: some View {
+        HStack {
+            Spacer()
+            HStack(spacing: 2.0) {
+                Image(systemName: "play.circle")
+                    .foregroundColor(Color(hex: "#6F83E9"))
+                    .padding(.trailing, 16)
+                    .font(.title)
+                ForEach(0..<20, id: \.self){index in
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color(hex: "#5B86E5"))
+                        .frame(width: 5, height: self.getRandomHeight())
+                }
+                Text("00:59")
+                    .font(.system(size: 12))
+                    .fontWeight(.bold)
+                    .foregroundColor(Color(hex: "#5B86E5"))
+                    .padding(.leading, 16)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 16)
+            .background(Color(hex: "#5B86E5").opacity(0.15))
+            .cornerRadius(10)
+        }
+    }
+    
+    func getRandomHeight () -> CGFloat {
+        let randomDouble = Double.random(in: 3.0...50.0)
+        return randomDouble
     }
 }

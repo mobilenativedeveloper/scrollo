@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class ActivitiesViewModel: ObservableObject {
+class ActionViewModel: ObservableObject {
  
     var page = 0
     let pageSize = 5
@@ -19,15 +19,19 @@ class ActivitiesViewModel: ObservableObject {
     func getActions () {
         guard let url = URL(string: "\(API_URL)\(API_GET_ACTIONS)?page=\(page)&pageSize=\(pageSize)") else {return}
         guard let request = Request(url: url, httpMethod: "GET", body: nil) else {return}
+        
         URLSession.shared.dataTask(with: request) { data, response, _ in
             guard let response = response as? HTTPURLResponse else {return}
             
             if response.statusCode == 200 {
                 guard let data = data else {return}
-//                guard let json = try? JSONDecoder().decode(PostResponse.self, from: data) else { return }
+                guard let json = try? JSONDecoder().decode(ActionResponse.self, from: data) else { return }
                 DispatchQueue.main.async {
-                    print("OK")
+                    debugPrint("OK")
+                    debugPrint(json)
                 }
+            } else {
+                debugPrint(response)
             }
         }.resume()
     }

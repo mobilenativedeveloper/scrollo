@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct ActivitiesView: View {
-    @StateObject var activities: ActivitiesViewModel = ActivitiesViewModel()
+struct ActionsView: View {
+    @StateObject var actions: ActionViewModel = ActionViewModel()
     @State private var selection: String = "Вы"
     private let tabs: [String] = ["Вы", "Запросы"]
     
@@ -307,7 +307,9 @@ struct ActivitiesView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: Alignment(horizontal: .leading, vertical: .top))
         .background(Color(hex: "#F9F9F9").ignoresSafeArea(.all))
-        
+        .onAppear {
+            actions.getActions()
+        }
     }
     
     @ViewBuilder
@@ -338,10 +340,4 @@ struct ActivitiesView: View {
     }
     
     
-}
-
-struct ActivitiesView_Previews: PreviewProvider {
-    static var previews: some View {
-        ActivitiesView()
-    }
 }

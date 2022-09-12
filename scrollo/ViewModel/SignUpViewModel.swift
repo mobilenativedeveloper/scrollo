@@ -67,6 +67,8 @@ class SignUpViewModel: ObservableObject {
             guard let response = response as? HTTPURLResponse else {return}
             guard let data = data else {return}
             
+            debugPrint("response \(response)")
+            
             if response.statusCode == 200 {
                 guard let json = try? JSONDecoder().decode(ResponseResult.self, from: data) else {return}
                 DispatchQueue.main.async {
