@@ -55,9 +55,8 @@ struct CommentsFooterView: View {
                         Image("send.comment.button")
                             .resizable()
                             .frame(width: 24, height: 24)
-                            .aspectRatio(contentMode: .fill)
+                            .aspectRatio(contentMode: .fit)
                             .opacity(commentsViewModel.content.isEmpty ? 0 : 1)
-                            .animation(.default)
                     }
                 }
                 .frame(height: 45)

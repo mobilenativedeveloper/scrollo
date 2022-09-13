@@ -131,7 +131,7 @@ private struct ActionView: View{
                     .padding(.trailing, 16)
             }
             Group {
-                Text("\(action.creator.login)").font(.custom(GothamBold, size: 14)) + Text(" ") + Text(getActionString()).font(.custom(GothamBook, size: 12)).foregroundColor(Color(hex: "#2E313C")) + Text(" ") + Text(self.howMuchTimeHasPassed()).font(.custom(GothamBold, size: 12)).foregroundColor(Color(hex: "#828796"))
+                Text("\(action.creator.login)").font(.custom(GothamBold, size: 14)) + Text(" ") + Text(getActionString()).font(.custom(GothamBook, size: 12)).foregroundColor(Color(hex: "#2E313C")) + Text(getActionSubStringUserLogin()).font(.custom(GothamBold, size: 12)).foregroundColor(Color(hex: "#7737FF")) + Text(getActionSubString()).font(.custom(GothamBook, size: 12)).foregroundColor(Color(hex: "#2E313C")) + Text(" ") + Text(self.howMuchTimeHasPassed()).font(.custom(GothamBold, size: 12)).foregroundColor(Color(hex: "#828796"))
             }
             .padding(.horizontal, 11)
     
@@ -221,21 +221,67 @@ private struct ActionView: View{
             case "SENT_FOLLOW_REQUEST":
                 return "отправил вам запрос на подписку"
             case "COMMENT_REPLY":
-                return "ответил на ваш комментарий \(action.comment?.comment != nil ? action.receiver.login : "") \(action.comment?.comment ?? "")"
+                return "ответил на ваш комментарий "
             case "POST_DISLIKE":
-                return "не нравится ваша публикация \(action.post?.content ?? "")"
+                return "не нравится ваша публикация "
             case "COMMENT_DISLIKE":
-                return "не нравится ваш комментарий \(action.comment?.comment != nil ? action.receiver.login : "") \(action.comment?.comment ?? "")"
+                return "не нравится ваш комментарий "
             case "ACCEPT_FOLLOW_REQUEST":
                 return "принял ваш запрос"
             case "POST_COMMENT":
-            return "прокомментировал вашу публикацию \(action.post?.content != nil ? action.receiver.login : "") \(action.post?.content ?? "")"
+            return "прокомментировал вашу публикацию "
             case "COMMENT_LIKE":
-                return "нравится ваш комментарий \(action.comment?.comment ?? "")"
+                return "нравится ваш комментарий "
             case "POST_LIKE":
-                return "нравится ваша публикация  \(action.post?.content ?? "")"
+                return "нравится ваша публикация "
             default:
                 return "подписался(-ась) на ваши обновления"
+        }
+    }
+    
+    func getActionSubStringUserLogin () -> String {
+        switch action.action {
+            case "SENT_FOLLOW_REQUEST":
+                return ""
+            case "COMMENT_REPLY":
+                return "\(action.comment?.comment != nil ? action.receiver.login : "") "
+            case "POST_DISLIKE":
+                return ""
+            case "COMMENT_DISLIKE":
+                return "\(action.comment?.comment != nil ? action.receiver.login : "") "
+            case "ACCEPT_FOLLOW_REQUEST":
+                return ""
+            case "POST_COMMENT":
+            return "\(action.post?.content != nil ? action.receiver.login : "") "
+            case "COMMENT_LIKE":
+                return ""
+            case "POST_LIKE":
+                return ""
+            default:
+                return ""
+        }
+    }
+    
+    func getActionSubString () -> String {
+        switch action.action {
+            case "SENT_FOLLOW_REQUEST":
+                return ""
+            case "COMMENT_REPLY":
+                return "\(action.comment?.comment ?? "")"
+            case "POST_DISLIKE":
+                return "\(action.post?.content ?? "")"
+            case "COMMENT_DISLIKE":
+                return "\(action.comment?.comment ?? "")"
+            case "ACCEPT_FOLLOW_REQUEST":
+                return ""
+            case "POST_COMMENT":
+            return "\(action.post?.content ?? "")"
+            case "COMMENT_LIKE":
+                return "\(action.comment?.comment ?? "")"
+            case "POST_LIKE":
+                return "\(action.post?.content ?? "")"
+            default:
+                return ""
         }
     }
 }

@@ -160,9 +160,10 @@ struct ProfileView: View {
                                         ProgressView()
                                     }
                                 }
+                                Color.clear.frame(height: 130)
                                 Spacer()
                             }
-                            .frame(width: reader.size.width, height: reader.size.height)
+                            .frame(width: reader.size.width)
                             .background(Color(hex: "#F9F9F9").edgesIgnoringSafeArea(.all))
                             if let avatar = user.avatar {
                                 WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
