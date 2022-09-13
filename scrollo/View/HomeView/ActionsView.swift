@@ -21,20 +21,24 @@ struct ActionsView: View {
                     VStack {
                         if actions.load {
                             if actions.actions.count > 0 {
-                                HStack {
-                                    Text("сегодня")
-                                        .font(.system(size: 18))
-                                        .bold()
-                                        .textCase(.uppercase)
-                                        .foregroundColor(Color(hex: "#2E313C"))
-                                        .padding(.top, 16)
-                                        .padding(.bottom, 18)
-                                        .padding(.horizontal, 19)
-                                    Spacer()
-                                }
+                                
                                 ForEach(0..<actions.actions.count, id: \.self){index in
-                                    ActionView(action: actions.actions[index])
-                                        .environmentObject(actions)
+                                    HStack {
+                                        Text(actions.actions[index].title)
+                                            .font(.system(size: 18))
+                                            .bold()
+                                            .textCase(.uppercase)
+                                            .foregroundColor(Color(hex: "#2E313C"))
+                                            .padding(.top, 16)
+                                            .padding(.bottom, 18)
+                                            .padding(.horizontal, 8)
+                                        Spacer()
+                                    }
+                                    ForEach(0..<actions.actions[index].data.count, id: \.self){j in
+                                        ActionView(action: actions.actions[index].data[j])
+                                            .environmentObject(actions)
+                                    }
+                                   
                                 }
                             } else {
                                 VStack(alignment: .center) {
@@ -149,7 +153,19 @@ private struct ActionView: View{
                         .stroke(!isFollow ? Color(hex: "#5B86E5") : Color(hex: "#DDE8E8"), lineWidth: 1)
                     )
             }
-        
+            
+            if (action.action == "COMMENT_LIKE" || action.action == "COMMENT_DISLIKE" || action.action == "COMMENT_REPLY" || action.action == "POST_LIKE" || action.action == "POST_DISLIKE" || action.action == "POST_COMMENT") {
+                if let post = action.post {
+                    if let preview = post.preview {
+                        WebImage(url: URL(string: "\(API_URL)/uploads/\(preview)")!)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 44, height: 44)
+                            .cornerRadius(10)
+                    }
+                }
+            }
+            
             
         }
         .padding(.horizontal, 8)

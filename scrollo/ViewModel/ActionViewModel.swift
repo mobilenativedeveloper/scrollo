@@ -9,7 +9,7 @@ import SwiftUI
 
 class ActionViewModel: ObservableObject {
     
-    @Published var actions: [ActionResponse.ActionModel] = []
+    @Published var actions: [ActionsSorted] = []
     @Published var load: Bool = false
  
     var page = 0
@@ -19,6 +19,57 @@ class ActionViewModel: ObservableObject {
         getActions {
             self.load = true
         }
+    }
+    
+    func sortedActions (dataActions: [ActionResponse.ActionModel]) -> [ActionsSorted] {
+//        const date = '2022-08-29T00:00:00.000Z'
+//        let currentDate = Date.parse(new Date());
+//        let days = (currentDate - Date.parse(date))/86400000;       //86400000 - ms в дне
+//        console.log(Math.round(days))
+        var res: [ActionsSorted] = []
+        dataActions.forEach { action in
+            let currentDate = Date()
+            let actionDate = action.createdAt.split(separator: ".")[0] + "+" + action.createdAt.split(separator: "+")[1]
+            let dateFormatter = ISO8601DateFormatter()
+            let date = dateFormatter.date(from: String(actionDate))!
+            
+
+            
+            let datesBetweenArray = Date.dates(from: currentDate, to: date)
+            
+            if (datesBetweenArray.count == 0) {
+                if let index = res.firstIndex(where: {$0.title == "Сегодня"}) {
+                    res[index].data.append(action)
+                } else {
+                    res.append(ActionsSorted(title: "Сегодня", data: [action]))
+                }
+            } else if (datesBetweenArray.count == 1) {
+                if let index = res.firstIndex(where: {$0.title == "Вчера"}) {
+                    res[index].data.append(action)
+                } else {
+                    res.append(ActionsSorted(title: "Вчера", data: [action]))
+                }
+            } else if (datesBetweenArray.count == 2) {
+                if let index = res.firstIndex(where: {$0.title == "Позавчера"}) {
+                    res[index].data.append(action)
+                } else {
+                    res.append(ActionsSorted(title: "Позавчера", data: [action]))
+                }
+            } else if (datesBetweenArray.count == 7) {
+                if let index = res.firstIndex(where: {$0.title == "Эта неделя"}) {
+                    res[index].data.append(action)
+                } else {
+                    res.append(ActionsSorted(title: "Эта неделя", data: [action]))
+                }
+            } else {
+                if let index = res.firstIndex(where: {$0.title == "Ранее"}) {
+                    res[index].data.append(action)
+                } else {
+                    res.append(ActionsSorted(title: "Ранее", data: [action]))
+                }
+            }
+        }
+        return res
     }
     
     func getActions (completion: @escaping () -> Void) {
@@ -35,8 +86,7 @@ class ActionViewModel: ObservableObject {
                 guard let json = try? JSONDecoder().decode(ActionResponse.self, from: data) else { return }
                 DispatchQueue.main.async {
                     
-                    debugPrint(json.data)
-                    self.actions = json.data
+                    self.actions = self.sortedActions(dataActions: json.data)
                     completion()
                 }
             } else {
@@ -126,5 +176,20 @@ class ActionViewModel: ObservableObject {
                 }
             }.resume()
         }
+    }
+}
+
+
+extension Date {
+    static func dates(from fromDate: Date, to toDate: Date) -> [Date] {
+        var dates: [Date] = []
+        var date = fromDate
+        
+        while date <= toDate {
+            dates.append(date)
+            guard let newDate = Calendar.current.date(byAdding: .day, value: 1, to: date) else { break }
+            date = newDate
+        }
+        return dates
     }
 }

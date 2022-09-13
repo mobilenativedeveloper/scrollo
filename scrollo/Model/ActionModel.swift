@@ -66,3 +66,8 @@ struct ActionResponse: Decodable {
         }
     }
 }
+
+struct ActionsSorted {
+    var title: String
+    var data: [ActionResponse.ActionModel]
+}
