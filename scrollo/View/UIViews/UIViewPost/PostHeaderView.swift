@@ -11,6 +11,7 @@ import SDWebImageSwiftUI
 struct PostHeaderView: View {
     @State var isPresentProfile: Bool = false
     @State var isPresentSheet: Bool = false
+    @State var sheet: Bool = false
     var userId: String
     var avatar: String?
     var login: String
@@ -65,15 +66,29 @@ struct PostHeaderView: View {
             .buttonStyle(FlatLinkStyle())
             Spacer()
             Button(action: {
-                NotificationCenter.default.post(name: NSNotification.Name(openPostActionsSheet), object: nil, userInfo: [
-                    "postId": postId
-                ])
+//                NotificationCenter.default.post(name: NSNotification.Name(openPostActionsSheet), object: nil, userInfo: [
+//                    "postId": postId
+//                ])
+                print("press")
+                sheet.toggle()
             }) {
                 Image("menu")
             }
+            .buttonStyle(FlatLinkStyle())
             .frame(width: 50, height: 50)
+            .background(Color.white)
             .cornerRadius(50)
             .offset(x: 14)
+            
         }
+        .sheetView(
+            isPresent: $sheet,
+            backgroundColor: Color.white,
+            prefersGrabberVisible: true,
+            detents: [.custom(350)],
+            content: {
+                PostActionsSheet(postId: postId)
+            }
+        )
     }
 }

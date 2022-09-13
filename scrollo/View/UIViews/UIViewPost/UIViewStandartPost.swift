@@ -23,10 +23,10 @@ struct UIViewStandartPost: View {
         }
         .padding(.vertical, 18)
         .padding(.horizontal, 14)
-        .background(Color.white)
+//        .background(Color.white)
         .background(
             NavigationLink(destination: PostDetailView(post: $post).ignoreDefaultHeaderBar) {
-                EmptyView()
+                Color.white
             }.buttonStyle(PlainButtonStyle())
         )
         .cornerRadius(20)

@@ -144,7 +144,7 @@ struct ProfileView: View {
                                     }
                                 }
                                 .frame(height: 55)
-                                .padding(.vertical, 21)
+                                .padding(.bottom, 21)
                                 if self.selectedTab == .media {
                                     if !postController.loadMdeiaPost {
                                         ProgressView()

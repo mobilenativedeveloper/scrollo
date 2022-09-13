@@ -18,9 +18,3 @@ struct PostCompositionView: View {
         }
     }
 }
-
-//struct PostCompositionView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        PostCompositionView()
-//    }
-//}

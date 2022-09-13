@@ -18,9 +18,3 @@ struct CompositionStack: View {
         }
     }
 }
-
-//struct CompositionStack_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CompositionStack()
-//    }
-//}

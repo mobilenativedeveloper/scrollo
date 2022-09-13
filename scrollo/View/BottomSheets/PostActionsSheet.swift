@@ -12,6 +12,8 @@ struct PostActionsSheet: View {
     @ObservedObject var removePostViewModel: RemovePostViewModel = RemovePostViewModel()
     @State var removePost: Bool = false
     let postId: String
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     
     
     var body: some View {
@@ -35,7 +37,7 @@ struct PostActionsSheet: View {
                             .frame(width: UIScreen.main.bounds.width - 42, height: 1)
                     }
                 }
-                .padding(.bottom, 13)
+                .padding(.vertical, 13)
                 Button(action: {}) {
                     VStack(spacing: 0) {
                         Text("Скрыть")
@@ -89,13 +91,13 @@ struct PostActionsSheet: View {
             Alert(
                 title: Text("Удалить публикацию ?"),
                 primaryButton: Alert.Button.destructive(Text("Удалить"), action: {
-                    if !bottomSheets.postActionsSheetPostId.isEmpty {
-                        removePostViewModel.removePost(postId: bottomSheets.postActionsSheetPostId) {
+                    presentationMode.wrappedValue.dismiss()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        removePostViewModel.removePost(postId: postId) {
                             NotificationCenter.default.post(name: NSNotification.Name(postRemoveFromFeed), object: nil, userInfo: [
-                                "postId": bottomSheets.postActionsSheetPostId
+                                "postId": postId
                             ])
-                            bottomSheets.postActionsSheet = false
-                            bottomSheets.postActionsSheetPostId = ""
+                            
                         }
                     }
                 }),

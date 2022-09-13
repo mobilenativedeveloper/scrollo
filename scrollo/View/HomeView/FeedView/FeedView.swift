@@ -40,7 +40,6 @@ struct FeedView: View {
             Spacer()
         }
         .background(Color(hex: "#F9F9F9").edgesIgnoringSafeArea(.all))
-        
     }
 }
 

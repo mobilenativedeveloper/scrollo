@@ -28,7 +28,7 @@ struct UIPostCompositionView: View {
                         .background(Color.gray.opacity(0.5))
                         .cornerRadius(6)
                 }
-                .buttonStyle(FlatLinkStyle())
+//                .buttonStyle(FlatLinkStyle())
             }
         } else {
             if let path = post.files[0].filePath {
@@ -37,7 +37,7 @@ struct UIPostCompositionView: View {
                 ) {
                     VideoThumbnail(video: URL(string: "\(API_URL)/uploads/\(path)")!, width: size, height: self.getHeight())
                 }
-                .buttonStyle(FlatLinkStyle())
+//                .buttonStyle(FlatLinkStyle())
             }
         }
     }

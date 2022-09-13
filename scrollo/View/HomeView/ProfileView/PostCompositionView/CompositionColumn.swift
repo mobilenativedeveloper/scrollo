@@ -19,9 +19,3 @@ struct CompositionColumn: View {
         }
     }
 }
-
-//struct CompositionColumn_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CompositionColumn()
-//    }
-//}
