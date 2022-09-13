@@ -37,8 +37,10 @@ struct ActionsView: View {
                                     ForEach(0..<actions.actions[index].data.count, id: \.self){j in
                                         ActionView(action: actions.actions[index].data[j])
                                             .environmentObject(actions)
+                                        if (j == actions.actions[index].data.count - 1 && index == actions.actions.count - 1) {
+                                            Color.clear.frame(height: 100)
+                                        }
                                     }
-                                   
                                 }
                             } else {
                                 VStack(alignment: .center) {
@@ -129,7 +131,7 @@ private struct ActionView: View{
                     .padding(.trailing, 16)
             }
             Group {
-                Text("\(action.creator.login)").font(.custom(GothamBold, size: 14)) + Text(" ") + Text(getActionString()).font(.custom(GothamBook, size: 12)).foregroundColor(Color(hex: "#2E313C")) + Text(" ") + Text("6д").font(.custom(GothamBold, size: 12)).foregroundColor(Color(hex: "#828796"))
+                Text("\(action.creator.login)").font(.custom(GothamBold, size: 14)) + Text(" ") + Text(getActionString()).font(.custom(GothamBook, size: 12)).foregroundColor(Color(hex: "#2E313C")) + Text(" ") + Text(self.howMuchTimeHasPassed()).font(.custom(GothamBold, size: 12)).foregroundColor(Color(hex: "#828796"))
             }
             .padding(.horizontal, 11)
     
@@ -185,25 +187,53 @@ private struct ActionView: View{
         }
     }
     
+    func howMuchTimeHasPassed () -> String {
+        let actionDate = action.createdAt.split(separator: ".")[0] + "+" + action.createdAt.split(separator: "+")[1]
+        let dateFormatter = ISO8601DateFormatter()
+        let date = dateFormatter.date(from: String(actionDate))!
+        
+        let currentDate = Date()
+        var calendar = Calendar.current
+
+        if let timeZone = TimeZone(identifier: "MSK") {
+           calendar.timeZone = timeZone
+        }
+
+        let diffComponents = calendar.dateComponents([.hour, .minute, .day], from: date, to: currentDate)
+        let days = diffComponents.day
+        let hours = diffComponents.hour
+        let minutes = diffComponents.minute
+        
+        if (days! > 0) {
+            return "\(days!)д"
+        } else if (hours! < 1) {
+            return "\(minutes!)м"
+        } else if (hours! <= 24) {
+            return "\(hours!)ч"
+        } else {
+            return ""
+        }
+    }
+    
 
     func getActionString () -> String {
         switch action.action {
             case "SENT_FOLLOW_REQUEST":
                 return "отправил вам запрос на подписку"
             case "COMMENT_REPLY":
-                return "ответил на ваш комментарий"
+                return "ответил на ваш комментарий \(action.comment?.comment != nil ? action.receiver.login : "") \(action.comment?.comment ?? "")"
             case "POST_DISLIKE":
-                return "не нравится ваша публикация"
+                return "не нравится ваша публикация \(action.post?.content ?? "")"
             case "COMMENT_DISLIKE":
-                return "не нравится ваш комментарий"
+                return "не нравится ваш комментарий \(action.comment?.comment != nil ? action.receiver.login : "") \(action.comment?.comment ?? "")"
             case "ACCEPT_FOLLOW_REQUEST":
                 return "принял ваш запрос"
             case "POST_COMMENT":
-                return "прокомментировал вашу публикацию"
+            return "прокомментировал вашу публикацию \(action.post?.content != nil ? action.receiver.login : "") \(action.post?.content ?? "")"
             case "COMMENT_LIKE":
-                return "нравится ваш комментарий"
+                return "нравится ваш комментарий \(action.comment?.comment ?? "")"
             case "POST_LIKE":
-                return "нравится ваша публикация"
+                return "нравится ваша публикация  \(action.post?.content ?? "")"
             default:
                 return "подписался(-ась) на ваши обновления"
         }

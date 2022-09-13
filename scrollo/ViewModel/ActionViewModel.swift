@@ -13,7 +13,7 @@ class ActionViewModel: ObservableObject {
     @Published var load: Bool = false
  
     var page = 0
-    let pageSize = 5
+    let pageSize = 100
     
     init () {
         getActions {
@@ -22,40 +22,43 @@ class ActionViewModel: ObservableObject {
     }
     
     func sortedActions (dataActions: [ActionResponse.ActionModel]) -> [ActionsSorted] {
-//        const date = '2022-08-29T00:00:00.000Z'
-//        let currentDate = Date.parse(new Date());
-//        let days = (currentDate - Date.parse(date))/86400000;       //86400000 - ms в дне
-//        console.log(Math.round(days))
         var res: [ActionsSorted] = []
+        print(dataActions)
         dataActions.forEach { action in
             let currentDate = Date()
             let actionDate = action.createdAt.split(separator: ".")[0] + "+" + action.createdAt.split(separator: "+")[1]
+            
             let dateFormatter = ISO8601DateFormatter()
             let date = dateFormatter.date(from: String(actionDate))!
+    
+//            let datesBetweenArray = Date.dates(from: currentDate, to: date)
             
-
+            var calendar = Calendar.current
+            if let timeZone = TimeZone(identifier: "MSK") {
+               calendar.timeZone = timeZone
+            }
+            let diffComponents = calendar.dateComponents([.day], from: date, to: currentDate)
+            let days = diffComponents.day!
             
-            let datesBetweenArray = Date.dates(from: currentDate, to: date)
-            
-            if (datesBetweenArray.count == 0) {
+            if (days == 0) {
                 if let index = res.firstIndex(where: {$0.title == "Сегодня"}) {
                     res[index].data.append(action)
                 } else {
                     res.append(ActionsSorted(title: "Сегодня", data: [action]))
                 }
-            } else if (datesBetweenArray.count == 1) {
+            } else if (days == 1) {
                 if let index = res.firstIndex(where: {$0.title == "Вчера"}) {
                     res[index].data.append(action)
                 } else {
                     res.append(ActionsSorted(title: "Вчера", data: [action]))
                 }
-            } else if (datesBetweenArray.count == 2) {
+            } else if (days == 2) {
                 if let index = res.firstIndex(where: {$0.title == "Позавчера"}) {
                     res[index].data.append(action)
                 } else {
                     res.append(ActionsSorted(title: "Позавчера", data: [action]))
                 }
-            } else if (datesBetweenArray.count == 7) {
+            } else if (days == 7) {
                 if let index = res.firstIndex(where: {$0.title == "Эта неделя"}) {
                     res[index].data.append(action)
                 } else {
@@ -78,19 +81,14 @@ class ActionViewModel: ObservableObject {
         
         URLSession.shared.dataTask(with: request) { data, response, _ in
             guard let response = response as? HTTPURLResponse else {return}
+            guard let data = data else {return}
             
             if response.statusCode == 200 {
-                guard let data = data else {return}
-                guard let debugJson = try? JSONSerialization.jsonObject(with: data, options: []) else {return}
-                debugPrint(debugJson)
                 guard let json = try? JSONDecoder().decode(ActionResponse.self, from: data) else { return }
                 DispatchQueue.main.async {
-                    
                     self.actions = self.sortedActions(dataActions: json.data)
                     completion()
                 }
-            } else {
-                debugPrint(response)
             }
         }.resume()
     }
@@ -100,15 +98,11 @@ class ActionViewModel: ObservableObject {
         
         if let request = Request(url: url, httpMethod: "GET", body: nil) {
             URLSession.shared.dataTask(with: request){data, response, error in
-                if let _ = error {
-                    return
-                }
-
                 guard let response = response as? HTTPURLResponse else {return}
-
+                guard let data = data else {return}
+                
                 if response.statusCode == 200 {
-                    if let json = try? JSONDecoder().decode(ResponseResult.self, from: data!) {
-                        debugPrint(json)
+                    if let json = try? JSONDecoder().decode(ResponseResult.self, from: data) {
                         DispatchQueue.main.async {
                             if json.result == true {
                                 completion(true)
@@ -131,24 +125,13 @@ class ActionViewModel: ObservableObject {
         
         if let request = Request(url: url, httpMethod: "POST", body: body) {
             URLSession.shared.dataTask(with: request){data, response, error in
-                if let _ = error {
-                    return
-                }
-
                 guard let response = response as? HTTPURLResponse else {return}
-
+                guard let data = data else {return}
+                
                 if response.statusCode == 200 {
-                    completion()
-                    print(response)
-                    if let json = try? JSONSerialization.jsonObject(with: data!, options: []) {
-                        print(json)
+                    DispatchQueue.main.async {
+                        completion()
                     }
-                } else {
-                    print(response)
-                    if let json = try? JSONSerialization.jsonObject(with: data!, options: []) {
-                        print(json)
-                    }
-                    return
                 }
 
             }.resume()
@@ -161,17 +144,13 @@ class ActionViewModel: ObservableObject {
         
         if let request = Request(url: url, httpMethod: "DELETE", body: nil) {
             URLSession.shared.dataTask(with: request){data, response, error in
-                if let _ = error {
-                    return
-                }
 
                 guard let response = response as? HTTPURLResponse else {return}
+                guard let data = data else {return}
 
                 if response.statusCode == 200 {
-                    completion()
-                    print(response)
-                    if let json = try? JSONSerialization.jsonObject(with: data!, options: []) {
-                        print(json)
+                    DispatchQueue.main.async {
+                        completion()
                     }
                 }
             }.resume()
