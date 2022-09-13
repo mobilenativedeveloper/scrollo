@@ -10,7 +10,6 @@ import SwiftUI
 struct PublicationTextPostView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @EnvironmentObject var notify: NotifyViewModel
     @StateObject var addPost: AddTextPostViewModel = AddTextPostViewModel()
     
     var body: some View {

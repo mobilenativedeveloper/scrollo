@@ -144,22 +144,13 @@ struct UploadView : View {
                         .padding(.top, 15)
                     Spacer(minLength: 0)
                     HStack(spacing: 18) {
-                        Button(action: {
-                            self.show = false
-//                            publicationPresent.presentPublicationMediaPostView = true
-                        }) {
+                        NavigationLink(destination: PublicationMediaPostView().ignoreDefaultHeaderBar) {
                             UploadButtonView(icon: "gallery_icon", title: "Фото")
                         }
-                        Button(action: {
-                            self.show = false
-//                            publicationPresent.presentPublicationTextPostView = true
-                        }) {
+                        NavigationLink(destination: PublicationTextPostView().ignoreDefaultHeaderBar) {
                             UploadButtonView(icon: "message_icon", title: "Пост")
                         }
-                        Button(action: {
-                            self.show = false
-//                            publicationPresent.presentPublicationStoryView = true
-                        }) {
+                        NavigationLink(destination: AddStoryView().ignoreDefaultHeaderBar) {
                             UploadButtonView(icon: "video_icon", title: "История")
                         }
                     }

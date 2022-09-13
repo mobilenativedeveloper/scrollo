@@ -91,10 +91,15 @@ struct SettingsView: View {
     }
     
     func logout() {
-        UserDefaults.standard.removeObject(forKey: "token")
-        UserDefaults.standard.removeObject(forKey: "userId")
+        presentationMode.wrappedValue.dismiss()
         
-        NotificationCenter.default.post(name: NSNotification.Name("logout"), object: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            UserDefaults.standard.removeObject(forKey: "token")
+            UserDefaults.standard.removeObject(forKey: "userId")
+            
+            NotificationCenter.default.post(name: NSNotification.Name("logout"), object: nil)
+        }
+        
     }
     
     @ViewBuilder

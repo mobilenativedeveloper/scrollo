@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Introspect
+import SDWebImageSwiftUI
 
 struct MessangerView: View {
     
@@ -51,26 +52,25 @@ struct MessangerView: View {
                 .padding(.bottom, 35)
                 
                 VStack(spacing: 13) {
-//                    ForEach(0..<8, id: \.self) {index in
-//                        NavigationLink(destination: UserMessages().ignoreDefaultHeaderBar) {
-//                            UIUserMessageView(online: true, login: "login", viewed: true, time: "4")
-//                        }
-//                        NavigationLink(destination:  UserMessages().ignoreDefaultHeaderBar) {
-//                            UIUserMessageView(online: true, login: "login", viewed: true, time: "1")
-//                        }
-//                        NavigationLink(destination: UserMessages().ignoreDefaultHeaderBar) {
-//                            UIUserMessageView(online: false, login: "login", viewed: false, time: "7")
-//                        }
-//                        
-//                        
-//                    }
+                    if (messangerViewModel.loadChats) {
+                        ForEach(0..<messangerViewModel.chats.count, id: \.self) {index in
+                            NavigationLink(destination: UserMessages().ignoreDefaultHeaderBar) {
+                                UIUserMessageView(online: true, login: messangerViewModel.chats[index].starter.login, avatar: messangerViewModel.chats[index].starter.avatar, viewed: true, time: "4")
+                            }
+                        }
+                    } else {
+                        ProgressView()
+                    }
                 }
                 .padding(.horizontal)
             }
             .refreshableCompat(
                 showsIndicators: false, onRefresh: { done in
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        done()
+                        
+                        messangerViewModel.getChats {
+                            done()
+                        }
                     }
                 },
                 progress: { state in
@@ -81,6 +81,11 @@ struct MessangerView: View {
             )
         }
         .background(Color(hex: "#F9F9F9").edgesIgnoringSafeArea(.all))
+        .onAppear {
+            messangerViewModel.getChats {
+                
+            }
+        }
     }
 }
 
@@ -122,6 +127,7 @@ private struct UIUserMessageView : View {
     @State var isDetail: Bool = false
     var online: Bool
     var login: String
+    var avatar: String?
     var viewed: Bool
     var time: String
     var body : some View {
@@ -129,11 +135,14 @@ private struct UIUserMessageView : View {
         HStack(spacing: 0) {
             
             ZStack(alignment: .bottomTrailing) {
-                Image("testUserPhoto")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 44, height: 44)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                if let avatar = avatar {
+                    WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
+                        .resizable()
+                        .frame(width: 44, height: 44)
+                        .cornerRadius(10)
+                } else {
+                    UIDefaultAvatar(width: 44, height: 44, cornerRadius: 10)
+                }
                 
                 if online {
                     Circle()

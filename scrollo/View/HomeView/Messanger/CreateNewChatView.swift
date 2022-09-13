@@ -7,8 +7,10 @@
 
 import SwiftUI
 import Introspect
+import SDWebImageSwiftUI
 
 struct CreateNewChatView: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @StateObject var messangerViewModel : MessangerViewModel = MessangerViewModel()
     @State var findUser: String = ""
     
@@ -24,22 +26,45 @@ struct CreateNewChatView: View {
             .padding(.horizontal)
             .padding(.bottom)
             ScrollView(showsIndicators: false) {
-                ForEach(0..<20, id: \.self){index in
-                    HStack(alignment: .top) {
-                        UIDefaultAvatar(width: 56, height: 56, cornerRadius: 16)
-                        VStack(alignment: .leading) {
-                            Text("Name Lastname")
-                                .font(.custom(GothamBold, size: 14))
-                                .foregroundColor(Color(hex: "#2E313C"))
-                            Text("@login")
-                                .font(.custom(GothamBook, size: 14))
-                                .foregroundColor(Color(hex: "#2E313C"))
+                if (!messangerViewModel.load) {
+                    ProgressView()
+                } else {
+                    ForEach(0..<messangerViewModel.followers.count, id: \.self){index in
+                        Button(action: {
+                            messangerViewModel.createChat(userId: messangerViewModel.followers[index].followOnUser.id) { res in
+                                if (res == true) {
+                                    presentationMode.wrappedValue.dismiss()
+                                }
+                            }
+                        }) {
+                            HStack(alignment: .top) {
+                                if let avatar = messangerViewModel.followers[index].followOnUser.avatar {
+                                    WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
+                                        .resizable()
+                                        .frame(width: 56, height: 56)
+                                        .cornerRadius(16)
+                                } else {
+                                    UIDefaultAvatar(width: 56, height: 56, cornerRadius: 16)
+                                }
+                                
+                                VStack(alignment: .leading) {
+                                    Text(messangerViewModel.followers[index].followOnUser.login ?? "")
+                                        .font(.custom(GothamBold, size: 14))
+                                        .foregroundColor(Color(hex: "#2E313C"))
+    //                                Text("@login")
+    //                                    .font(.custom(GothamBook, size: 14))
+    //                                    .foregroundColor(Color(hex: "#2E313C"))
+                                }
+                                Spacer()
+                            }
                         }
-                        Spacer()
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
                 }
             }
+        }
+        .onAppear {
+            messangerViewModel.getFollowers()
         }
     }
 }

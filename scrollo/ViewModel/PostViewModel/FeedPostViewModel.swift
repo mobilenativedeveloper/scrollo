@@ -17,14 +17,16 @@ class FeedPostViewModel: ObservableObject {
     @Published var canLoadMorePages: Bool = false
     @Published var isLoadMore: Bool? = nil
     
-    var page = 0
+    @Published var page = 0
     let pageSize = 5
     
     init () {
-        self.getPostsFeed()
+        self.getPostsFeed(completion: {
+            
+        })
     }
     
-    func getPostsFeed() {
+    func getPostsFeed(completion: @escaping () -> Void) {
         if self.status == .initial || self.status == .error { self.status = .loading }
         
         guard let url = URL(string: "\(API_URL)\(API_GET_FEED_POST)?page=\(page)&pageSize=\(pageSize)") else {return}
@@ -40,11 +42,18 @@ class FeedPostViewModel: ObservableObject {
                 
                 DispatchQueue.main.async {
                     self.canLoadMorePages = self.page == json.totalPages
-                    self.posts += json.data
+                    if self.isLoadMore == true {
+                        self.posts += json.data
+                    } else {
+                        self.posts = json.data
+                    }
+                        
+                    
                     if self.isLoadMore == true { self.isLoadMore = false }
                     if self.status == .initial || self.status == .loading {
                         self.status = .success
                     }
+                    completion()
                 }
             }
             
@@ -58,7 +67,9 @@ class FeedPostViewModel: ObservableObject {
             self.page += 1
             print(self.page)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.getPostsFeed()
+                self.getPostsFeed(completion: {
+                    
+                })
             }
         }
     }

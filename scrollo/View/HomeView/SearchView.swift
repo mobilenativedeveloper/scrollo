@@ -102,7 +102,7 @@ struct SearchView: View {
                 .background(Color.white)
 
                 ZStack(alignment: .top) {
-                    List {
+                    VStack(spacing: 0) {
                         if let images = self.searchViewModel.images {
                             SearchCompositionLayout(items: images, id: \.id, spacing: 11) {item in
                                 GeometryReader{proxy in
@@ -134,10 +134,18 @@ struct SearchView: View {
                         }
 
                     }
-                    .listStyle(.plain)
-                    .refreshable {
-
-                    }
+                    .refreshableCompat(
+                        showsIndicators: false, onRefresh: { done in
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                done()
+                            }
+                        },
+                        progress: { state in
+                            RefreshActivityIndicator(isAnimating: state == .loading) {
+                                $0.hidesWhenStopped = false
+                            }
+                        }
+                    )
                     if self.searchHistoryViewModel.isSearch {
                         SearchLayer()
                             .environmentObject(self.searchViewModel)
@@ -237,10 +245,10 @@ private struct SearchUserItem: View {
         .padding(.horizontal, 15)
         .padding(.bottom, 28)
         .buttonStyle(FlatLinkStyle())
-//        .background(
-//            NavigationLink(destination: ProfileView(userId:user.id).ignoreDefaultHeaderBar, isActive: $isPresetProfile) { EmptyView() }.frame(height: 0)
-//                .opacity(0)
-//        )
+        .background(
+            NavigationLink(destination: ProfileView(userId:user.id).ignoreDefaultHeaderBar, isActive: $isPresetProfile) { EmptyView() }.frame(height: 0)
+                .opacity(0)
+        )
     }
 }
 

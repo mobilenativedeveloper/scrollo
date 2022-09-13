@@ -9,19 +9,21 @@ import SwiftUI
 
 struct SettingsSheet: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-//    @Binding var isPresentSettings: Bool
-//    @Binding var isPresentSaved: Bool
-//    @Binding var isPresentYourActivity: Bool
-//    @Binding var isPresentInterestingPeople: Bool
+    @Binding var isPresentSettingsView: Bool
+    @Binding var isPresentYourActivityView: Bool
+    @Binding var isPresentSavedView: Bool
+    @Binding var isPresentInterestingPeopleView: Bool
+    @Binding var isPresentEditProfileView: Bool
+    
     let time: CGFloat = 0.2
     
     var body: some View {
         VStack {
             Button(action: {
-//                presentationMode.wrappedValue.dismiss()
-//                DispatchQueue.main.asyncAfter(deadline: .now() + time) {
-//                    isPresentYourActivity.toggle()
-//                }
+                presentationMode.wrappedValue.dismiss()
+                DispatchQueue.main.asyncAfter(deadline: .now() + time) {
+                    isPresentYourActivityView.toggle()
+                }
             }) {
                 HStack {
                     Image("your_activity")
@@ -37,10 +39,10 @@ struct SettingsSheet: View {
                 .padding()
             }
             Button(action: {
-//                presentationMode.wrappedValue.dismiss()
-//                DispatchQueue.main.asyncAfter(deadline: .now() + time) {
-//                    isPresentSaved.toggle()
-//                }
+                presentationMode.wrappedValue.dismiss()
+                DispatchQueue.main.asyncAfter(deadline: .now() + time) {
+                    isPresentSavedView.toggle()
+                }
             }) {
                 HStack {
                     Image("saves")
@@ -70,10 +72,10 @@ struct SettingsSheet: View {
                 .padding()
             }
             Button(action: {
-//                presentationMode.wrappedValue.dismiss()
-//                DispatchQueue.main.asyncAfter(deadline: .now() + time) {
-//                    isPresentInterestingPeople.toggle()
-//                }
+                presentationMode.wrappedValue.dismiss()
+                DispatchQueue.main.asyncAfter(deadline: .now() + time) {
+                    isPresentInterestingPeopleView.toggle()
+                }
             }) {
                 HStack {
                     Image("add_friend")
@@ -88,7 +90,12 @@ struct SettingsSheet: View {
                 }
                 .padding()
             }
-            Button(action: {}) {
+            Button(action: {
+                presentationMode.wrappedValue.dismiss()
+                DispatchQueue.main.asyncAfter(deadline: .now() + time) {
+                    isPresentEditProfileView.toggle()
+                }
+            }) {
                 HStack {
                     Image("edit_profile")
                     .resizable()
@@ -104,10 +111,10 @@ struct SettingsSheet: View {
             }
             Spacer(minLength: 0)
             Button(action: {
-//                presentationMode.wrappedValue.dismiss()
-//                DispatchQueue.main.asyncAfter(deadline: .now() + time) {
-//                    isPresentSettings.toggle()
-//                }
+                presentationMode.wrappedValue.dismiss()
+                DispatchQueue.main.asyncAfter(deadline: .now() + time) {
+                    isPresentSettingsView.toggle()
+                }
             }) {
                 VStack(spacing: 0) {
                     Rectangle()

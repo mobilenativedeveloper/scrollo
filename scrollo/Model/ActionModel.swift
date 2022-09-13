@@ -21,7 +21,7 @@ struct ActionResponse: Decodable {
     struct ActionPost: Decodable {
         var id: String
         var content: String
-        var preview: String
+        var preview: String?
         var type: String
         var creator: ActionModel.ActionUser
         
@@ -36,10 +36,10 @@ struct ActionResponse: Decodable {
         var action: String
         var receiver: ActionUser
         var creator: ActionUser
-        var post: ActionPost
+        var post: ActionPost?
         var count: Int
-        var comment: ActionComment
-        var content: String
+        var comment: ActionComment?
+        var content: String?
         var createdAt: String
         
         enum CodingKeys: CodingKey {
@@ -49,8 +49,8 @@ struct ActionResponse: Decodable {
         struct ActionUser: Decodable {
             var id: String
             var login: String
-            var name: String
-            var avatar: String
+            var name: String?
+            var avatar: String?
             
             enum CodingKeys: CodingKey {
                 case id, login, name, avatar

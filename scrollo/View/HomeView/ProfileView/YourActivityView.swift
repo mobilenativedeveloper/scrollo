@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUICharts
 
 struct YourActivityView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -60,11 +61,7 @@ struct YourActivityView: View {
                     .cornerRadius(10)
                     .padding(.bottom, 28)
                     .padding(.horizontal)
-                    Image("chart")
-                        .resizable()
-                        .frame(height: 213)
-                        .padding(.horizontal, 5)
-                        .padding(.bottom, 44)
+                    ChartView(height: 213)
                     HStack(spacing: 0) {
                         Text("За эту неделю у вас")
                             .font(.custom(GothamBold, size: 16))
@@ -144,5 +141,54 @@ struct YourActivityView: View {
 struct YourActivityView_Previews: PreviewProvider {
     static var previews: some View {
         YourActivityView()
+    }
+}
+
+private struct ChartView: View {
+    var height: CGFloat
+    var data: LineChartData = LineChartData(
+        dataSets: LineDataSet(dataPoints: [
+            LineChartDataPoint(value: 12000, xAxisLabel: "Пн", description: "Monday"),
+            LineChartDataPoint(value: 10000, xAxisLabel: "Вт", description: "Tuesday"),
+            LineChartDataPoint(value: 8000,  xAxisLabel: "Ср", description: "Wednesday"),
+            LineChartDataPoint(value: 17500, xAxisLabel: "Чт", description: "Thursday"),
+            LineChartDataPoint(value: 16000, xAxisLabel: "Пт", description: "Friday"),
+            LineChartDataPoint(value: 11000, xAxisLabel: "Сб", description: "Saturday"),
+            LineChartDataPoint(value: 9000,  xAxisLabel: "Сегодня", description: "Sunday")
+        ],
+                              pointStyle: PointStyle(),
+        style: LineStyle(
+            lineColour: ColourStyle(colours: [Color(hex: "#5B86E5").opacity(0.77),Color(hex: "#5B86E5").opacity(0.06)], startPoint: .top, endPoint: .bottom),
+            lineType: .curvedLine
+        )),
+
+        chartStyle: LineChartStyle(
+            infoBoxPlacement: .infoBox(isStatic: false),
+            infoBoxBorderColour : Color.primary,
+            infoBoxBorderStyle  : StrokeStyle(lineWidth: 1),
+            xAxisGridStyle: GridStyle(numberOfLines: 7,
+                                    lineColour: Color(.lightGray).opacity(0.5),
+                                    lineWidth: 1,dash: [1],dashPhase: 1),
+            xAxisLabelPosition: .bottom,
+            xAxisLabelColour: Color.primary,
+            yAxisGridStyle: GridStyle(numberOfLines: 7,
+                                    lineColour: Color(.lightGray).opacity(0.5),
+                                    lineWidth: 1,dash: [1],dashPhase: 1),
+            yAxisLabelPosition: .leading,
+            yAxisLabelColour: Color.primary
+        )
+    )
+    var body: some View {
+        VStack {
+            FilledLineChart(chartData: data)
+                .pointMarkers(chartData: data)
+                .touchOverlay(chartData: data, specifier: "%.0f")
+                .xAxisGrid(chartData: data)
+                .yAxisGrid(chartData: data)
+                .xAxisLabels(chartData: data)
+        }
+        .frame(height: height)
+        .padding(.horizontal, 24)
+        .padding(.bottom, 44)
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FeedPostsView: View {
-    @StateObject var feedController: FeedPostViewModel = FeedPostViewModel()
+    @EnvironmentObject var feedController: FeedPostViewModel
     
     var body: some View {
         if feedController.status == .initial || feedController.status == .loading {

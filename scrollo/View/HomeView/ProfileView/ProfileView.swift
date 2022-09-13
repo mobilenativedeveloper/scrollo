@@ -27,7 +27,19 @@ struct ProfileView: View {
     @State var sheet: Bool = false
     @State var sheetContent: SheetContent = .publication
     
+    //MARK: Publication bottom sheet
     @State var isPresentActualStoryView: Bool = false
+    @State var isPresentCreateTextPost: Bool = false
+    @State var isPresentCreateMediaPost: Bool = false
+    @State var isPresentCreateStory: Bool = false
+    
+    //MARK: Settings sheet
+    @State var isPresentSettingsView: Bool = false
+    @State var isPresentYourActivityView: Bool = false
+    @State var isPresentSavedView: Bool = false
+    @State var isPresentInterestingPeopleView: Bool = false
+    @State var isPresentEditProfileView: Bool = false
+    
     
     let userId: String
     
@@ -239,6 +251,30 @@ struct ProfileView: View {
         .fullScreenCover(isPresented: $isPresentActualStoryView, onDismiss: {}, content: {
             ActualStoryView()
         })
+        .fullScreenCover(isPresented: $isPresentCreateTextPost, onDismiss: {}, content: {
+            PublicationTextPostView()
+        })
+        .fullScreenCover(isPresented: $isPresentCreateMediaPost, onDismiss: {}, content: {
+            PublicationMediaPostView()
+        })
+        .fullScreenCover(isPresented: $isPresentCreateStory, onDismiss: {}, content: {
+            AddStoryView()
+        })
+        .fullScreenCover(isPresented: $isPresentSettingsView, onDismiss: {}, content: {
+            SettingsView()
+        })
+        .fullScreenCover(isPresented: $isPresentYourActivityView, onDismiss: {}, content: {
+            YourActivityView()
+        })
+        .fullScreenCover(isPresented: $isPresentSavedView, onDismiss: {}, content: {
+            SavedView()
+        })
+        .fullScreenCover(isPresented: $isPresentInterestingPeopleView, onDismiss: {}, content: {
+            InterestingPeople()
+        })
+        .fullScreenCover(isPresented: $isPresentEditProfileView, onDismiss: {}, content: {
+            EditUserProfile().environmentObject(profileController)
+        })
         .sheetView(
             isPresent: $sheet,
             backgroundColor: Color.clear,
@@ -263,9 +299,15 @@ struct ProfileView: View {
     @ViewBuilder
     func getSheetContent () -> some View {
         if sheetContent == .publication {
-            AddPublicationSheet(isPresentActualStoryView: $isPresentActualStoryView)
+            AddPublicationSheet(isPresentActualStoryView: $isPresentActualStoryView, isPresentCreateTextPost: $isPresentCreateTextPost, isPresentCreateMediaPost: $isPresentCreateMediaPost, isPresentCreateStory: $isPresentCreateStory)
         } else {
-            SettingsSheet()
+            SettingsSheet(
+                isPresentSettingsView: $isPresentSettingsView,
+                isPresentYourActivityView: $isPresentYourActivityView,
+                isPresentSavedView: $isPresentSavedView,
+                isPresentInterestingPeopleView: $isPresentInterestingPeopleView,
+                isPresentEditProfileView: $isPresentEditProfileView
+            )
         }
     }
 }

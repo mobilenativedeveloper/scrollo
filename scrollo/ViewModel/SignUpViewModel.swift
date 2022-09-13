@@ -67,6 +67,9 @@ class SignUpViewModel: ObservableObject {
             guard let response = response as? HTTPURLResponse else {return}
             guard let data = data else {return}
             
+            guard let debugJson = try? JSONSerialization.jsonObject(with: data, options: []) else { return }
+            print(debugJson)
+            
             debugPrint("response \(response)")
             
             if response.statusCode == 200 {

@@ -10,6 +10,10 @@ import SwiftUI
 struct AddPublicationSheet: View {
     @Environment(\.presentationMode) var presentation: Binding<PresentationMode>
     @Binding var isPresentActualStoryView: Bool
+    @Binding var isPresentCreateTextPost: Bool
+    @Binding var isPresentCreateMediaPost: Bool
+    @Binding var isPresentCreateStory: Bool
+    
     var body: some View {
         ZStack(alignment: .top) {
             Color.white
@@ -29,11 +33,26 @@ struct AddPublicationSheet: View {
                     .padding(.horizontal, 24)
                     .padding(.bottom, 34)
                     Sepparator()
-                    AddPublicationItem(icon: "publication", title: "публикацию")
+                    Button(action: {
+                        presentation.wrappedValue.dismiss()
+                        self.isPresentCreateMediaPost.toggle()
+                    }) {
+                        AddPublicationItem(icon: "publication", title: "публикацию")
+                    }
                     Sepparator()
-                    AddPublicationItem(icon: "post", title: "пост")
+                    Button(action: {
+                        presentation.wrappedValue.dismiss()
+                        self.isPresentCreateTextPost.toggle()
+                    }) {
+                        AddPublicationItem(icon: "post", title: "пост")
+                    }
                     Sepparator()
-                    AddPublicationItem(icon: "story", title: "историю")
+                    Button(action: {
+                        presentation.wrappedValue.dismiss()
+                        self.isPresentCreateStory.toggle()
+                    }) {
+                        AddPublicationItem(icon: "story", title: "историю")
+                    }
                     Sepparator()
                     Button(action: {
                         presentation.wrappedValue.dismiss()

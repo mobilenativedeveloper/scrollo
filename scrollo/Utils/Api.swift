@@ -46,4 +46,7 @@ let API_POST_CREATION_START = "/api/v1/post-creation/start"
 let API_POST_CREATION_LOAD_PART = "/api/v1/post-creation/load-part"
 let API_REMOVE_POST = "/api/v1/post/"
 let API_GET_ACTIONS = "/api/v1/action/"
+
 let API_GET_USER_FOLLOWERS = "/api/v1/follow/following/me"
+
+let API_CHAT = "/api/v1/chat/"

@@ -9,8 +9,7 @@ import SwiftUI
 import Photos
 
 struct PublicationMediaPostView: View {
-    @EnvironmentObject var notify: NotifyViewModel
-    @EnvironmentObject var publicationPresent: PublicationViewModel
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @StateObject var mediaPost: AddMediaPostViewModel = AddMediaPostViewModel()
     @State var present: MediaType = .gallery
     @State private var isPresentCamera: Bool = false
@@ -26,7 +25,7 @@ struct PublicationMediaPostView: View {
             //MARK: Header
             HStack {
                 Button(action: {
-                    publicationPresent.presentPublicationMediaPostView = false
+                    presentationMode.wrappedValue.dismiss()
                 }) {
                     Image("circle_close")
                         .resizable()
@@ -134,7 +133,7 @@ struct PublicationMediaPostView: View {
         .ignoresSafeArea(.all, edges: .bottom)
         //MARK: Add content & published
         .navigationController(isPresent: $isPresentAddMediaPost, content: {
-            AddMediaPostView(isPresent: $isPresentAddMediaPost).ignoreDefaultHeaderBar.environmentObject(notify).environmentObject(publicationPresent).environmentObject(mediaPost)
+            AddMediaPostView(isPresent: $isPresentAddMediaPost).ignoreDefaultHeaderBar.environmentObject(mediaPost)
         })
         .onAppear(perform: mediaPost.permissions)
         .fullScreenCover(isPresented: self.$presentationSelectFromAlboum, content: {
@@ -356,8 +355,7 @@ private struct SelectedPostImageView: View {
 }
 
 struct AddMediaPostView: View {
-    @EnvironmentObject var notify: NotifyViewModel
-    @EnvironmentObject var publicationPresent: PublicationViewModel
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject var mediaPost: AddMediaPostViewModel
     @Binding var isPresent: Bool
     
@@ -393,8 +391,10 @@ struct AddMediaPostView: View {
                         isPresent.toggle()
                         mediaPost.pickedPhoto = [mediaPost.allPhotos[0][0]]
                         mediaPost.selection = mediaPost.allPhotos[0][0]
-
-                        publicationPresent.presentPublicationMediaPostView = false
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                            presentationMode.wrappedValue.dismiss()
+                        }
                     }
                 }) {
                     if mediaPost.isPublished {
