@@ -45,23 +45,46 @@ struct UserMessages: View {
             .padding(.horizontal)
             .padding(.bottom)
             
-            
-            ScrollView(showsIndicators: false) {
-                VStack {
-                    Spacer()
-                    .frame(minWidth: 0, maxWidth: .infinity, minHeight:0, maxHeight: .infinity, alignment: Alignment.topLeading)
-                    ForEach(0..<30, id: \.self) {index in
+            GeometryReader{geometry in
+                ScrollView(showsIndicators: false) {
+                    VStack{
+                        DetailUser()
                         
-                        UIFromMessage()
-                        WaveformView()
+                        Spacer(minLength: 0)
+                            .frame(minWidth: 0, maxWidth: .infinity, minHeight:0, maxHeight: .infinity, alignment: Alignment.topLeading)
                         
-                        UIToMessage()
+                        VStack{
+                            Spacer(minLength: 0)
+                            UIFromMessage()
+                            WaveformView()
+                            UIToMessage()
+                        }
+                        .padding(.horizontal)
                     }
+                    
+                    .frame(minHeight: geometry.size.height)
                 }
-                .padding(.horizontal)
-                .rotationEffect(Angle(degrees: 180))
+                .frame(width: geometry.size.width)
+
             }
-            .rotationEffect(Angle(degrees: 180))
+            
+            
+//            ScrollView(showsIndicators: false) {
+//                VStack {
+//                    Spacer()
+//                    .frame(minWidth: 0, maxWidth: .infinity, minHeight:0, maxHeight: .infinity, alignment: Alignment.topLeading)
+//                    ForEach(0..<30, id: \.self) {index in
+//
+//                        UIFromMessage()
+//                        WaveformView()
+//
+//                        UIToMessage()
+//                    }
+//                }
+//                .padding(.horizontal)
+//                .rotationEffect(Angle(degrees: 180))
+//            }
+//            .rotationEffect(Angle(degrees: 180))
             
             Spacer(minLength: 0)
             
@@ -79,14 +102,44 @@ struct UserMessages: View {
                             .frame(width: 20, height: 20)
                     }
                     .padding(.trailing, 8)
-                    Button(action: {
-                        
-                    }) {
-                        Image("image")
-                            .resizable()
-                            .frame(width: 20, height: 20)
+                    Menu {
+                        Button(action: {
+                            
+                        }) {
+                            HStack {
+                                Text("Открыть камеру")
+                                    .font(.system(size: 10))
+                                    .foregroundColor(.white)
+                                    .colorMultiply(.white)
+                                    .textCase(.uppercase)
+                                    .padding(.vertical, 15)
+                                Image(systemName: "camera")
+                            }
+                        }
+                        Button(action: {
+                            
+                        }) {
+                            HStack {
+                                Text("Выбрать из галереи")
+                                    .font(.system(size: 10))
+                                    .foregroundColor(.white)
+                                    .colorMultiply(.white)
+                                    .textCase(.uppercase)
+                                    .padding(.vertical, 15)
+                                Image(systemName: "photo")
+                            }
+                        }
+                    } label: {
+                        Button(action: {
+                            
+                        }) {
+                            Image("image")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                        }
+                        .padding(.trailing, 8)
                     }
-                    .padding(.trailing, 8)
+
                     Button(action: {
                         
                     }) {
@@ -118,12 +171,39 @@ struct UserMessages: View {
     }
 }
 
-struct UserMessages_Previews: PreviewProvider {
-    static var previews: some View {
-        UserMessages()
+private struct DetailUser: View {
+    var body: some View{
+        VStack(spacing: 0){
+            Image("testUserPhoto")
+                .resizable()
+                .scaledToFill()
+                .frame(width: 70, height: 70)
+                .clipShape(Circle())
+                .padding(.bottom, 6)
+            Text("Name Lastname")
+                .font(.system(size: 14))
+                .fontWeight(.bold)
+                .padding(.bottom, 3)
+            Text("login • Scrollo")
+                .font(.system(size: 13))
+                .foregroundColor(Color(hex: "#838383"))
+                .padding(.bottom, 1)
+            Text("Подписчики: 135 • Публикации: 0")
+                .font(.system(size: 13))
+                .foregroundColor(Color(hex: "#838383"))
+                .padding(.bottom, 8)
+            NavigationLink(destination: Text("Profile").ignoreDefaultHeaderBar){
+                Text("Посмотреть профиль")
+                    .font(.system(size: 12))
+                    .foregroundColor(.black)
+                    .fontWeight(.bold)
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 13)
+                    .background(Color(hex: "#efefef").cornerRadius(8))
+            }
+        }
     }
 }
-
 
 private struct UIFromMessage : View {
     
