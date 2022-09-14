@@ -38,10 +38,8 @@
 		AC1F7C222876C900009227CB /* EditProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1F7C212876C900009227CB /* EditProfileViewModel.swift */; };
 		AC1FF2CC28AF75BE00806CC0 /* AddStoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1FF2CB28AF75BE00806CC0 /* AddStoryView.swift */; };
 		AC1FF2CE28AF9AF800806CC0 /* AddStoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1FF2CD28AF9AF700806CC0 /* AddStoryViewModel.swift */; };
-		AC2A077F2866E0DA00BB1C6D /* MessangerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A077E2866E0DA00BB1C6D /* MessangerView.swift */; };
 		AC2A07812866F28500BB1C6D /* MessangerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A07802866F28500BB1C6D /* MessangerViewModel.swift */; };
 		AC2A07832866F2A400BB1C6D /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A07822866F2A400BB1C6D /* MessageModel.swift */; };
-		AC2A07852866FAD100BB1C6D /* UserMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A07842866FAD000BB1C6D /* UserMessages.swift */; };
 		AC2CAB072874137500BEEB3C /* CommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2CAB062874137400BEEB3C /* CommentsViewModel.swift */; };
 		AC2CAB0C2874569700BEEB3C /* BottomSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2CAB0B2874569700BEEB3C /* BottomSheetViewModel.swift */; };
 		AC3756CE28B8E8EF00C678B6 /* CreateNewChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3756CD28B8E8EF00C678B6 /* CreateNewChatView.swift */; };
@@ -54,6 +52,14 @@
 		AC5F902E2892BDC800D05254 /* UISheetPresentationControllerCustomDetentObjc in Frameworks */ = {isa = PBXBuildFile; productRef = AC5F902D2892BDC800D05254 /* UISheetPresentationControllerCustomDetentObjc */; };
 		AC5F90302892C14200D05254 /* SavePostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5F902F2892C14200D05254 /* SavePostViewModel.swift */; };
 		AC5F90322892C40600D05254 /* UIVIewToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5F90312892C40600D05254 /* UIVIewToast.swift */; };
+		AC6A473B28D2264100FBFF30 /* CustomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6A473A28D2264000FBFF30 /* CustomSheet.swift */; };
+		AC6A473E28D226A400FBFF30 /* ChatListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6A473D28D226A300FBFF30 /* ChatListView.swift */; };
+		AC6A474028D226DE00FBFF30 /* ChatItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6A473F28D226DE00FBFF30 /* ChatItemView.swift */; };
+		AC6A474228D2270300FBFF30 /* FavoriteContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6A474128D2270300FBFF30 /* FavoriteContactView.swift */; };
+		AC6A474428D2277700FBFF30 /* ChatMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6A474328D2277700FBFF30 /* ChatMessagesView.swift */; };
+		AC6A474628D23E9C00FBFF30 /* VoiceRecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6A474528D23E9C00FBFF30 /* VoiceRecordView.swift */; };
+		AC6A474F28D270F100FBFF30 /* SCAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC6A474E28D270F100FBFF30 /* SCAudioManager.m */; };
+		AC6A475328D2794500FBFF30 /* DSWaveformImage in Frameworks */ = {isa = PBXBuildFile; productRef = AC6A475228D2794500FBFF30 /* DSWaveformImage */; };
 		AC6DCDEB2867652D0051106B /* UIUserStory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC6DCDEA2867652C0051106B /* UIUserStory.swift */; };
 		AC8D392428CBB2E400B24D69 /* ActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8D392328CBB2E400B24D69 /* ActionModel.swift */; };
 		AC8E24F328B0BBD8001486FC /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8E24F228B0BBD8001486FC /* CameraController.swift */; };
@@ -127,7 +133,6 @@
 		ACDB88EB2879CAFB00C6F1B2 /* PublicationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDB88EA2879CAFB00C6F1B2 /* PublicationViewModel.swift */; };
 		ACDB88EE2879D68800C6F1B2 /* PublicationMediaPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDB88ED2879D68800C6F1B2 /* PublicationMediaPostView.swift */; };
 		ACDB88F02879D6A000C6F1B2 /* AddMediaPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDB88EF2879D6A000C6F1B2 /* AddMediaPostViewModel.swift */; };
-		ACDF531428CF1DBB006B3EF0 /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDF531328CF1DBB006B3EF0 /* WaveformView.swift */; };
 		ACDF531728CF3829006B3EF0 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = ACDF531628CF3829006B3EF0 /* SwiftUICharts */; };
 		ACE44F61287A6BD6002D0BB1 /* NotifyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE44F60287A6BD6002D0BB1 /* NotifyViewModel.swift */; };
 		ACEB90012892D61D0096110D /* ToastViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEB90002892D61D0096110D /* ToastViewModel.swift */; };
@@ -216,10 +221,8 @@
 		AC1F7C212876C900009227CB /* EditProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewModel.swift; sourceTree = "<group>"; };
 		AC1FF2CB28AF75BE00806CC0 /* AddStoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStoryView.swift; sourceTree = "<group>"; };
 		AC1FF2CD28AF9AF700806CC0 /* AddStoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStoryViewModel.swift; sourceTree = "<group>"; };
-		AC2A077E2866E0DA00BB1C6D /* MessangerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessangerView.swift; sourceTree = "<group>"; };
 		AC2A07802866F28500BB1C6D /* MessangerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessangerViewModel.swift; sourceTree = "<group>"; };
 		AC2A07822866F2A400BB1C6D /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
-		AC2A07842866FAD000BB1C6D /* UserMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessages.swift; sourceTree = "<group>"; };
 		AC2CAB062874137400BEEB3C /* CommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewModel.swift; sourceTree = "<group>"; };
 		AC2CAB0B2874569700BEEB3C /* BottomSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewModel.swift; sourceTree = "<group>"; };
 		AC3756CD28B8E8EF00C678B6 /* CreateNewChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewChatView.swift; sourceTree = "<group>"; };
@@ -230,6 +233,15 @@
 		AC5F902628928B1400D05254 /* AlbumsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsViewModel.swift; sourceTree = "<group>"; };
 		AC5F902F2892C14200D05254 /* SavePostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavePostViewModel.swift; sourceTree = "<group>"; };
 		AC5F90312892C40600D05254 /* UIVIewToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIVIewToast.swift; sourceTree = "<group>"; };
+		AC6A473A28D2264000FBFF30 /* CustomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSheet.swift; sourceTree = "<group>"; };
+		AC6A473D28D226A300FBFF30 /* ChatListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListView.swift; sourceTree = "<group>"; };
+		AC6A473F28D226DE00FBFF30 /* ChatItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatItemView.swift; sourceTree = "<group>"; };
+		AC6A474128D2270300FBFF30 /* FavoriteContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteContactView.swift; sourceTree = "<group>"; };
+		AC6A474328D2277700FBFF30 /* ChatMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesView.swift; sourceTree = "<group>"; };
+		AC6A474528D23E9C00FBFF30 /* VoiceRecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecordView.swift; sourceTree = "<group>"; };
+		AC6A474B28D2688100FBFF30 /* scrollo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "scrollo-Bridging-Header.h"; sourceTree = "<group>"; };
+		AC6A474E28D270F100FBFF30 /* SCAudioManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCAudioManager.m; sourceTree = "<group>"; };
+		AC6A475028D2714900FBFF30 /* SCAudioManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCAudioManager.h; sourceTree = "<group>"; };
 		AC6DCDEA2867652C0051106B /* UIUserStory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUserStory.swift; sourceTree = "<group>"; };
 		AC75B632287D858C00BA1875 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC8D392328CBB2E400B24D69 /* ActionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionModel.swift; sourceTree = "<group>"; };
@@ -305,7 +317,6 @@
 		ACDB88EA2879CAFB00C6F1B2 /* PublicationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicationViewModel.swift; sourceTree = "<group>"; };
 		ACDB88ED2879D68800C6F1B2 /* PublicationMediaPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicationMediaPostView.swift; sourceTree = "<group>"; };
 		ACDB88EF2879D6A000C6F1B2 /* AddMediaPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMediaPostViewModel.swift; sourceTree = "<group>"; };
-		ACDF531328CF1DBB006B3EF0 /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		ACE44F60287A6BD6002D0BB1 /* NotifyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyViewModel.swift; sourceTree = "<group>"; };
 		ACEB90002892D61D0096110D /* ToastViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewModel.swift; sourceTree = "<group>"; };
 		ACEB90032892F6FD0096110D /* UIViewStandartPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewStandartPost.swift; sourceTree = "<group>"; };
@@ -353,6 +364,7 @@
 				AC5F902E2892BDC800D05254 /* UISheetPresentationControllerCustomDetentObjc in Frameworks */,
 				ACC21ACE28632EE700AF8B0D /* SDWebImageSwiftUI in Frameworks */,
 				ACC21ADC2863503100AF8B0D /* Introspect in Frameworks */,
+				AC6A475328D2794500FBFF30 /* DSWaveformImage in Frameworks */,
 				ACDF531728CF3829006B3EF0 /* SwiftUICharts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -424,15 +436,17 @@
 			path = AlbumsViewModel;
 			sourceTree = "<group>";
 		};
-		AC6DCDE8286763D00051106B /* Messanger */ = {
+		AC6A473C28D2269400FBFF30 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				AC2A077E2866E0DA00BB1C6D /* MessangerView.swift */,
-				AC2A07842866FAD000BB1C6D /* UserMessages.swift */,
 				AC3756CD28B8E8EF00C678B6 /* CreateNewChatView.swift */,
-				ACDF531328CF1DBB006B3EF0 /* WaveformView.swift */,
+				AC6A473D28D226A300FBFF30 /* ChatListView.swift */,
+				AC6A473F28D226DE00FBFF30 /* ChatItemView.swift */,
+				AC6A474128D2270300FBFF30 /* FavoriteContactView.swift */,
+				AC6A474328D2277700FBFF30 /* ChatMessagesView.swift */,
+				AC6A474528D23E9C00FBFF30 /* VoiceRecordView.swift */,
 			);
-			path = Messanger;
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		AC8E24F628B0DAB5001486FC /* BottomSheets */ = {
@@ -486,6 +500,7 @@
 		ACC21A5B2862EC9400AF8B0D /* scrollo */ = {
 			isa = PBXGroup;
 			children = (
+				AC6A474E28D270F100FBFF30 /* SCAudioManager.m */,
 				AC75B632287D858C00BA1875 /* Info.plist */,
 				ACC21AB3286322F300AF8B0D /* Fonts */,
 				ACC21A922862EF0400AF8B0D /* Utils */,
@@ -499,6 +514,8 @@
 				ACC21A672862EC9B00AF8B0D /* scrollo.xcdatamodeld */,
 				ACC21A622862EC9B00AF8B0D /* Preview Content */,
 				AC4039212870387900B9A762 /* Test.swift */,
+				AC6A474B28D2688100FBFF30 /* scrollo-Bridging-Header.h */,
+				AC6A475028D2714900FBFF30 /* SCAudioManager.h */,
 			);
 			path = scrollo;
 			sourceTree = "<group>";
@@ -627,6 +644,7 @@
 		ACC21AAC28631DAE00AF8B0D /* HomeView */ = {
 			isa = PBXGroup;
 			children = (
+				AC6A473C28D2269400FBFF30 /* Chat */,
 				AC05854B28B1951400BB982A /* ActualStory */,
 				ACEB90362893DD8C0096110D /* ProfileView */,
 				ACEB902D289352850096110D /* CommentsView */,
@@ -636,7 +654,6 @@
 				AC10102F287869000014E13B /* Saved */,
 				AC10101628783E290014E13B /* Settings */,
 				AC0E252028709B0800AFB2F2 /* Comments */,
-				AC6DCDE8286763D00051106B /* Messanger */,
 				ACC21AAD28631DC600AF8B0D /* HomeView.swift */,
 				ACC21AAF28631DF900AF8B0D /* StoryView.swift */,
 				ACC21AB12863219B00AF8B0D /* ActionsView.swift */,
@@ -676,6 +693,7 @@
 				AC5F90312892C40600D05254 /* UIVIewToast.swift */,
 				AC8E24FB28B10045001486FC /* UIBottomSheet.swift */,
 				AC8E250628B12B54001486FC /* UITabBar.swift */,
+				AC6A473A28D2264000FBFF30 /* CustomSheet.swift */,
 			);
 			path = UIViews;
 			sourceTree = "<group>";
@@ -815,6 +833,7 @@
 				AC5F902B2892BDC800D05254 /* UISheetPresentationControllerCustomDetent */,
 				AC5F902D2892BDC800D05254 /* UISheetPresentationControllerCustomDetentObjc */,
 				ACDF531628CF3829006B3EF0 /* SwiftUICharts */,
+				AC6A475228D2794500FBFF30 /* DSWaveformImage */,
 			);
 			productName = scrollo;
 			productReference = ACC21A592862EC9400AF8B0D /* scrollo.app */;
@@ -868,6 +887,7 @@
 				TargetAttributes = {
 					ACC21A582862EC9400AF8B0D = {
 						CreatedOnToolsVersion = 13.2.1;
+						LastSwiftMigration = 1320;
 					};
 					ACC21A6D2862EC9B00AF8B0D = {
 						CreatedOnToolsVersion = 13.2.1;
@@ -893,6 +913,7 @@
 				ACC21ADA2863503000AF8B0D /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 				AC5F902A2892BDC800D05254 /* XCRemoteSwiftPackageReference "UISheetPresentationControllerCustomDetent" */,
 				ACDF531528CF3829006B3EF0 /* XCRemoteSwiftPackageReference "SwiftUICharts" */,
+				AC6A475128D2794500FBFF30 /* XCRemoteSwiftPackageReference "DSWaveformImage" */,
 			);
 			productRefGroup = ACC21A5A2862EC9400AF8B0D /* Products */;
 			projectDirPath = "";
@@ -948,6 +969,7 @@
 				ACEB904C28943A4D0096110D /* UIPostCompositionView.swift in Sources */,
 				ACEB9024289332700096110D /* PostDetailView.swift in Sources */,
 				ACEB9028289334C50096110D /* UserLikedPostView.swift in Sources */,
+				AC6A474628D23E9C00FBFF30 /* VoiceRecordView.swift in Sources */,
 				ACEB901F2893149B0096110D /* DislikePostViewModel.swift in Sources */,
 				ACEB90112892FE8C0096110D /* LikePostViewModel.swift in Sources */,
 				AC1F7C202876C064009227CB /* EditUserProfile.swift in Sources */,
@@ -961,13 +983,13 @@
 				AC10102A287861D80014E13B /* ConfidentialityView.swift in Sources */,
 				ACC21AD02863340700AF8B0D /* FeedPostViewModel.swift in Sources */,
 				ACEB900A2892FA720096110D /* TruncateTextView.swift in Sources */,
+				AC6A473B28D2264100FBFF30 /* CustomSheet.swift in Sources */,
 				AC8E250528B12AA8001486FC /* DashboardView.swift in Sources */,
 				AC8E24F528B0DA60001486FC /* AppNotificationCenter.swift in Sources */,
 				ACEB90082892F8C20096110D /* PostFooterView.swift in Sources */,
 				ACC1DE1C28946A73008A3932 /* Constants.swift in Sources */,
 				ACDB88E92879C0A400C6F1B2 /* AddTextPostViewModel.swift in Sources */,
 				ACC21AD928634CDE00AF8B0D /* UIRefreshable.swift in Sources */,
-				ACDF531428CF1DBB006B3EF0 /* WaveformView.swift in Sources */,
 				AC1010312878690F0014E13B /* SavedView.swift in Sources */,
 				ACC21AB028631DF900AF8B0D /* StoryView.swift in Sources */,
 				AC1FF2CE28AF9AF800806CC0 /* AddStoryViewModel.swift in Sources */,
@@ -980,7 +1002,6 @@
 				AC8E24F328B0BBD8001486FC /* CameraController.swift in Sources */,
 				ACC1DE1E289485DC008A3932 /* SavedPostsViewModel.swift in Sources */,
 				AC8E250128B11D3C001486FC /* EmptyFeedView.swift in Sources */,
-				AC2A077F2866E0DA00BB1C6D /* MessangerView.swift in Sources */,
 				AC05855128B1B03000BB982A /* ActualStoryCoverCropperView.swift in Sources */,
 				ACEB90042892F6FD0096110D /* UIViewStandartPost.swift in Sources */,
 				ACBE7A7128926D2000F76D93 /* AlbumModel.swift in Sources */,
@@ -990,6 +1011,7 @@
 				ACC21AB22863219B00AF8B0D /* ActionsView.swift in Sources */,
 				ACEB90412893E29A0096110D /* UserInfoView.swift in Sources */,
 				ACEB903B2893DE170096110D /* ProfileViewModel.swift in Sources */,
+				AC6A474F28D270F100FBFF30 /* SCAudioManager.m in Sources */,
 				AC8E250328B1270E001486FC /* AddPublicationSheet.swift in Sources */,
 				ACEB902A289335190096110D /* ShareUsersPost.swift in Sources */,
 				ACC21A912862EDE800AF8B0D /* Scrollo.swift in Sources */,
@@ -999,8 +1021,10 @@
 				ACEB9018289300280096110D /* FeedPostsView.swift in Sources */,
 				AC1F7C222876C900009227CB /* EditProfileViewModel.swift in Sources */,
 				AC3756D028B8F9B900C678B6 /* ActionViewModel.swift in Sources */,
+				AC6A473E28D226A400FBFF30 /* ChatListView.swift in Sources */,
 				ACDB88E72879C04800C6F1B2 /* PublicationTextPostView.swift in Sources */,
 				ACEB90062892F7120096110D /* PostHeaderView.swift in Sources */,
+				AC6A474228D2270300FBFF30 /* FavoriteContactView.swift in Sources */,
 				AC101028287857F30014E13B /* NotifyView.swift in Sources */,
 				AC05854A28B1646600BB982A /* SettingsSheet.swift in Sources */,
 				ACC21A5F2862EC9400AF8B0D /* ContentView.swift in Sources */,
@@ -1025,7 +1049,7 @@
 				ACEB90162892FFBC0096110D /* FeedStoryView.swift in Sources */,
 				AC5F902728928B1400D05254 /* AlbumsViewModel.swift in Sources */,
 				ACC21AC9286327D100AF8B0D /* StoryModel.swift in Sources */,
-				AC2A07852866FAD100BB1C6D /* UserMessages.swift in Sources */,
+				AC6A474428D2277700FBFF30 /* ChatMessagesView.swift in Sources */,
 				ACEB90432893EAC70096110D /* PostViewModel.swift in Sources */,
 				ACEB903F2893E2440096110D /* FollowInfoView.swift in Sources */,
 				AC8E24F828B0DAE0001486FC /* PostActionsSheet.swift in Sources */,
@@ -1064,6 +1088,7 @@
 				ACACBDF0287A41A300DF7171 /* AssetModel.swift in Sources */,
 				AC2A07832866F2A400BB1C6D /* MessageModel.swift in Sources */,
 				AC10102028784A150014E13B /* ChangePassword.swift in Sources */,
+				AC6A474028D226DE00FBFF30 /* ChatItemView.swift in Sources */,
 				AC101035287982DF0014E13B /* SignUpViewModel.swift in Sources */,
 				AC1F7C1E2876B53D009227CB /* ProfileViewModelOld.swift in Sources */,
 				ACC21A692862EC9B00AF8B0D /* scrollo.xcdatamodeld in Sources */,
@@ -1241,6 +1266,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 18;
@@ -1272,6 +1298,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "scrollo/scrollo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1282,6 +1310,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 18;
@@ -1313,6 +1342,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "scrollo/scrollo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1444,6 +1474,14 @@
 				minimumVersion = 0.9.0;
 			};
 		};
+		AC6A475128D2794500FBFF30 /* XCRemoteSwiftPackageReference "DSWaveformImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dmrschmidt/DSWaveformImage";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
 		ACC21ACC28632EE700AF8B0D /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
@@ -1480,6 +1518,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AC5F902A2892BDC800D05254 /* XCRemoteSwiftPackageReference "UISheetPresentationControllerCustomDetent" */;
 			productName = UISheetPresentationControllerCustomDetentObjc;
+		};
+		AC6A475228D2794500FBFF30 /* DSWaveformImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AC6A475128D2794500FBFF30 /* XCRemoteSwiftPackageReference "DSWaveformImage" */;
+			productName = DSWaveformImage;
 		};
 		ACC21ACD28632EE700AF8B0D /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;

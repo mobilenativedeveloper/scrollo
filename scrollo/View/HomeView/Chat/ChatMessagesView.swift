@@ -1,16 +1,18 @@
 //
-//  UserMessages.swift
+//  ChatMessagesView.swift
 //  scrollo
 //
-//  Created by Artem Strelnik on 25.06.2022.
+//  Created by Artem Strelnik on 14.09.2022.
 //
 
 import SwiftUI
 
-struct UserMessages: View {
+struct ChatMessagesView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var message : String = String()
+    
     @State var isPresentSelectAttachments: Bool = false
+    @State var isVoiceRecord: Bool = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -78,7 +80,9 @@ struct UserMessages: View {
                     TextField("Написать сообщение...", text: self.$message)
                     
                     Button(action: {
-                        
+                        withAnimation(.easeInOut){
+                            isVoiceRecord.toggle()
+                        }
                     }) {
                         Image("microphone")
                             .resizable()
@@ -109,6 +113,9 @@ struct UserMessages: View {
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(Color(hex: "#DDE8E8"), lineWidth: 1)
+                )
+                .overlay(
+                    VoiceRecordView(isVoiceRecord: $isVoiceRecord)
                 )
             }
             .padding()

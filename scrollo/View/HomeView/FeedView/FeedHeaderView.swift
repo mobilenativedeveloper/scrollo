@@ -14,7 +14,7 @@ struct FeedHeaderView: View {
                 .resizable()
                 .frame(width: 95, height: 21)
             Spacer()
-            NavigationLink(destination: MessangerView().ignoreDefaultHeaderBar) {
+            NavigationLink(destination: ChatListView().ignoreDefaultHeaderBar) {
                 Image("messanger")
                     .shadow(color: Color.black.opacity(0.15), radius: 4, x: 0, y: 4)
             }

@@ -18,6 +18,8 @@
 		<string>gotham_light.ttf</string>
 		<string>gotham_medium.ttf</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Разрешите доступ к микрофону</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 </dict>
