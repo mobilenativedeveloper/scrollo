@@ -54,9 +54,7 @@ struct MessangerView: View {
                 VStack(spacing: 13) {
                     if (messangerViewModel.loadChats) {
                         ForEach(0..<messangerViewModel.chats.count, id: \.self) {index in
-                            NavigationLink(destination: UserMessages().ignoreDefaultHeaderBar) {
-                                UIUserMessageView(online: true, login: messangerViewModel.chats[index].starter.login, avatar: messangerViewModel.chats[index].starter.avatar, viewed: true, time: "4")
-                            }
+                            ChatItem(chat: $messangerViewModel.chats[index], chatList: $messangerViewModel.chats)
                         }
                     } else {
                         ProgressView()
@@ -85,6 +83,133 @@ struct MessangerView: View {
             messangerViewModel.getChats {
                 
             }
+        }
+    }
+}
+
+private struct ChatItem: View{
+    @State var offset: CGFloat = .zero
+    @State var isSwiped: Bool = false
+    @Binding var chat: ChatListModel.ChatModel
+    @Binding var chatList: [ChatListModel.ChatModel]
+    
+    var body: some View {
+        ZStack {
+            LinearGradient(gradient: .init(colors: [Color(hex: "#f55442"), Color(hex: "#fa6c5c")]), startPoint: .trailing, endPoint: .leading)
+                .clipShape(CustomCorner(radius: 15, corners: [.topLeft, .bottomLeft]))
+            // Delete button
+            
+            HStack{
+                Spacer(minLength: 90)
+                Button(action: {
+                    withAnimation(.easeInOut) {
+                        deleteItem()
+                    }
+                }){
+                    Image(systemName: "trash")
+                        .font(.title)
+                        .foregroundColor(.white)
+                        .frame(width: 90, height: 70)
+                }
+            }
+            .padding(.trailing, 90)
+            HStack{
+                Spacer()
+                Button(action: {
+                    print("Favorites")
+                }){
+                    Image(systemName: "star.fill")
+                        .font(.title)
+                        .foregroundColor(.white)
+                        .frame(width: 90, height: 70)
+                }
+                .background(Color(hex: "#36DCD8"))
+            }
+            
+            
+            
+            HStack(spacing: 0) {
+                ZStack(alignment: .bottomTrailing) {
+                    if let avatar = chat.starter.avatar {
+                        WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
+                            .resizable()
+                            .frame(width: 44, height: 44)
+                            .cornerRadius(10)
+                    } else {
+                        UIDefaultAvatar(width: 44, height: 44, cornerRadius: 10)
+                    }
+                    Circle()
+                        .fill(Color(hex: "#38DA7C"))
+                        .frame(width: 9, height: 9)
+                        .background(
+                            Circle()
+                                .fill(Color.white)
+                                .frame(width: 14, height: 14)
+                        )
+                        .offset(x: 2)
+                }
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(chat.starter.login)
+                        .font(.custom(GothamBold, size: 14))
+                        .foregroundColor(Color(hex: "#2E313C"))
+                    Text("See you on the next meeting! 😂")
+                        .font(.custom(GothamBook, size: 14))
+                        .foregroundColor(Color(hex: "#2E313C"))
+                }
+                .padding(.leading, 20)
+                
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 10)
+            .padding(.top, 12)
+            .padding(.bottom, 8)
+            .frame(height: 70)
+            .background(Color.white.clipShape(CustomCorner(radius: 15, corners: [.topLeft, .bottomLeft])))
+            .shadow(color: Color(hex: "#778EA5").opacity(0.13), radius: 10, x: 3, y: 5)
+            .contentShape(Rectangle())
+            .offset(x: offset)
+            .gesture(DragGesture().onChanged(onChange(value:)).onEnded(onEnd(value:)))
+        }
+        
+    }
+    
+    func onChange(value: DragGesture.Value){
+        if value.translation.width < 0 {
+            if self.isSwiped {
+                self.offset = value.translation.width - 180
+            }
+            else {
+                self.offset = value.translation.width
+            }
+        }
+    }
+    
+    func onEnd(value: DragGesture.Value){
+        withAnimation(.easeInOut) {
+            if value.translation.width < 0{
+                if -value.translation.width > UIScreen.main.bounds.width / 2{
+                    self.offset = -1000
+                    deleteItem()
+                }
+                else if -self.offset > 50{
+                    self.isSwiped = true
+                    self.offset = -180
+                }
+                else {
+                    self.isSwiped = false
+                    self.offset = 0
+                }
+            }
+            else {
+                self.isSwiped = false
+                self.offset = 0
+            }
+        }
+    }
+    
+    func deleteItem() {
+        chatList.removeAll{(item) -> Bool in
+            return self.chat.id == item.id
         }
     }
 }
@@ -123,96 +248,96 @@ private struct UIFavoriteContactView : View {
     }
 }
 
-private struct UIUserMessageView : View {
-    @State var isDetail: Bool = false
-    var online: Bool
-    var login: String
-    var avatar: String?
-    var viewed: Bool
-    var time: String
-    var body : some View {
-        
-        HStack(spacing: 0) {
-            
-            ZStack(alignment: .bottomTrailing) {
-                if let avatar = avatar {
-                    WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
-                        .resizable()
-                        .frame(width: 44, height: 44)
-                        .cornerRadius(10)
-                } else {
-                    UIDefaultAvatar(width: 44, height: 44, cornerRadius: 10)
-                }
-                
-                if online {
-                    Circle()
-                        .fill(Color(hex: "#38DA7C"))
-                        .frame(width: 9, height: 9)
-                        .background(
-                            Circle()
-                                .fill(Color.white)
-                                .frame(width: 14, height: 14)
-                        )
-                        .offset(x: 2)
-                } else {
-                    Text("1ч")
-                        .font(.custom(GothamBook, size: 10))
-                        .foregroundColor(Color(hex: "#828796"))
-                        .padding(.all, 2)
-                        .padding(.horizontal, 4)
-                        .background(Color(hex: "#DDE8E8"))
-                        .cornerRadius(50)
-                        .offset(x: 4)
-                }
-            }
-            
-            VStack(alignment: .leading, spacing: 8) {
-                Text(login)
-                    .font(.custom(GothamBold, size: 14))
-                    .foregroundColor(Color(hex: "#2E313C"))
-                Text("See you on the next meeting! 😂")
-                    .font(.custom(GothamBook, size: 14))
-                    .foregroundColor(viewed ? Color(hex: "#2E313C") : Color(hex:"#828796"))
-            }
-            .padding(.leading, 20)
-            
-            Spacer(minLength: 0)
-            
-            if viewed {
-                VStack(spacing: 0) {
-                    
-                    Text("\(time) мин")
-                        .font(.custom(GothamMedium, size: 10))
-                        .foregroundColor(Color(hex: "828796"))
-                        .padding(.bottom, 4)
-                    Text("3")
-                        .font(.system(size: 12))
-                        .foregroundColor(.white)
-                        .padding(.all, 4)
-                        .padding(.horizontal, 4)
-                        .background(
-                            Color(hex: "#5B86E5")
-                        )
-                        .cornerRadius(50)
-                }
-            }
-        }
-        .padding(.horizontal, 10)
-        .padding(.top, 12)
-        .padding(.bottom, 8)
-        .background(
-            viewed ? Color.white.clipShape(CustomCorner(radius: 15, corners: [.topLeft, .bottomLeft])) : nil
-        )
-        .background(
-            NavigationLink(destination: UserMessages()
-                            .ignoreDefaultHeaderBar, isActive: $isDetail) { EmptyView() }.hidden()
-        )
-        .shadow(color: Color(hex: "#778EA5").opacity(0.13), radius: 10, x: 3, y: 5)
-        .onTapGesture {
-            isDetail.toggle()
-        }
-    }
-}
+//private struct UIUserMessageView : View {
+//    @State var isDetail: Bool = false
+//    var online: Bool
+//    var login: String
+//    var avatar: String?
+//    var viewed: Bool
+//    var time: String
+//    var body : some View {
+//
+//        HStack(spacing: 0) {
+//
+//            ZStack(alignment: .bottomTrailing) {
+//                if let avatar = avatar {
+//                    WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
+//                        .resizable()
+//                        .frame(width: 44, height: 44)
+//                        .cornerRadius(10)
+//                } else {
+//                    UIDefaultAvatar(width: 44, height: 44, cornerRadius: 10)
+//                }
+//
+//                if online {
+//                    Circle()
+//                        .fill(Color(hex: "#38DA7C"))
+//                        .frame(width: 9, height: 9)
+//                        .background(
+//                            Circle()
+//                                .fill(Color.white)
+//                                .frame(width: 14, height: 14)
+//                        )
+//                        .offset(x: 2)
+//                } else {
+//                    Text("1ч")
+//                        .font(.custom(GothamBook, size: 10))
+//                        .foregroundColor(Color(hex: "#828796"))
+//                        .padding(.all, 2)
+//                        .padding(.horizontal, 4)
+//                        .background(Color(hex: "#DDE8E8"))
+//                        .cornerRadius(50)
+//                        .offset(x: 4)
+//                }
+//            }
+//
+//            VStack(alignment: .leading, spacing: 8) {
+//                Text(login)
+//                    .font(.custom(GothamBold, size: 14))
+//                    .foregroundColor(Color(hex: "#2E313C"))
+//                Text("See you on the next meeting! 😂")
+//                    .font(.custom(GothamBook, size: 14))
+//                    .foregroundColor(viewed ? Color(hex: "#2E313C") : Color(hex:"#828796"))
+//            }
+//            .padding(.leading, 20)
+//
+//            Spacer(minLength: 0)
+//
+//            if viewed {
+//                VStack(spacing: 0) {
+//
+//                    Text("\(time) мин")
+//                        .font(.custom(GothamMedium, size: 10))
+//                        .foregroundColor(Color(hex: "828796"))
+//                        .padding(.bottom, 4)
+//                    Text("3")
+//                        .font(.system(size: 12))
+//                        .foregroundColor(.white)
+//                        .padding(.all, 4)
+//                        .padding(.horizontal, 4)
+//                        .background(
+//                            Color(hex: "#5B86E5")
+//                        )
+//                        .cornerRadius(50)
+//                }
+//            }
+//        }
+//        .padding(.horizontal, 10)
+//        .padding(.top, 12)
+//        .padding(.bottom, 8)
+//        .background(
+//            viewed ? Color.white.clipShape(CustomCorner(radius: 15, corners: [.topLeft, .bottomLeft])) : nil
+//        )
+//        .background(
+//            NavigationLink(destination: UserMessages()
+//                            .ignoreDefaultHeaderBar, isActive: $isDetail) { EmptyView() }.hidden()
+//        )
+//        .shadow(color: Color(hex: "#778EA5").opacity(0.13), radius: 10, x: 3, y: 5)
+//        .onTapGesture {
+//            isDetail.toggle()
+//        }
+//    }
+//}
 
 private struct HeaderBar: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
