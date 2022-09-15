@@ -9,7 +9,7 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct ChatListView: View {
-    @StateObject var messangerViewModel : MessangerViewModel = MessangerViewModel()
+    @StateObject var chatViewModel : ChatViewModel = ChatViewModel()
     @State private var searchText : String = String()
     @State var isShowing: Bool = false
     
@@ -33,7 +33,7 @@ struct ChatListView: View {
                 .padding(.bottom, 30)
                 
                 // Favorites chats
-                if messangerViewModel.favoriteChats.count > 0 {
+                if chatViewModel.favoriteChats.count > 0 {
                     VStack(alignment: .leading, spacing: 0) {
                         Text("Избранные контакты")
                             .font(.custom(GothamMedium, size: 16))
@@ -42,8 +42,8 @@ struct ChatListView: View {
                             .padding(.bottom, 15)
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 20) {
-                                ForEach(0..<messangerViewModel.favoriteChats.count, id: \.self) {index in
-                                    FavoriteContactView(favoriteChatList: $messangerViewModel.favoriteChats, chat: messangerViewModel.favoriteChats[index])
+                                ForEach(0..<chatViewModel.favoriteChats.count, id: \.self) {index in
+                                    FavoriteContactView(favoriteChatList: $chatViewModel.favoriteChats, chat: chatViewModel.favoriteChats[index])
                                 }
                             }
                             .padding(.horizontal)
@@ -54,10 +54,10 @@ struct ChatListView: View {
                 
                 // Chat list
                 VStack(spacing: 13) {
-                    if (messangerViewModel.loadChats) {
-                        ForEach(0..<messangerViewModel.chats.count, id: \.self) {index in
-                            ChatItemView(chat: $messangerViewModel.chats[index], chatList: $messangerViewModel.chats)
-                                .environmentObject(messangerViewModel)
+                    if (chatViewModel.loadChats) {
+                        ForEach(0..<chatViewModel.chats.count, id: \.self) {index in
+                            ChatItemView(chat: $chatViewModel.chats[index], chatList: $chatViewModel.chats)
+                                .environmentObject(chatViewModel)
                         }
                     } else {
                         ProgressView()
@@ -69,7 +69,7 @@ struct ChatListView: View {
                 showsIndicators: false, onRefresh: { done in
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                         
-                        messangerViewModel.getChats {
+                        chatViewModel.getChats {
                             done()
                         }
                     }
@@ -83,7 +83,7 @@ struct ChatListView: View {
         }
         .background(Color(hex: "#F9F9F9").edgesIgnoringSafeArea(.all))
         .onAppear {
-            messangerViewModel.getChats {}
+            chatViewModel.getChats {}
         }
     }
 }
@@ -124,8 +124,8 @@ private struct HeaderBar: View {
         }
         .padding(.horizontal)
         .padding(.bottom)
-        .fullScreenCover(isPresented: $newChat, onDismiss: {}) {
-            CreateNewChatView()
-        }
+//        .fullScreenCover(isPresented: $newChat, onDismiss: {}) {
+//            CreateNewChatView()
+//        }
     }
 }

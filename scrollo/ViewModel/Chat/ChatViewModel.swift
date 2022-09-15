@@ -7,16 +7,15 @@
 
 import SwiftUI
 
-class MessangerViewModel : ObservableObject {
+class ChatViewModel : ObservableObject {
     
     @Published var chats: [ChatListModel.ChatModel] = []
     @Published var loadChats : Bool = false
     var pageChat = 0
     var pageSizeChat = 100
     
-    @Published var favoriteChats: [ChatListModel.ChatModel] = []
     
-    //----
+    @Published var favoriteChats: [ChatListModel.ChatModel] = []
     
     @Published var followers: [FollowersResponse.FollowerModel] = []
     @Published var load : Bool = false
@@ -51,10 +50,6 @@ class MessangerViewModel : ObservableObject {
     func deleteFavoriteChat(chatId: String) {
         
     }
-    
-    
-    //--
-    
     
     func getFollowers () {
         guard let url = URL(string: "\(API_URL)\(API_GET_USER_FOLLOWERS)?page=\(page)&pageSize=\(pageSize)") else {return}
@@ -112,4 +107,6 @@ class MessangerViewModel : ObservableObject {
         }
         .resume()
     }
+    
+    
 }

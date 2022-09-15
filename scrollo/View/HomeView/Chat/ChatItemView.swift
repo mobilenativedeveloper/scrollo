@@ -9,7 +9,7 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct ChatItemView: View{
-    @EnvironmentObject var messangerViewModel: MessangerViewModel
+    @EnvironmentObject var chatViewModel: ChatViewModel
     @State var offset: CGFloat = .zero
     @State var isSwiped: Bool = false
     @Binding var chat: ChatListModel.ChatModel
@@ -141,7 +141,7 @@ struct ChatItemView: View{
     }
     
     func addFavoriteChat(){
-        messangerViewModel.favoriteChats.append(chat)
+        chatViewModel.favoriteChats.append(chat)
         self.isSwiped = false
         self.offset = 0
     }

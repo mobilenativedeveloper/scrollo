@@ -10,61 +10,61 @@ import Introspect
 import SDWebImageSwiftUI
 
 struct CreateNewChatView: View {
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @StateObject var messangerViewModel : MessangerViewModel = MessangerViewModel()
-    @State var findUser: String = ""
+//    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+//    @StateObject var messangerViewModel : MessangerViewModel = MessangerViewModel()
+//    @State var findUser: String = ""
     
     var body: some View {
         VStack {
-            HeaderBar()
-            VStack(alignment: .leading){
-                Text("Кому: ")
-                    .font(.custom(GothamBold, size: 14))
-                    .foregroundColor(Color(hex: "#2E313C"))
-                TextField("Поиск", text: $findUser)
-            }
-            .padding(.horizontal)
-            .padding(.bottom)
-            ScrollView(showsIndicators: false) {
-                if (!messangerViewModel.load) {
-                    ProgressView()
-                } else {
-                    ForEach(0..<messangerViewModel.followers.count, id: \.self){index in
-                        Button(action: {
-                            messangerViewModel.createChat(userId: messangerViewModel.followers[index].followOnUser.id) { res in
-                                if (res == true) {
-                                    presentationMode.wrappedValue.dismiss()
-                                }
-                            }
-                        }) {
-                            HStack(alignment: .top) {
-                                if let avatar = messangerViewModel.followers[index].followOnUser.avatar {
-                                    WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
-                                        .resizable()
-                                        .frame(width: 56, height: 56)
-                                        .cornerRadius(16)
-                                } else {
-                                    UIDefaultAvatar(width: 56, height: 56, cornerRadius: 16)
-                                }
-                                
-                                VStack(alignment: .leading) {
-                                    Text(messangerViewModel.followers[index].followOnUser.login ?? "")
-                                        .font(.custom(GothamBold, size: 14))
-                                        .foregroundColor(Color(hex: "#2E313C"))
-    //                                Text("@login")
-    //                                    .font(.custom(GothamBook, size: 14))
-    //                                    .foregroundColor(Color(hex: "#2E313C"))
-                                }
-                                Spacer()
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                }
-            }
+//            HeaderBar()
+//            VStack(alignment: .leading){
+//                Text("Кому: ")
+//                    .font(.custom(GothamBold, size: 14))
+//                    .foregroundColor(Color(hex: "#2E313C"))
+//                TextField("Поиск", text: $findUser)
+//            }
+//            .padding(.horizontal)
+//            .padding(.bottom)
+//            ScrollView(showsIndicators: false) {
+//                if (!messangerViewModel.load) {
+//                    ProgressView()
+//                } else {
+//                    ForEach(0..<messangerViewModel.followers.count, id: \.self){index in
+//                        Button(action: {
+//                            messangerViewModel.createChat(userId: messangerViewModel.followers[index].followOnUser.id) { res in
+//                                if (res == true) {
+//                                    presentationMode.wrappedValue.dismiss()
+//                                }
+//                            }
+//                        }) {
+//                            HStack(alignment: .top) {
+//                                if let avatar = messangerViewModel.followers[index].followOnUser.avatar {
+//                                    WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
+//                                        .resizable()
+//                                        .frame(width: 56, height: 56)
+//                                        .cornerRadius(16)
+//                                } else {
+//                                    UIDefaultAvatar(width: 56, height: 56, cornerRadius: 16)
+//                                }
+//
+//                                VStack(alignment: .leading) {
+//                                    Text(messangerViewModel.followers[index].followOnUser.login ?? "")
+//                                        .font(.custom(GothamBold, size: 14))
+//                                        .foregroundColor(Color(hex: "#2E313C"))
+//    //                                Text("@login")
+//    //                                    .font(.custom(GothamBook, size: 14))
+//    //                                    .foregroundColor(Color(hex: "#2E313C"))
+//                                }
+//                                Spacer()
+//                            }
+//                        }
+//                        .padding(.horizontal)
+//                    }
+//                }
+//            }
         }
         .onAppear {
-            messangerViewModel.getFollowers()
+//            messangerViewModel.getFollowers()
         }
     }
 }
