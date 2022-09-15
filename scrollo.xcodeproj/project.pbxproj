@@ -180,6 +180,7 @@
 		ACF063B728D3823200CC4208 /* WaveformViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063B628D3823200CC4208 /* WaveformViewTest.swift */; };
 		ACF063B928D3A85900CC4208 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063B828D3A85900CC4208 /* AudioPlayer.swift */; };
 		ACF063BB28D3B32200CC4208 /* MessageActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063BA28D3B32200CC4208 /* MessageActivityIndicatorView.swift */; };
+		ACF063BD28D3EFF800CC4208 /* ImageMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063BC28D3EFF800CC4208 /* ImageMessageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -373,6 +374,7 @@
 		ACF063B628D3823200CC4208 /* WaveformViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformViewTest.swift; sourceTree = "<group>"; };
 		ACF063B828D3A85900CC4208 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		ACF063BA28D3B32200CC4208 /* MessageActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageActivityIndicatorView.swift; sourceTree = "<group>"; };
+		ACF063BC28D3EFF800CC4208 /* ImageMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -471,6 +473,7 @@
 				ACE2AF2F28D37C95005603E9 /* DetailUserView.swift */,
 				ACE2AF3128D37CC7005603E9 /* SelectAttachmentsView.swift */,
 				ACF063BA28D3B32200CC4208 /* MessageActivityIndicatorView.swift */,
+				ACF063BC28D3EFF800CC4208 /* ImageMessageView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1074,6 +1077,7 @@
 				ACEB90412893E29A0096110D /* UserInfoView.swift in Sources */,
 				ACEB903B2893DE170096110D /* ProfileViewModel.swift in Sources */,
 				AC6A474F28D270F100FBFF30 /* SCAudioManager.m in Sources */,
+				ACF063BD28D3EFF800CC4208 /* ImageMessageView.swift in Sources */,
 				AC8E250328B1270E001486FC /* AddPublicationSheet.swift in Sources */,
 				ACEB902A289335190096110D /* ShareUsersPost.swift in Sources */,
 				ACC21A912862EDE800AF8B0D /* Scrollo.swift in Sources */,

@@ -113,8 +113,7 @@ struct ChatMessagesView: View {
                 )
                 .overlay(
                     VoiceRecorderView(isVoiceRecord: $isVoiceRecord, onSendAudio: {audio in
-                        print("send audio: \(audio)")
-                        messageViewModel.sendMessage(message: MessageModel(type: "STARTER", audio:audio))
+                        messageViewModel.sendMessage(message: MessageModel(type: "STARTER", audio: audio))
                         isVoiceRecord.toggle()
                     })
                 )

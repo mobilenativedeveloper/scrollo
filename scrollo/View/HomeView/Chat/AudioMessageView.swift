@@ -15,7 +15,7 @@ struct AudioMessageView: View {
     @Binding var message: MessageModel
     
     @State var configuration: Waveform.Configuration = Waveform.Configuration(
-        style: .striped(.init(color: UIColor(Color(hex: "#080808")), width: 2, spacing: 2)),
+        style: .striped(.init(color: UIColor(Color(hex: "#080808")), width: 3, spacing: 3)),
         position: .middle
     )
     
@@ -35,7 +35,62 @@ struct AudioMessageView: View {
         HStack(alignment: .top, spacing: 10){
             if message.type == "STARTER" {
                 Spacer(minLength: 25)
-                // This is my massage
+                if audioURL != nil {
+                    HStack(spacing: 2.0) {
+                        if player.isPlaying && player.id == message.id {
+                            Button(action: {
+                                player.stopPlayback()
+                            }){
+                                Image(systemName: "pause.circle")
+                                    .font(.system(size: 23))
+                                    .foregroundColor(Color.white)
+                                    .frame(width: 23, height: 23)
+                                    .padding(.trailing, 8)
+                            }
+                        } else {
+                            Button(action: {
+                                player.id = message.id
+                                player.startPlayback(audio: audioURL!)
+                                self.timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+                            }){
+                                Image(systemName: "play.circle")
+                                    .font(.system(size: 23))
+                                    .foregroundColor(Color.white)
+                                    .frame(width: 23, height: 23)
+                                    .padding(.trailing, 8)
+                            }
+                        }
+                        
+                        
+                        Rectangle()
+                            .fill(player.isPlaying && player.id == message.id ? Color.white.opacity(0.5) : Color.white)
+                            .overlay(Color.white.frame(width: player.isPlaying && player.id == message.id ? getCurrentWidth() : 0),alignment: .leading)
+                            .mask(WaveformViewTest(audioURL: $audioURL, configuration: $configuration))
+                        
+                        
+                        
+                        Text(player.isPlaying && player.id == message.id ? "\(Self.timeFormatter.string(from: playValue) ?? "00:00")" : "\(Self.timeFormatter.string(from: getDuration()) ?? "00:00")")
+                            .font(.system(size: 12))
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.white)
+                            .frame(width: 40)
+                            .padding(.leading, 8)
+                            .onReceive(timer) { _ in
+                                    if player.isPlaying && player.id == message.id {
+                                        if let currentTime = player.audioPlayer?.currentTime {
+                                            self.playValue = currentTime
+                                        }
+                                    }
+                                    else {
+                                        self.timer.upstream.connect().cancel()
+                                    }
+                                }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 20)
+                    .background(Color(hex: "#5B86E5"))
+                    .clipShape(CustomCorner(radius: 10, corners: [.topLeft, .bottomLeft, .bottomRight]))
+                }
             }
             else {
                 Image("testUserPhoto")
@@ -109,9 +164,16 @@ struct AudioMessageView: View {
         .padding(.vertical)
         .id(message.id)
         .onAppear{
-            downloadFile(withUrl: message.audio!) { filePath in
+            if message.type == "STARTER" {
                 withAnimation(.easeInOut) {
-                    self.audioURL = filePath
+                    self.audioURL = message.audio!
+                }
+            }
+            else {
+                downloadFile(withUrl: message.audio!) { filePath in
+                    withAnimation(.easeInOut) {
+                        self.audioURL = filePath
+                    }
                 }
             }
         }

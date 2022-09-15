@@ -31,7 +31,7 @@ struct VoiceRecorderView: View {
                         isVoiceRecord.toggle()
                     }
                 }) {
-                    Image(systemName: "stop.fill")
+                    Image(systemName: "trash")
                         .font(.system(size: 22))
                         .foregroundColor(.white)
                         .frame(width: 20, height: 20)
@@ -40,14 +40,12 @@ struct VoiceRecorderView: View {
                 Spacer()
                 
                 AudioVisualizationView()
+                    .frame(height: 20)
                     .environmentObject(audioRecorder)
                     .onChange(of: audioRecorder.audio) { newValue in
                         if let audio = newValue {
-                            print("onSendAudio")
                             onSendAudio(audio)
-                            
                         }
-                        
                     }
                 
                 Spacer()
@@ -62,7 +60,6 @@ struct VoiceRecorderView: View {
                     .foregroundColor(.white)
                 Button(action: {
                     audioRecorder.isRecording.toggle()
-                    
                 }) {
                     Image(systemName: "arrow.up.circle.fill")
                         .font(.system(size: 22))

@@ -40,8 +40,6 @@ class AudioRecorderViewModel: NSObject, ObservableObject, RecordingDelegate {
     func stopRecording() {
         audioManager.stopRecording()
         isRecording = false
-        
-        
     }
 
     // MARK: - RecordingDelegate
@@ -53,7 +51,7 @@ class AudioRecorderViewModel: NSObject, ObservableObject, RecordingDelegate {
             let fileManager = FileManager.default
             let documentDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let directoryContents = try! fileManager.contentsOfDirectory(at: documentDirectory, includingPropertiesForKeys: nil)
-            self.audio = directoryContents.last!
+            self.audio = audioFile
         }
     }
 
