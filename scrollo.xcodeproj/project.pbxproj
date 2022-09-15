@@ -179,6 +179,7 @@
 		ACEE4F31287E040500C464D6 /* CreateThumbnailFromVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEE4F30287E040500C464D6 /* CreateThumbnailFromVideo.swift */; };
 		ACF063B728D3823200CC4208 /* WaveformViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063B628D3823200CC4208 /* WaveformViewTest.swift */; };
 		ACF063B928D3A85900CC4208 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063B828D3A85900CC4208 /* AudioPlayer.swift */; };
+		ACF063BB28D3B32200CC4208 /* MessageActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063BA28D3B32200CC4208 /* MessageActivityIndicatorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -371,6 +372,7 @@
 		ACEE4F30287E040500C464D6 /* CreateThumbnailFromVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateThumbnailFromVideo.swift; sourceTree = "<group>"; };
 		ACF063B628D3823200CC4208 /* WaveformViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformViewTest.swift; sourceTree = "<group>"; };
 		ACF063B828D3A85900CC4208 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
+		ACF063BA28D3B32200CC4208 /* MessageActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageActivityIndicatorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -468,6 +470,7 @@
 				ACE2AF2D28D37BC7005603E9 /* AudioMessageView.swift */,
 				ACE2AF2F28D37C95005603E9 /* DetailUserView.swift */,
 				ACE2AF3128D37CC7005603E9 /* SelectAttachmentsView.swift */,
+				ACF063BA28D3B32200CC4208 /* MessageActivityIndicatorView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1100,6 +1103,7 @@
 				ACE2AF2C28D37BB2005603E9 /* TextMessageView.swift in Sources */,
 				AC54C2FB28B3661900D8CF2C /* ImageCropperViewModel.swift in Sources */,
 				AC10101E2878497C0014E13B /* SafetyView.swift in Sources */,
+				ACF063BB28D3B32200CC4208 /* MessageActivityIndicatorView.swift in Sources */,
 				ACC1DE2528951483008A3932 /* InterestingPeople.swift in Sources */,
 				ACC21AC7286327AD00AF8B0D /* FeedView.swift in Sources */,
 				ACEB90012892D61D0096110D /* ToastViewModel.swift in Sources */,

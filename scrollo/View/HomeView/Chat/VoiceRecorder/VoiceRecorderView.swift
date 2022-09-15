@@ -42,7 +42,6 @@ struct VoiceRecorderView: View {
                 AudioVisualizationView()
                     .environmentObject(audioRecorder)
                     .onChange(of: audioRecorder.audio) { newValue in
-                        print("newValue: \(newValue)")
                         if let audio = newValue {
                             print("onSendAudio")
                             onSendAudio(audio)

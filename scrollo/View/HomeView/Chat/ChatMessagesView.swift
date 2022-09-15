@@ -84,11 +84,11 @@ struct ChatMessagesView: View {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                                 withAnimation(.easeInOut){
                                     messageViewModel.sendMessage(message: MessageModel(type: "RECIVER", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."))
-                                    messageViewModel.sendMessage(message: MessageModel(type: "RECIVER", audio: URL(string: "https://download.samplelib.com/mp3/sample-3s.mp3")))
+                                    
+                                    messageViewModel.sendMessage(message: MessageModel(type: "RECIVER", audio: URL(string: "https://archive.org/download/testmp3testfile/mpthreetest.mp3")))
                                 }
                             }
                             messageViewModel.message = String()
-//                            UIApplication.shared.endEditing()
                         }
                     }) {
                         Image("send")

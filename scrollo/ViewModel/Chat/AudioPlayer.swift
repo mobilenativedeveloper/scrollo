@@ -23,6 +23,9 @@ class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate{
     
     var audioPlayer:AVAudioPlayer?
     
+    @Published var id: String?
+    
+    
     func startPlayback(audio: URL) {
         let playbackSession = AVAudioSession.sharedInstance()
             
@@ -45,6 +48,7 @@ class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate{
     func stopPlayback() {
         audioPlayer?.stop()
         isPlaying = false
+        id = nil
     }
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {

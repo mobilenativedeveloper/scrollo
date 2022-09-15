@@ -7,11 +7,7 @@
 
 import SwiftUI
 import DSWaveformImage
-
-
-import Combine
-
-
+import AVFoundation
 
 struct AudioMessageView: View {
     @EnvironmentObject var player: AudioPlayer
@@ -19,9 +15,19 @@ struct AudioMessageView: View {
     @Binding var message: MessageModel
     
     @State var configuration: Waveform.Configuration = Waveform.Configuration(
-        style: .striped(.init(color: UIColor(Color(hex: "#5B86E5")), width: 3, spacing: 3)),
+        style: .striped(.init(color: UIColor(Color(hex: "#080808")), width: 2, spacing: 2)),
         position: .middle
     )
+    
+    @State private var playValue: TimeInterval = 0.0
+    @State private var timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    
+    static let timeFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.minute, .second]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
     
     @State var audioURL: URL?
     
@@ -39,45 +45,67 @@ struct AudioMessageView: View {
                     .cornerRadius(8)
                     .clipped()
                 if audioURL == nil {
-                    MessageActivityIndicator(color: Color(hex: "#6F83E9"), size: 40)
+                    MessageActivityIndicatorView(color: Color(hex: "#efefef"), size: 40)
                 }
                 else {
                     HStack(spacing: 2.0) {
-                        if player.isPlaying {
+                        if player.isPlaying && player.id == message.id {
                             Button(action: {
                                 player.stopPlayback()
                             }){
-                                Image(systemName: "stop.fill")
-                                    .foregroundColor(Color(hex: "#6F83E9"))
-                                    .padding(.trailing, 16)
-                                    .font(.title)
+                                Image(systemName: "pause.circle")
+                                    .font(.system(size: 23))
+                                    .foregroundColor(Color(hex: "#080808"))
+                                    .frame(width: 23, height: 23)
+                                    .padding(.trailing, 8)
                             }
                         } else {
                             Button(action: {
+                                player.id = message.id
                                 player.startPlayback(audio: audioURL!)
+                                self.timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
                             }){
                                 Image(systemName: "play.circle")
-                                    .foregroundColor(Color(hex: "#6F83E9"))
-                                    .padding(.trailing, 16)
-                                    .font(.title)
+                                    .font(.system(size: 23))
+                                    .foregroundColor(Color(hex: "#080808"))
+                                    .frame(width: 23, height: 23)
+                                    .padding(.trailing, 8)
                             }
                         }
                         
-                        Spacer()
-                        WaveformViewTest(audioURL: $audioURL, configuration: $configuration)
-                        Spacer()
-                        Text("00:59")
+                        
+                        Rectangle()
+                            .fill(player.isPlaying && player.id == message.id ? Color(hex: "#a8a8a8") : Color(hex: "#080808"))
+                            .overlay(Color(hex: "#080808").frame(width: player.isPlaying && player.id == message.id ? getCurrentWidth() : 0),alignment: .leading)
+                            .mask(WaveformViewTest(audioURL: $audioURL, configuration: $configuration))
+                        
+                        
+                        
+                        Text(player.isPlaying && player.id == message.id ? "\(Self.timeFormatter.string(from: playValue) ?? "00:00")" : "\(Self.timeFormatter.string(from: getDuration()) ?? "00:00")")
                             .font(.system(size: 12))
                             .fontWeight(.bold)
                             .foregroundColor(Color(hex: "#2E313C"))
-                            .padding(.leading, 16)
+                            .frame(width: 40)
+                            .padding(.leading, 8)
+                            .onReceive(timer) { _ in
+                                    if player.isPlaying && player.id == message.id {
+                                        if let currentTime = player.audioPlayer?.currentTime {
+                                            self.playValue = currentTime
+                                        }
+                                    }
+                                    else {
+                                        self.timer.upstream.connect().cancel()
+                                    }
+                                }
                     }
                     .padding(.horizontal, 16)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color(hex: "F2F2F2"), lineWidth: 1)
-                    )
+                    .padding(.vertical, 20)
+                    .background(Color(hex: "#F2F2F2"))
+                    .cornerRadius(12)
+//                    .background(
+//                        RoundedRectangle(cornerRadius: 12)
+//                            .stroke(Color(hex: "#F2F2F2"), lineWidth: 1)
+//                    )
                 }
                 Spacer(minLength: 25)
             }
@@ -112,78 +140,19 @@ struct AudioMessageView: View {
             }
         }
     }
-}
-
-struct AudioLoadIndicator: View{
-    @State var isAnimating: Bool = false
-    let count: Int = 10
-    let spacing: CGFloat = 8
-    let cornerRadius: CGFloat = 8
-    let scaleRange: ClosedRange<Double> = (0.5...1)
     
-    var body: some View{
-        HStack(spacing: spacing){
-            ForEach(0..<Int(count)) { index in
-                item(forIndex: index)
-            }
-        }
-        .onAppear{
-            isAnimating.toggle()
-        }
-    }
-    
-    private var scale: CGFloat { CGFloat(isAnimating ? scaleRange.lowerBound : scaleRange.upperBound) }
-    
-    private func size(count: Int) -> CGFloat {
-        (3/CGFloat(count)) - (spacing-2)
-    }
-    
-    private func item(forIndex index: Int) -> some View {
-        RoundedRectangle(cornerRadius: cornerRadius)
-            .fill(Color.red)
-            .frame(width: 3, height: 7)
-            .scaleEffect(x: 1, y: scale, anchor: .center)
-            .animation(
-                Animation
-                    .default
-                    .repeatCount(isAnimating ? .max : 1, autoreverses: true)
-                    .delay(Double(index) / Double(count) / 2)
-            )
-            .offset(x: CGFloat(index) * (size(count: count) + spacing))
-    }
-}
-
-struct MessageActivityIndicator: View{
-    
-    let timer: Publishers.Autoconnect<Timer.TimerPublisher>
-    let timing: Double
+    func getCurrentWidth() -> CGFloat {
+        let pDuration = (player.audioPlayer!.currentTime*100)/self.getDuration()
         
-    let maxCounter = 3
-    @State var counter = 0
-        
-    let frame: CGSize
-    let primaryColor: Color
+        let progress = (200*pDuration)/100
 
-    init(color: Color = .black, size: CGFloat = 50, speed: Double = 0.5) {
-        timing = speed / 2
-        timer = Timer.publish(every: timing, on: .main, in: .common).autoconnect()
-        frame = CGSize(width: size, height: size)
-        primaryColor = color
+        return progress
     }
-
-    var body: some View {
-        HStack(spacing: 5) {
-            ForEach(0..<maxCounter) { index in
-                Circle()
-                    .offset(y: counter == index ? -frame.height / 10 : frame.height / 10)
-                    .fill(primaryColor)
-                }
-        }
-        .frame(width: frame.width, height: frame.height, alignment: .center)
-        .onReceive(timer, perform: { _ in
-            withAnimation(.easeInOut(duration: timing * 2)) {
-                counter = counter == (maxCounter - 1) ? 0 : counter + 1
-            }
-        })
+    
+    func getDuration()-> Double {
+        let asset = AVURLAsset(url: self.audioURL!)
+        return Double(asset.duration.value) / Double(asset.duration.timescale)
     }
 }
+
+
