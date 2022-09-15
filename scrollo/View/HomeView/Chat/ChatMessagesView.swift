@@ -83,9 +83,18 @@ struct ChatMessagesView: View {
                             }
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                                 withAnimation(.easeInOut){
-                                    messageViewModel.sendMessage(message: MessageModel(type: "RECIVER", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."))
+                                    messageViewModel.sendMessage(message: MessageModel(type: "RECIVER", content: "MatreshkaVPN безотказный и простой в использовании анонимайзер позволяющий вам посещать любые сайты и приложения, на которые наложены ограничения провайдером, оставаясь полностью анонимным. Matreshka не просто подменяет локацию вашего устройства, но и передает все ваши запросы в зашифрованном виде, переводя устройство в режим “невидимки”. Высокая скорость соединения, неограниченный трафик и различное расположение сервером обеспечат вам комфортное использование любых сайтов и приложений. MatreshkaVPN не мешает работе остальных приложений и не снижает скорость вашего интернета."))
+                                
+                                    messageViewModel.sendMessage(message: MessageModel(type: "RECIVER", audio: URL(string: "https://zvukogram.com/index.php?r=site/download&id=43127")))
                                     
-                                    messageViewModel.sendMessage(message: MessageModel(type: "RECIVER", audio: URL(string: "https://archive.org/download/testmp3testfile/mpthreetest.mp3")))
+                                    messageViewModel.sendMessage(message: MessageModel(type: "RECIVER", audio: URL(string: "https://zvukogram.com/index.php?r=site/download&id=43101")))
+                                    
+                                    messageViewModel.sendMessage(message: MessageModel(type: "RECIVER", audio: URL(string: "https://zvukogram.com/index.php?r=site/download&id=43103")))
+                                    
+                                    messageViewModel.sendMessage(message: MessageModel(type: "RECIVER", audio: URL(string: "https://zvukogram.com/index.php?r=site/download&id=78804")))
+                                    
+                                
+                                
                                 }
                             }
                             messageViewModel.message = String()

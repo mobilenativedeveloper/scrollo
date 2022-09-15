@@ -102,10 +102,6 @@ struct AudioMessageView: View {
                     .padding(.vertical, 20)
                     .background(Color(hex: "#F2F2F2"))
                     .cornerRadius(12)
-//                    .background(
-//                        RoundedRectangle(cornerRadius: 12)
-//                            .stroke(Color(hex: "#F2F2F2"), lineWidth: 1)
-//                    )
                 }
                 Spacer(minLength: 25)
             }
