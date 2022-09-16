@@ -157,7 +157,6 @@ struct ChatMessagesView: View {
                         }
                     }
                 })
-                    .environmentObject(messageViewModel)
             }
         }
         .alert(isPresented: $isRequestPermission){
@@ -175,58 +174,13 @@ struct ChatMessagesView: View {
                 .opacity(loadExpandedContent ? 1 : 0)
                 .ignoresSafeArea()
         })
-        .overlay{
-            if let expandedMedia = expandedMedia,isExpanded {
-                ExpandedView(expandedMedia: expandedMedia)
-            }
-        }
+        .overlay(ImageOverviewView(loadExpandedContent: $loadExpandedContent, isExpanded: $isExpanded, expandedMedia: $expandedMedia, animation: animation)
+        )
         .onTapGesture {
             UIApplication.shared.endEditing()
         }
     }
     
-    @ViewBuilder
-    func ExpandedView(expandedMedia: MessageModel)->some View{
-        VStack{
-            GeometryReader{proxy in
-                let size = proxy.size
-                
-                Image("story1")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: size.width, height: size.height)
-                    .cornerRadius(loadExpandedContent ? 0 : 10)
-            }
-            .matchedGeometryEffect(id: expandedMedia.id, in: animation)
-            .frame(height: 300)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .overlay(alignment: .top, content:{
-            HStack(spacing: 10){
-                Button(action: {
-                    withAnimation(.easeInOut(duration: 0.3)){
-                        loadExpandedContent = false
-                    }
-                    withAnimation(.easeInOut(duration: 0.3).delay(0.05)){
-                        isExpanded = false
-                    }
-                }){
-                    Image(systemName: "arrow.left")
-                        .font(.title3)
-                        .foregroundColor(.white)
-                }
-                Spacer(minLength: 10)
-            }
-            .padding()
-            .opacity(loadExpandedContent ? 1 : 0)
-        })
-        .transition(.offset(x: 0, y: 1))
-        .onAppear{
-            withAnimation(.easeInOut(duration: 0.3)){
-                loadExpandedContent = true
-            }
-        }
-    }
     
     func permission(){
         switch AVAudioSession.sharedInstance().recordPermission {

@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SelectAttachmentsView: View {
-    @EnvironmentObject var messageViewModel: MessageViewModel
     @StateObject var photos: AttachmentsViewModel = AttachmentsViewModel()
     @Binding var isPresent: Bool
     @State var offset: CGFloat = 900
