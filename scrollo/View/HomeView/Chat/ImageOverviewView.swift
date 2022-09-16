@@ -12,6 +12,8 @@ struct ImageOverviewView: View {
     @Binding var isExpanded: Bool
     @Binding var expandedMedia: MessageModel?
     var animation: Namespace.ID
+    @Binding var offset: CGSize
+    var offsetProgress: CGFloat
     
     @State var isShare: Bool = false
     
@@ -26,6 +28,36 @@ struct ImageOverviewView: View {
                             .aspectRatio(contentMode: .fill)
                             .frame(width: size.width, height: size.height)
                             .cornerRadius(loadExpandedContent ? 0 : 10)
+                            .offset(y: loadExpandedContent ? offset.height : .zero)
+                            .gesture(
+                                DragGesture()
+                                    .onChanged({ value in
+                                        withAnimation(.easeInOut(duration: 0.2)){
+                                            offset = value.translation
+                                        }
+                                        
+                                    })
+                                    .onEnded({ value in
+                                        let height = value.translation.height
+                                        if height > 0 && height > 100{
+                                            withAnimation(.easeInOut(duration: 0.2)){
+                                                loadExpandedContent = false
+                                            }
+                                            withAnimation(.easeInOut(duration: 0.2).delay(0.05)){
+                                                isExpanded = false
+                                                self.expandedMedia = nil
+                                            }
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                                offset = .zero
+                                            }
+                                        }
+                                        else{
+                                            withAnimation(.easeInOut(duration: 0.2)){
+                                                offset = .zero
+                                            }
+                                        }
+                                    })
+                            )
                     }
                 }
                 .matchedGeometryEffect(id: expandedMedia.id, in: animation)
@@ -61,6 +93,7 @@ struct ImageOverviewView: View {
                 }
                 .padding()
                 .opacity(loadExpandedContent ? 1 : 0)
+                .opacity(offsetProgress)
             })
             .actionSheet(isPresented: $isShare, content: {
                 ActionSheet(title: Text("Поделиться"), buttons: [

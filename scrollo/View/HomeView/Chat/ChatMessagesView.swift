@@ -23,6 +23,7 @@ struct ChatMessagesView: View {
     @State var isExpanded: Bool = false
     @State var expandedMedia: MessageModel?
     @State var loadExpandedContent: Bool = false
+    @State var offset: CGSize = .zero
     
     var body: some View {
         VStack(spacing: 0) {
@@ -172,15 +173,25 @@ struct ChatMessagesView: View {
             Rectangle()
                 .fill(.black)
                 .opacity(loadExpandedContent ? 1 : 0)
+                .opacity(offsetProgress())
+                .ignoresSafeArea()
                 .ignoresSafeArea()
         })
-        .overlay(ImageOverviewView(loadExpandedContent: $loadExpandedContent, isExpanded: $isExpanded, expandedMedia: $expandedMedia, animation: animation)
+        .overlay(ImageOverviewView(loadExpandedContent: $loadExpandedContent, isExpanded: $isExpanded, expandedMedia: $expandedMedia, animation: animation, offset: $offset, offsetProgress: offsetProgress())
         )
         .onTapGesture {
             UIApplication.shared.endEditing()
         }
     }
     
+    func offsetProgress()->CGFloat{
+        let progress = offset.height / 100
+        if progress < 1{
+            return 1
+        } else {
+            return 1 - (progress < 1 ? progress : 1)
+        }
+    }
     
     func permission(){
         switch AVAudioSession.sharedInstance().recordPermission {
