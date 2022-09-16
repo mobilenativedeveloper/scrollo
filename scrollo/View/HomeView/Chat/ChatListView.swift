@@ -32,33 +32,29 @@ struct ChatListView: View {
                 .cornerRadius(8)
                 .shadow(color: Color(hex: "#ececec").opacity(0.5), radius: 30, x: 0, y: 0)
                 .padding(.horizontal)
-                .padding(.top, 25)
-                .padding(.bottom, 30)
-                
-                // Favorites chats
-                if chatViewModel.favoriteChats.count > 0 {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("Избранные контакты")
-                            .font(.custom(GothamMedium, size: 16))
-                            .foregroundColor(Color(hex: "#4F4F4F"))
-                            .padding(.horizontal)
-                            .padding(.bottom, 15)
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 20) {
-                                ForEach(0..<chatViewModel.favoriteChats.count, id: \.self) {index in
-                                    FavoriteContactView(favoriteChatList: $chatViewModel.favoriteChats, chat: chatViewModel.favoriteChats[index])
-                                }
-                            }
-                            .padding(.horizontal)
-                        }
-                    }
-                    .padding(.bottom, 35)
-                }
+                .padding(.top, 15) //<--This mark
+                .padding(.bottom, 15) //<--This mark
                 
                 // Chat list
-                VStack(spacing: 13) {
+                VStack(alignment: .leading, spacing: 13) {
                     if (chatViewModel.loadChats) {
-                        if chatViewModel.chats.count > 0{
+                        if chatViewModel.chats.count > 0 || chatViewModel.favoriteChats.count > 0{
+                            // Favorites chats
+                            if chatViewModel.favoriteChats.count > 0{
+                                Text("Избранные контакты")
+                                    .font(.custom(GothamMedium, size: 16))
+                                    .foregroundColor(Color(hex: "#4F4F4F"))
+                                    .padding(.bottom, 9) //<--This mark
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 20) {
+                                        ForEach(0..<chatViewModel.favoriteChats.count, id: \.self) {index in
+                                            FavoriteContactView(chat: chatViewModel.favoriteChats[index])
+                                                .environmentObject(chatViewModel)
+                                        }
+                                    }
+                                }
+                                .padding(.bottom, 5) //<--This mark
+                            }
                             ForEach(0..<chatViewModel.chats.count, id: \.self) {index in
                                 ChatItemView(chat: $chatViewModel.chats[index], chatList: $chatViewModel.chats)
                                     .environmentObject(chatViewModel)
@@ -81,7 +77,6 @@ struct ChatListView: View {
             .refreshableCompat(
                 showsIndicators: false, onRefresh: { done in
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        
                         chatViewModel.getChats {
                             done()
                         }
@@ -114,7 +109,10 @@ struct ChatListView: View {
             }
         }
         .onAppear {
-            chatViewModel.getChats {}
+            
+            chatViewModel.getChats{
+                
+            }
         }
     }
 }

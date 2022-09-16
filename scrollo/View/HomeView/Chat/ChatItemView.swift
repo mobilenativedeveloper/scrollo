@@ -20,6 +20,7 @@ struct ChatItemView: View{
             ZStack {
                 LinearGradient(gradient: .init(colors: [Color(hex: "#f55442"), Color(hex: "#fa6c5c").opacity(0.5)]), startPoint: .trailing, endPoint: .leading)
                     .clipShape(CustomCorner(radius: 15, corners: [.topLeft, .bottomLeft]))
+                    .frame(height: 70)
                 
                 HStack{
                     Spacer(minLength: 90)
@@ -141,7 +142,7 @@ struct ChatItemView: View{
     }
     
     func addFavoriteChat(){
-        chatViewModel.favoriteChats.append(chat)
+        chatViewModel.addFavorite(chat: self.chat)
         self.isSwiped = false
         self.offset = 0
     }

@@ -41,16 +41,13 @@ class AudioRecorderViewModel: NSObject, ObservableObject, RecordingDelegate {
         audioManager.stopRecording()
         isRecording = false
     }
-
+    
     // MARK: - RecordingDelegate
     func audioManager(_ manager: SCAudioManager!, didAllowRecording flag: Bool) {}
 
     func audioManager(_ manager: SCAudioManager!, didFinishRecordingSuccessfully flag: Bool) {
         
         if let audioFile = manager.recordedAudioFileURL() {
-            let fileManager = FileManager.default
-            let documentDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let directoryContents = try! fileManager.contentsOfDirectory(at: documentDirectory, includingPropertiesForKeys: nil)
             self.audio = audioFile
         }
     }
