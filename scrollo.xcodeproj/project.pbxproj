@@ -185,6 +185,9 @@
 		ACF063C128D49F2700CC4208 /* VideoMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063C028D49F2200CC4208 /* VideoMessageView.swift */; };
 		ACF063C328D4A44400CC4208 /* ImageOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063C228D4A44300CC4208 /* ImageOverviewView.swift */; };
 		ACF063C528D4BAAA00CC4208 /* ChatSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063C428D4BAA900CC4208 /* ChatSettingsView.swift */; };
+		ACF063C728D4F27000CC4208 /* CreateChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063C628D4F27000CC4208 /* CreateChatViewModel.swift */; };
+		ACF063C928D5061A00CC4208 /* FollowersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063C828D5061900CC4208 /* FollowersView.swift */; };
+		ACF063CB28D506F100CC4208 /* FollowersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063CA28D506F100CC4208 /* FollowersViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -383,6 +386,9 @@
 		ACF063C028D49F2200CC4208 /* VideoMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageView.swift; sourceTree = "<group>"; };
 		ACF063C228D4A44300CC4208 /* ImageOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOverviewView.swift; sourceTree = "<group>"; };
 		ACF063C428D4BAA900CC4208 /* ChatSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSettingsView.swift; sourceTree = "<group>"; };
+		ACF063C628D4F27000CC4208 /* CreateChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateChatViewModel.swift; sourceTree = "<group>"; };
+		ACF063C828D5061900CC4208 /* FollowersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersView.swift; sourceTree = "<group>"; };
+		ACF063CA28D506F100CC4208 /* FollowersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -630,6 +636,7 @@
 				AC1FF2CD28AF9AF700806CC0 /* AddStoryViewModel.swift */,
 				AC8E24F228B0BBD8001486FC /* CameraController.swift */,
 				AC3756CF28B8F9B900C678B6 /* ActionViewModel.swift */,
+				ACF063CA28D506F100CC4208 /* FollowersViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -702,6 +709,7 @@
 				AC1F7C1F2876C064009227CB /* EditUserProfile.swift */,
 				AC8E24F428B0DA60001486FC /* AppNotificationCenter.swift */,
 				AC8E250428B12AA8001486FC /* DashboardView.swift */,
+				ACF063C828D5061900CC4208 /* FollowersView.swift */,
 			);
 			path = HomeView;
 			sourceTree = "<group>";
@@ -765,6 +773,7 @@
 				ACE2AF2728D3266A005603E9 /* MessageViewModel.swift */,
 				ACF063B828D3A85900CC4208 /* AudioPlayer.swift */,
 				ACF063BE28D4739300CC4208 /* AttachmentsViewModel.swift */,
+				ACF063C628D4F27000CC4208 /* CreateChatViewModel.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1102,6 +1111,7 @@
 				AC1F7C222876C900009227CB /* EditProfileViewModel.swift in Sources */,
 				ACF063B728D3823200CC4208 /* WaveformViewTest.swift in Sources */,
 				AC3756D028B8F9B900C678B6 /* ActionViewModel.swift in Sources */,
+				ACF063CB28D506F100CC4208 /* FollowersViewModel.swift in Sources */,
 				AC6A473E28D226A400FBFF30 /* ChatListView.swift in Sources */,
 				ACDB88E72879C04800C6F1B2 /* PublicationTextPostView.swift in Sources */,
 				ACEB90062892F7120096110D /* PostHeaderView.swift in Sources */,
@@ -1142,6 +1152,7 @@
 				AC8E24F828B0DAE0001486FC /* PostActionsSheet.swift in Sources */,
 				ACC21A992863045400AF8B0D /* OTPViewModel.swift in Sources */,
 				AC0E252228709B9C00AFB2F2 /* CommentsView.swift in Sources */,
+				ACF063C728D4F27000CC4208 /* CreateChatViewModel.swift in Sources */,
 				ACC21AE628644A2400AF8B0D /* SearchHistoryViewModel.swift in Sources */,
 				AC05854D28B1953900BB982A /* ActualStoryView.swift in Sources */,
 				ACC21AD728633DEC00AF8B0D /* TextWithHashtags.swift in Sources */,
@@ -1176,6 +1187,7 @@
 				ACE2AF1E28D3206F005603E9 /* VoiceRecorderView.swift in Sources */,
 				AC4039222870387900B9A762 /* Test.swift in Sources */,
 				ACC21AC52863235200AF8B0D /* Fonts.swift in Sources */,
+				ACF063C928D5061A00CC4208 /* FollowersView.swift in Sources */,
 				AC2CAB0C2874569700BEEB3C /* BottomSheetViewModel.swift in Sources */,
 				AC1FF2CC28AF75BE00806CC0 /* AddStoryView.swift in Sources */,
 				ACACBDF0287A41A300DF7171 /* AssetModel.swift in Sources */,

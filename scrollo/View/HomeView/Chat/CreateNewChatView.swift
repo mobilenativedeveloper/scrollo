@@ -10,71 +10,78 @@ import Introspect
 import SDWebImageSwiftUI
 
 struct CreateNewChatView: View {
-//    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-//    @StateObject var messangerViewModel : MessangerViewModel = MessangerViewModel()
-//    @State var findUser: String = ""
-    
+    @ObservedObject var createChatViewModel : CreateChatViewModel = CreateChatViewModel()
+    @Binding var presentNewChat: Bool
+    var onCreated: (ChatListModel.ChatModel)->Void
     var body: some View {
         VStack {
-//            HeaderBar()
-//            VStack(alignment: .leading){
-//                Text("Кому: ")
-//                    .font(.custom(GothamBold, size: 14))
-//                    .foregroundColor(Color(hex: "#2E313C"))
-//                TextField("Поиск", text: $findUser)
-//            }
-//            .padding(.horizontal)
-//            .padding(.bottom)
-//            ScrollView(showsIndicators: false) {
-//                if (!messangerViewModel.load) {
-//                    ProgressView()
-//                } else {
-//                    ForEach(0..<messangerViewModel.followers.count, id: \.self){index in
-//                        Button(action: {
-//                            messangerViewModel.createChat(userId: messangerViewModel.followers[index].followOnUser.id) { res in
-//                                if (res == true) {
-//                                    presentationMode.wrappedValue.dismiss()
+            HeaderBar(presentNewChat: $presentNewChat)
+            VStack(alignment: .leading){
+                Text("Кому: ")
+                    .font(.custom(GothamBold, size: 14))
+                    .foregroundColor(Color(hex: "#2E313C"))
+                TextField("Поиск", text: $createChatViewModel.findUser)
+            }
+            .padding(.horizontal)
+            .padding(.bottom)
+            ScrollView(showsIndicators: false) {
+                if (!createChatViewModel.load) {
+                    ProgressView()
+                } else {
+                    ForEach(0..<createChatViewModel.followers.count, id: \.self){index in
+                        Button(action: {
+//                            createChatViewModel.createChat(userId: createChatViewModel.followers[index].followOnUser.id) { newChat in
+//                                if let newChat = newChat{
+//                                    onCreated(newChat)
 //                                }
 //                            }
-//                        }) {
-//                            HStack(alignment: .top) {
-//                                if let avatar = messangerViewModel.followers[index].followOnUser.avatar {
-//                                    WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
-//                                        .resizable()
-//                                        .frame(width: 56, height: 56)
-//                                        .cornerRadius(16)
-//                                } else {
-//                                    UIDefaultAvatar(width: 56, height: 56, cornerRadius: 16)
-//                                }
-//
-//                                VStack(alignment: .leading) {
-//                                    Text(messangerViewModel.followers[index].followOnUser.login ?? "")
-//                                        .font(.custom(GothamBold, size: 14))
-//                                        .foregroundColor(Color(hex: "#2E313C"))
-//    //                                Text("@login")
-//    //                                    .font(.custom(GothamBook, size: 14))
-//    //                                    .foregroundColor(Color(hex: "#2E313C"))
-//                                }
-//                                Spacer()
-//                            }
-//                        }
-//                        .padding(.horizontal)
-//                    }
-//                }
-//            }
+                        }) {
+                            HStack(alignment: .top) {
+                                if let avatar = createChatViewModel.followers[index].followOnUser.avatar {
+                                    WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
+                                        .resizable()
+                                        .frame(width: 56, height: 56)
+                                        .cornerRadius(16)
+                                } else {
+                                    UIDefaultAvatar(width: 56, height: 56, cornerRadius: 16)
+                                }
+
+                                VStack(alignment: .leading) {
+                                    Text(createChatViewModel.followers[index].followOnUser.login ?? "")
+                                        .font(.custom(GothamBold, size: 14))
+                                        .foregroundColor(Color(hex: "#2E313C"))
+                                    Text("@login")
+                                        .font(.custom(GothamBook, size: 14))
+                                        .foregroundColor(Color(hex: "#2E313C"))
+                                }
+                                Spacer()
+                            }
+                        }
+                        .padding(.horizontal)
+                        .transition(.opacity)
+                    }
+                }
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.white.edgesIgnoringSafeArea(.all))
+        .transition(.move(edge: .trailing))
         .onAppear {
-//            messangerViewModel.getFollowers()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                createChatViewModel.getFollowers()
+            }
         }
     }
 }
 
 private struct HeaderBar: View {
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Binding var presentNewChat: Bool
     var body: some View{
         HStack(spacing: 0) {
             Button(action: {
-                presentationMode.wrappedValue.dismiss()
+                withAnimation(.easeInOut(duration: 0.3)){
+                    presentNewChat.toggle()
+                }
             }) {
                 Image("circle_close")
                     .resizable()

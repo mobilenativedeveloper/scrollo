@@ -10,17 +10,23 @@ import SwiftUI
 struct FollowInfoView: View {
     var followersCount: Int
     var followingCount: Int
+    
     var body: some View {
         HStack {
-            VStack {
-                Text("\(followersCount)")
-                    .font(.system(size: 21))
-                    .fontWeight(.bold)
-                    .foregroundColor(Color(hex: "#1F2128"))
-                Text("подписчики")
-                    .font(.system(size: 11))
-                    .foregroundColor(Color(hex: "#828796"))
+            NavigationLink {
+                FollowersView().ignoreDefaultHeaderBar
+            } label: {
+                VStack {
+                    Text("\(followersCount)")
+                        .font(.system(size: 21))
+                        .fontWeight(.bold)
+                        .foregroundColor(Color(hex: "#1F2128"))
+                    Text("подписчики")
+                        .font(.system(size: 11))
+                        .foregroundColor(Color(hex: "#828796"))
+                }
             }
+
             Spacer()
             VStack {
                 Text("\(followingCount)")

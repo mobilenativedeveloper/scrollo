@@ -13,9 +13,12 @@ struct ChatListView: View {
     @State private var searchText : String = String()
     @State var isShowing: Bool = false
     
+    @State var presentNewChat: Bool = false
+    @State var pushOnNewChat: Bool = false
+    
     var body: some View {
         VStack(spacing: 0) {
-            HeaderBar()
+            HeaderBar(presentNewChat: $presentNewChat)
             VStack {
                 HStack(spacing: 0) {
                     Image(systemName: "magnifyingglass")
@@ -81,7 +84,25 @@ struct ChatListView: View {
                 }
             )
         }
+        .background(
+            NavigationLink(destination: ChatMessagesView().ignoreDefaultHeaderBar, isActive: $pushOnNewChat, label: {
+                EmptyView()
+            })
+        )
         .background(Color(hex: "#F9F9F9").edgesIgnoringSafeArea(.all))
+        .overlay{
+            if presentNewChat {
+                CreateNewChatView(presentNewChat: $presentNewChat) { newChat in
+                    chatViewModel.chats.append(newChat)
+                    withAnimation(.easeInOut(duration: 0.3)){
+                        presentNewChat.toggle()
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        pushOnNewChat.toggle()
+                    }
+                }
+            }
+        }
         .onAppear {
             chatViewModel.getChats {}
         }
@@ -90,7 +111,7 @@ struct ChatListView: View {
 
 private struct HeaderBar: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @State var newChat: Bool = false
+    @Binding var presentNewChat: Bool
     var body: some View{
         HStack {
             Button(action: {
@@ -114,7 +135,9 @@ private struct HeaderBar: View {
             }
             Spacer(minLength: 0)
             Button(action: {
-                newChat.toggle()
+                withAnimation(.easeInOut(duration: 0.3)){
+                    presentNewChat.toggle()
+                }
             }) {
                 Image("new.message")
                     .resizable()
@@ -124,8 +147,5 @@ private struct HeaderBar: View {
         }
         .padding(.horizontal)
         .padding(.bottom)
-//        .fullScreenCover(isPresented: $newChat, onDismiss: {}) {
-//            CreateNewChatView()
-//        }
     }
 }

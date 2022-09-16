@@ -134,7 +134,7 @@ struct ChatItemView: View{
     }
     
     func deleteItem() {
-        // messangerViewModel.removeChat(chatId: self.chat.id)
+        chatViewModel.removeChat(chatId: self.chat.id)
         chatList.removeAll{(item) -> Bool in
             return self.chat.id == item.id
         }
