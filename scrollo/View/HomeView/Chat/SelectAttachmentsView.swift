@@ -6,6 +6,10 @@
 //
 
 import SwiftUI
+import Photos
+//    .onChange(of: addStoryController.selectedAlbum) { _ in
+//        addStoryController.getThumbnailAssetsFromAlbum()
+//    }
 
 struct SelectAttachmentsView: View {
     @StateObject var photos: AttachmentsViewModel = AttachmentsViewModel()
@@ -92,15 +96,20 @@ struct SelectAttachmentsView: View {
                         }
                         // Else
                         else{
-                            Button(action:{}){
+                            Button(action:{
+                                withAnimation(.easeInOut){
+                                    photos.albumPresent.toggle()
+                                }
+                            }){
                                 HStack{
-                                    Text("Недавние")
+                                    Text(photos.getAlbumTitle(album: photos.albums[photos.selectedAlbum]))
                                         .font(.system(size: 15))
                                         .fontWeight(.bold)
                                         .foregroundColor(.black)
                                     Image(systemName: "chevron.down")
                                         .font(.system(size: 12))
                                         .foregroundColor(.black)
+                                        .rotationEffect(Angle(degrees: photos.albumPresent ? -180 : 0))
                                 }
                             }
                             .padding(.bottom, 15)
@@ -112,10 +121,16 @@ struct SelectAttachmentsView: View {
                             )
                             
                             if photos.load{
-                                ScrollView(showsIndicators: false){
+                                ScrollView{
                                     VStack(spacing: 1){
                                         makeGrid()
                                         Spacer(minLength: bounceOffset + 50)
+                                    }
+                                }
+                                .overlay{
+                                    if photos.albumPresent{
+                                        AlbumsList()
+                                            .environmentObject(photos)
                                     }
                                 }
                             }
@@ -222,6 +237,8 @@ struct SelectAttachmentsView: View {
             }
         }
     }
+    
+    
 }
 
 
@@ -270,6 +287,75 @@ private struct GridThumbnailGallery : View {
         
         .onTapGesture {
             photos.pickPhoto(asset: asset)
+        }
+    }
+}
+
+private struct AlbumsList: View{
+    @EnvironmentObject var photos: AttachmentsViewModel
+    var body: some View{
+        VStack{
+            ScrollView{
+                VStack{
+                    ForEach(0..<photos.albums.count, id: \.self) {index in
+                        if let album = photos.albums[index] {
+                            AlbumsListItemView(album: album)
+                                .environmentObject(photos)
+                        }
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.white)
+        .transition(.move(edge: .bottom))
+    }
+}
+
+private struct AlbumsListItemView: View{
+    @EnvironmentObject var photos: AttachmentsViewModel
+    @State var thumbnail: UIImage?
+    var album: PHAssetCollection
+    var body: some View{
+        Button(action: {
+//            photos.selectedAlbum = index
+        }) {
+            HStack{
+                if let thumbnail = self.thumbnail{
+                    Image(uiImage: thumbnail)
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                } else {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.2))
+                        .frame(width: 40, height: 40)
+                }
+                Text("\(photos.getAlbumTitle(album: album))")
+                    .font(.system(size: 13))
+                    .foregroundColor(.black)
+                Spacer()
+                Text("\(photos.getCountMediaInAlbum(album: album))")
+                    .font(.system(size: 13))
+                    .foregroundColor(.black)
+            }
+            .padding()
+        }
+        .onAppear{
+            getFirstMediaInAlbum()
+        }
+    }
+    
+    func getFirstMediaInAlbum () {
+        let fetchOptions = PHFetchOptions()
+        
+        let assetsAlbum = PHAsset.fetchAssets(in: album, options: fetchOptions)
+        
+        assetsAlbum.enumerateObjects { asset, index, stop in
+            photos.PHAssetToUIImage(asset: asset) { thumbnail in
+                self.thumbnail = thumbnail
+                
+            }
+            stop.pointee = true
         }
     }
 }

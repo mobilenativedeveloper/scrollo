@@ -28,6 +28,8 @@ class AttachmentsViewModel: ObservableObject{
     
     @Published var selectedPhotos: [AssetModel] = []
     
+    @Published var albumPresent: Bool = false
+    
     var load: Bool = false
     
     
@@ -156,4 +158,22 @@ class AttachmentsViewModel: ObservableObject{
             return false
         }
     }
+    
+    func getAlbumTitle (album: PHAssetCollection) -> String {
+        switch album.localizedTitle?.lowercased() {
+            case "recents":
+                return "Недавние"
+            default:
+                return album.localizedTitle!
+        }
+    }
+    
+    func getCountMediaInAlbum (album: PHAssetCollection) -> Int{
+        let fetchOptions = PHFetchOptions()
+        
+        let assetsAlbum = PHAsset.fetchAssets(in: album, options: fetchOptions)
+        return assetsAlbum.count
+    }
+    
+    
 }
