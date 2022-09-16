@@ -184,6 +184,7 @@
 		ACF063BF28D4739300CC4208 /* AttachmentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063BE28D4739300CC4208 /* AttachmentsViewModel.swift */; };
 		ACF063C128D49F2700CC4208 /* VideoMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063C028D49F2200CC4208 /* VideoMessageView.swift */; };
 		ACF063C328D4A44400CC4208 /* ImageOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063C228D4A44300CC4208 /* ImageOverviewView.swift */; };
+		ACF063C528D4BAAA00CC4208 /* ChatSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF063C428D4BAA900CC4208 /* ChatSettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -381,6 +382,7 @@
 		ACF063BE28D4739300CC4208 /* AttachmentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentsViewModel.swift; sourceTree = "<group>"; };
 		ACF063C028D49F2200CC4208 /* VideoMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMessageView.swift; sourceTree = "<group>"; };
 		ACF063C228D4A44300CC4208 /* ImageOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOverviewView.swift; sourceTree = "<group>"; };
+		ACF063C428D4BAA900CC4208 /* ChatSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -482,6 +484,7 @@
 				ACF063BC28D3EFF800CC4208 /* ImageMessageView.swift */,
 				ACF063C028D49F2200CC4208 /* VideoMessageView.swift */,
 				ACF063C228D4A44300CC4208 /* ImageOverviewView.swift */,
+				ACF063C428D4BAA900CC4208 /* ChatSettingsView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1059,6 +1062,7 @@
 				ACEB900A2892FA720096110D /* TruncateTextView.swift in Sources */,
 				AC6A473B28D2264100FBFF30 /* CustomSheet.swift in Sources */,
 				AC8E250528B12AA8001486FC /* DashboardView.swift in Sources */,
+				ACF063C528D4BAAA00CC4208 /* ChatSettingsView.swift in Sources */,
 				AC8E24F528B0DA60001486FC /* AppNotificationCenter.swift in Sources */,
 				ACEB90082892F8C20096110D /* PostFooterView.swift in Sources */,
 				ACC1DE1C28946A73008A3932 /* Constants.swift in Sources */,

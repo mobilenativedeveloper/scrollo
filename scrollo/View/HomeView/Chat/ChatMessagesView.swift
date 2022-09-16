@@ -219,6 +219,7 @@ struct ChatMessagesView: View {
 
 private struct HeaderBar: View{
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @State var isPresentChatSettings: Bool = false
     var body: some View{
         HStack {
             Button(action: {
@@ -237,14 +238,24 @@ private struct HeaderBar: View{
                     .frame(width: 32, height: 32)
                     .cornerRadius(8)
                     .padding(.trailing, 5)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Max Jacobson")
-                        .font(.custom(GothamBold, size: 14))
-                        .foregroundColor(Color(hex: "#444A5E"))
-                    Text("jacobs_max")
-                        .font(.custom(GothamBook, size: 12))
-                        .foregroundColor(Color(hex: "#828796"))
+                Button(action: {
+                    isPresentChatSettings.toggle()
+                }){
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Max Jacobson")
+                            .font(.custom(GothamBold, size: 14))
+                            .foregroundColor(Color(hex: "#444A5E"))
+                        Text("jacobs_max")
+                            .font(.custom(GothamBook, size: 12))
+                            .foregroundColor(Color(hex: "#828796"))
+                    }
                 }
+                .overlay(
+                    NavigationLink(destination: ChatSettingsView().ignoreDefaultHeaderBar, isActive: $isPresentChatSettings, label: {
+                        EmptyView()
+                    })
+                )
+                
             }
             Spacer(minLength: 0)
         }
