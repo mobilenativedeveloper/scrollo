@@ -14,6 +14,12 @@ struct ChatMessagesView: View {
     @State var isPresentSelectAttachments: Bool = false
     @State var isVoiceRecord: Bool = false
     
+    // Photo viewer
+    @Namespace var animation
+    @State var isExpanded: Bool = false
+    @State var expandedMedia: MessageModel?
+    @State var loadExpandedContent: Bool = false
+    
     var body: some View {
         VStack(spacing: 0) {
             
@@ -35,7 +41,7 @@ struct ChatMessagesView: View {
                                     .environmentObject(player)
                             }
                             else if messageViewModel.messages[index].image != nil {
-                                ImageMessageView(message: $messageViewModel.messages[index])
+                                ImageMessageView(message: $messageViewModel.messages[index], animation: animation, isExpanded: $isExpanded, expandedMedia: $expandedMedia)
                             }
                         }
                         .onChange(of: messageViewModel.messages) { (value) in
@@ -135,9 +141,64 @@ struct ChatMessagesView: View {
             .shadow(color: Color(hex: "#1e5385").opacity(0.03), radius: 10, x: 0, y: -12)
         }
         .background(Color.white.edgesIgnoringSafeArea(.all))
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         .overlay(SelectAttachmentsView(isPresent: $isPresentSelectAttachments))
+        .overlay(content: {
+            Rectangle()
+                .fill(.black)
+                .opacity(loadExpandedContent ? 1 : 0)
+                .ignoresSafeArea()
+        })
+        .overlay{
+            if let expandedMedia = expandedMedia,isExpanded {
+                ExpandedView(expandedMedia: expandedMedia)
+            }
+        }
         .onTapGesture {
             UIApplication.shared.endEditing()
+        }
+    }
+    
+    @ViewBuilder
+    func ExpandedView(expandedMedia: MessageModel)->some View{
+        VStack{
+            GeometryReader{proxy in
+                let size = proxy.size
+                
+                Image("story1")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: size.width, height: size.height)
+                    .cornerRadius(loadExpandedContent ? 0 : 10)
+            }
+            .matchedGeometryEffect(id: expandedMedia.id, in: animation)
+            .frame(height: 300)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .top, content:{
+            HStack(spacing: 10){
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.3)){
+                        loadExpandedContent = false
+                    }
+                    withAnimation(.easeInOut(duration: 0.3).delay(0.05)){
+                        isExpanded = false
+                    }
+                }){
+                    Image(systemName: "arrow.left")
+                        .font(.title3)
+                        .foregroundColor(.white)
+                }
+                Spacer(minLength: 10)
+            }
+            .padding()
+            .opacity(loadExpandedContent ? 1 : 0)
+        })
+        .transition(.offset(x: 0, y: 1))
+        .onAppear{
+            withAnimation(.easeInOut(duration: 0.3)){
+                loadExpandedContent = true
+            }
         }
     }
 }
