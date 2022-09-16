@@ -13,6 +13,8 @@ struct ImageOverviewView: View {
     @Binding var expandedMedia: MessageModel?
     var animation: Namespace.ID
     
+    @State var isShare: Bool = false
+    
     var body: some View {
         if let expandedMedia = self.expandedMedia{
             VStack{
@@ -32,30 +34,65 @@ struct ImageOverviewView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .overlay(alignment: .top, content:{
                 HStack(spacing: 10){
+                    Spacer(minLength: 10)
+                    
                     Button(action: {
-                        withAnimation(.easeInOut(duration: 0.4)){
+                        isShare.toggle()
+                    }){
+                        Image(systemName: "ellipsis")
+                            .font(.title3)
+                            .foregroundColor(.white)
+                    }
+                    
+                    Button(action: {
+                        withAnimation(.easeInOut(duration: 0.2)){
                             loadExpandedContent = false
                         }
-                        withAnimation(.easeInOut(duration: 0.4).delay(0.05)){
+                        withAnimation(.easeInOut(duration: 0.2).delay(0.05)){
                             isExpanded = false
                             self.expandedMedia = nil
                         }
                     }){
-                        Image(systemName: "arrow.left")
+                        Image(systemName: "xmark")
                             .font(.title3)
                             .foregroundColor(.white)
                     }
-                    Spacer(minLength: 10)
+                    .padding(.leading, 10)
                 }
                 .padding()
                 .opacity(loadExpandedContent ? 1 : 0)
             })
+            .actionSheet(isPresented: $isShare, content: {
+                ActionSheet(title: Text("Поделиться"), buttons: [
+                    .default(Text("Cохранить в Фотопленку")) {
+                        saveToGallery()
+                    },
+                    .cancel(Text("Отмена"))
+                ])
+            })
             .transition(.offset(x: 0, y: 1))
             .onAppear{
-                withAnimation(.easeInOut(duration: 0.4)){
+                withAnimation(.easeInOut(duration: 0.2)){
                     loadExpandedContent = true
                 }
             }
         }
+    }
+    
+    func saveToGallery(){
+        guard let inputImage = expandedMedia?.asset?.thumbnail else { return }
+
+        let imageSaver = ImageSaver()
+        imageSaver.writeToPhotoAlbum(image: inputImage)
+    }
+}
+
+class ImageSaver: NSObject {
+    func writeToPhotoAlbum(image: UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveCompleted), nil)
+    }
+
+    @objc func saveCompleted(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        print("Save finished!")
     }
 }

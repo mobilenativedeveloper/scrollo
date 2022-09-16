@@ -50,7 +50,7 @@ struct ImageMessageView: View {
                             .clipShape(CustomCorner(radius: 10, corners: [.topLeft, .bottomLeft, .bottomRight]))
                             .onTapGesture {
                                 
-                                withAnimation(.easeInOut(duration: 0.4)){
+                                withAnimation(.easeInOut(duration: 0.2)){
                                     expandedMedia = message
                                     isExpanded.toggle()
                                 }
@@ -66,7 +66,7 @@ struct ImageMessageView: View {
                             .matchedGeometryEffect(id: message.id, in: animation)
                             .clipShape(CustomCorner(radius: 10, corners: [.topLeft, .bottomLeft, .bottomRight]))
                             .onTapGesture {
-                                withAnimation(.easeInOut(duration: 0.4)){
+                                withAnimation(.easeInOut(duration: 0.2)){
                                     expandedMedia = message
                                     isExpanded.toggle()
                                 }
