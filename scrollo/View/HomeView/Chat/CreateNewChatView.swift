@@ -30,11 +30,11 @@ struct CreateNewChatView: View {
                 } else {
                     ForEach(0..<createChatViewModel.followers.count, id: \.self){index in
                         Button(action: {
-//                            createChatViewModel.createChat(userId: createChatViewModel.followers[index].followOnUser.id) { newChat in
-//                                if let newChat = newChat{
-//                                    onCreated(newChat)
-//                                }
-//                            }
+                            createChatViewModel.createChat(userId: createChatViewModel.followers[index].followOnUser.id) { newChat in
+                                if let newChat = newChat{
+                                    onCreated(newChat)
+                                }
+                            }
                         }) {
                             HStack(alignment: .top) {
                                 if let avatar = createChatViewModel.followers[index].followOnUser.avatar {

@@ -58,9 +58,19 @@ struct ChatListView: View {
                 // Chat list
                 VStack(spacing: 13) {
                     if (chatViewModel.loadChats) {
-                        ForEach(0..<chatViewModel.chats.count, id: \.self) {index in
-                            ChatItemView(chat: $chatViewModel.chats[index], chatList: $chatViewModel.chats)
-                                .environmentObject(chatViewModel)
+                        if chatViewModel.chats.count > 0{
+                            ForEach(0..<chatViewModel.chats.count, id: \.self) {index in
+                                ChatItemView(chat: $chatViewModel.chats[index], chatList: $chatViewModel.chats)
+                                    .environmentObject(chatViewModel)
+                            }
+                        }
+                        else{
+                            Image(systemName: "text.bubble.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 70, height: 70)
+                                .foregroundColor(Color.gray.opacity(0.3))
+                                .padding(.top, 100)
                         }
                     } else {
                         ProgressView()
