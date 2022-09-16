@@ -7,9 +7,6 @@
 
 import SwiftUI
 import Photos
-//    .onChange(of: addStoryController.selectedAlbum) { _ in
-//        addStoryController.getThumbnailAssetsFromAlbum()
-//    }
 
 struct SelectAttachmentsView: View {
     @StateObject var photos: AttachmentsViewModel = AttachmentsViewModel()
@@ -126,6 +123,9 @@ struct SelectAttachmentsView: View {
                                         makeGrid()
                                         Spacer(minLength: bounceOffset + 50)
                                     }
+                                }
+                                .onChange(of: photos.selectedAlbum) { _ in
+                                    photos.getThumbnailAssetsFromAlbum()
                                 }
                                 .overlay{
                                     if photos.albumPresent{
@@ -299,7 +299,7 @@ private struct AlbumsList: View{
                 VStack{
                     ForEach(0..<photos.albums.count, id: \.self) {index in
                         if let album = photos.albums[index] {
-                            AlbumsListItemView(album: album)
+                            AlbumsListItemView(album: album, index: index)
                                 .environmentObject(photos)
                         }
                     }
@@ -316,9 +316,10 @@ private struct AlbumsListItemView: View{
     @EnvironmentObject var photos: AttachmentsViewModel
     @State var thumbnail: UIImage?
     var album: PHAssetCollection
+    var index: Int
     var body: some View{
         Button(action: {
-//            photos.selectedAlbum = index
+            photos.selectedAlbum = index
         }) {
             HStack{
                 if let thumbnail = self.thumbnail{

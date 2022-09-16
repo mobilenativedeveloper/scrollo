@@ -71,17 +71,17 @@ class AttachmentsViewModel: ObservableObject{
         let fetchOptions = PHFetchOptions()
         let smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: fetchOptions)
         let userAlbums = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
-        
+
         smartAlbums.enumerateObjects { (assetCollection, index, stop) in
             if assetCollection.localizedTitle == "Recents" {
                 self.albums.append(assetCollection)
             }
         }
-        
+
         userAlbums.enumerateObjects { [self](assetCollection, index, stop) in
             self.albums.append(assetCollection)
         }
-        
+
         self.getThumbnailAssetsFromAlbum()
     }
     
@@ -123,6 +123,11 @@ class AttachmentsViewModel: ObservableObject{
                 
                 if index == assetsAlbum.count - 1 {
                     self.load = true
+                    if self.albumPresent {
+                        withAnimation(.easeInOut){
+                            self.albumPresent = false
+                        }
+                    }
                 }
             }
         }
