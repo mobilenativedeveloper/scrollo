@@ -18,13 +18,13 @@ struct ChatItemView: View{
     var body: some View {
         NavigationLink(destination: ChatMessagesView().ignoreDefaultHeaderBar) {
             ZStack {
-                LinearGradient(gradient: .init(colors: [Color(hex: "#f55442"), Color(hex: "#fa6c5c")]), startPoint: .trailing, endPoint: .leading)
+                LinearGradient(gradient: .init(colors: [Color(hex: "#f55442"), Color(hex: "#fa6c5c").opacity(0.5)]), startPoint: .trailing, endPoint: .leading)
                     .clipShape(CustomCorner(radius: 15, corners: [.topLeft, .bottomLeft]))
                 
                 HStack{
                     Spacer(minLength: 90)
                     Button(action: {
-                        withAnimation(.easeInOut) {
+                        withAnimation(.easeInOut(duration: 0.3)) {
                             deleteItem()
                         }
                     }){
@@ -38,7 +38,7 @@ struct ChatItemView: View{
                 HStack{
                     Spacer()
                     Button(action: {
-                        withAnimation(.easeInOut){
+                        withAnimation(.easeInOut(duration: 0.3)){
                             addFavoriteChat()
                         }
                     }){
@@ -111,7 +111,7 @@ struct ChatItemView: View{
     }
     
     func onEnd(value: DragGesture.Value){
-        withAnimation(.easeInOut) {
+        withAnimation(.easeInOut(duration: 0.3)) {
             if value.translation.width < 0{
                 if -value.translation.width > UIScreen.main.bounds.width / 2{
                     self.offset = -1000

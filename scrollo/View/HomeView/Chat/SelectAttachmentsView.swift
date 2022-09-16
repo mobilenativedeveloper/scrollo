@@ -169,8 +169,10 @@ struct SelectAttachmentsView: View {
                             }
                             .frame(width: UIScreen.main.bounds.width - 40)
                             .background(Color(hex: "#5B86E5").clipShape(RoundedRectangle(cornerRadius: 10)))
+                            .buttonStyle(FlatLinkStyle())
                         }
                             .offset(y: -(bounceOffset + 50))
+                            .transition(.move(edge: .bottom))
                     }
                 }
                 .offset(y: offset + bounceOffset)
@@ -286,7 +288,10 @@ private struct GridThumbnailGallery : View {
         }
         
         .onTapGesture {
-            photos.pickPhoto(asset: asset)
+            withAnimation(.easeInOut(duration: 0.1)){
+                photos.pickPhoto(asset: asset)
+            }
+            
         }
     }
 }
