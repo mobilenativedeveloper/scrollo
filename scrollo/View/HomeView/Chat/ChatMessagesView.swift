@@ -34,6 +34,9 @@ struct ChatMessagesView: View {
                                 AudioMessageView(message: $messageViewModel.messages[index])
                                     .environmentObject(player)
                             }
+                            else if messageViewModel.messages[index].image != nil {
+                                ImageMessageView(message: $messageViewModel.messages[index])
+                            }
                         }
                         .onChange(of: messageViewModel.messages) { (value) in
                             scrollReader.scrollTo(value.last?.id)
@@ -93,11 +96,15 @@ struct ChatMessagesView: View {
                                     
                                     messageViewModel.sendMessage(message: MessageModel(type: "RECIVER", audio: URL(string: "https://zvukogram.com/index.php?r=site/download&id=78804")))
                                     
-                                
+                                    messageViewModel.sendMessage(message: MessageModel(type: "RECIVER", image: "story1"))
                                 
                                 }
                             }
                             messageViewModel.message = String()
+                        } else {
+                            withAnimation(.easeInOut){
+                                messageViewModel.sendMessage(message: MessageModel(type: "STARTER", image: "story1"))
+                            }
                         }
                     }) {
                         Image("send")
