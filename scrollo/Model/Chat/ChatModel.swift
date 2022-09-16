@@ -41,6 +41,10 @@ struct ChatListModel: Decodable {
 }
 
 struct MessageModel: Identifiable, Equatable{
+    static func == (lhs: MessageModel, rhs: MessageModel) -> Bool {
+        return true
+    }
+    
     var id = UUID().uuidString
     var type: String
     var content: String?
@@ -48,4 +52,5 @@ struct MessageModel: Identifiable, Equatable{
     var image: String?
     var video: String?
     var date: Date = Date()
+    var asset: AssetModel?
 }

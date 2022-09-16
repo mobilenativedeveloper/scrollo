@@ -17,44 +17,61 @@ struct ImageMessageView: View {
             if message.type == "STARTER" {
                 Spacer(minLength: 25)
                 
-                Image("story1")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: UIScreen.main.bounds.width - 150, height: 150)
-//                    .clipped()
-                    .matchedGeometryEffect(id: message.id, in: animation)
-                    .clipShape(CustomCorner(radius: 10, corners: [.topLeft, .bottomLeft, .bottomRight]))
-                    .opacity((expandedMedia?.id == message.id && isExpanded) ? 0 : 1)
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.3)){
-                            expandedMedia = message
-                            isExpanded.toggle()
-                        }
+                if expandedMedia?.id == message.id && isExpanded{
+                    if message.image != nil{
+                        Image("story1")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: UIScreen.main.bounds.width - 150, height: 150)
+                            .contentShape(Rectangle())
+                            .clipped()
+                            .cornerRadius(0)
+                            .opacity(0)
                     }
-                
-//                if expandedMedia?.id == message.id && isExpanded{
-//                    Image("story1")
-//                        .resizable()
-//                        .aspectRatio(contentMode: .fill)
-//                        .frame(width: UIScreen.main.bounds.width - 150, height: 150)
-//                        .clipped()
-//                        .cornerRadius(0)
-//                        .opacity(0)
-//                } else {
-//                    Image("story1")
-//                        .resizable()
-//                        .aspectRatio(contentMode: .fill)
-//                        .frame(width: UIScreen.main.bounds.width - 150, height: 150)
-//                        .clipped()
-//                        .matchedGeometryEffect(id: message.id, in: animation)
-//                        .clipShape(CustomCorner(radius: 10, corners: [.topLeft, .bottomLeft, .bottomRight]))
-//                        .onTapGesture {
-//                            withAnimation(.easeInOut(duration: 0.3)){
-//                                expandedMedia = message
-//                                isExpanded.toggle()
-//                            }
-//                        }
-//                }
+                    else{
+                        Image(uiImage: message.asset!.thumbnail)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: UIScreen.main.bounds.width - 150, height: 150)
+                            .contentShape(Rectangle())
+                            .clipped()
+                            .cornerRadius(0)
+                            .opacity(0)
+                    }
+                } else {
+                    if message.image != nil{
+                        Image("story1")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: UIScreen.main.bounds.width - 150, height: 150)
+                            .contentShape(Rectangle())
+                            .clipped()
+                            .matchedGeometryEffect(id: message.id, in: animation)
+                            .clipShape(CustomCorner(radius: 10, corners: [.topLeft, .bottomLeft, .bottomRight]))
+                            .onTapGesture {
+                                withAnimation(.easeInOut(duration: 0.3)){
+                                    expandedMedia = message
+                                    isExpanded.toggle()
+                                }
+                            }
+                    }
+                    else {
+                        Image(uiImage: message.asset!.thumbnail)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: UIScreen.main.bounds.width - 150, height: 150)
+                            .contentShape(Rectangle())
+                            .clipped()
+                            .matchedGeometryEffect(id: message.id, in: animation)
+                            .clipShape(CustomCorner(radius: 10, corners: [.topLeft, .bottomLeft, .bottomRight]))
+                            .onTapGesture {
+                                withAnimation(.easeInOut(duration: 0.3)){
+                                    expandedMedia = message
+                                    isExpanded.toggle()
+                                }
+                            }
+                    }
+                }
                 
             }
             else {
@@ -79,3 +96,4 @@ struct ImageMessageView: View {
         .id(message.id)
     }
 }
+

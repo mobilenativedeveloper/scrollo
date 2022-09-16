@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct ChatMessagesView: View {
     @StateObject var messageViewModel: MessageViewModel = MessageViewModel()
     @ObservedObject var player: AudioPlayer = AudioPlayer()
     
     @State var isPresentSelectAttachments: Bool = false
+    
+    //Voice recorder
+    @State var isRequestPermission: Bool = false
     @State var isVoiceRecord: Bool = false
     
     // Photo viewer
@@ -40,8 +44,11 @@ struct ChatMessagesView: View {
                                 AudioMessageView(message: $messageViewModel.messages[index])
                                     .environmentObject(player)
                             }
-                            else if messageViewModel.messages[index].image != nil {
+                            else if messageViewModel.messages[index].image != nil || messageViewModel.messages[index].asset?.asset.mediaType == .image {
                                 ImageMessageView(message: $messageViewModel.messages[index], animation: animation, isExpanded: $isExpanded, expandedMedia: $expandedMedia)
+                            }
+                            else if messageViewModel.messages[index].video != nil || messageViewModel.messages[index].asset?.asset.mediaType == .video {
+                                VideoMessageView(message: $messageViewModel.messages[index])
                             }
                         }
                         .onChange(of: messageViewModel.messages) { (value) in
@@ -63,9 +70,7 @@ struct ChatMessagesView: View {
                     TextField("Написать сообщение...", text: $messageViewModel.message)
                     
                     Button(action: {
-                        withAnimation(.easeInOut){
-                            isVoiceRecord.toggle()
-                        }
+                        permission()
                     }) {
                         Image("microphone")
                             .resizable()
@@ -107,10 +112,6 @@ struct ChatMessagesView: View {
                                 }
                             }
                             messageViewModel.message = String()
-                        } else {
-                            withAnimation(.easeInOut){
-                                messageViewModel.sendMessage(message: MessageModel(type: "STARTER", image: "story1"))
-                            }
                         }
                     }) {
                         Image("send")
@@ -124,12 +125,15 @@ struct ChatMessagesView: View {
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(Color(hex: "#DDE8E8"), lineWidth: 1)
                 )
-                .overlay(
-                    VoiceRecorderView(isVoiceRecord: $isVoiceRecord, onSendAudio: {audio in
-                        messageViewModel.sendMessage(message: MessageModel(type: "STARTER", audio: audio))
-                        isVoiceRecord.toggle()
-                    })
-                )
+                // MARK: This bug when opened screen muted sound
+                .overlay{
+                    if isVoiceRecord{
+                        VoiceRecorderView(isVoiceRecord: $isVoiceRecord, onSendAudio: {audio in
+                            messageViewModel.sendMessage(message: MessageModel(type: "STARTER", audio: audio))
+                            isVoiceRecord.toggle()
+                        })
+                    }
+                }
             }
             .padding()
             .background(Color.white)
@@ -142,7 +146,29 @@ struct ChatMessagesView: View {
         }
         .background(Color.white.edgesIgnoringSafeArea(.all))
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-        .overlay(SelectAttachmentsView(isPresent: $isPresentSelectAttachments))
+        .overlay{
+            if isPresentSelectAttachments{
+                SelectAttachmentsView(isPresent: $isPresentSelectAttachments, sendMedia: { media in
+                    media.forEach { asset in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            withAnimation(.easeInOut){
+                                messageViewModel.sendMessage(message: MessageModel(type: "STARTER", asset: asset))
+                            }
+                        }
+                    }
+                })
+                    .environmentObject(messageViewModel)
+            }
+        }
+        .alert(isPresented: $isRequestPermission){
+            Alert(title: Text("Разрешить доступ к микрофону"), message: Text("Чтобы отправлять голосовые сообщения, предоставьте этому приложению доступ к микрофону в настройках устройства"), primaryButton: .default(Text("Отмена")), secondaryButton: .default(Text("Настройки")){
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    if UIApplication.shared.canOpenURL(url) {
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    }
+                }
+            })
+        }
         .overlay(content: {
             Rectangle()
                 .fill(.black)
@@ -200,6 +226,29 @@ struct ChatMessagesView: View {
                 loadExpandedContent = true
             }
         }
+    }
+    
+    func permission(){
+        switch AVAudioSession.sharedInstance().recordPermission {
+            case .granted:
+                withAnimation(.easeInOut(duration: 0.2)){
+                    isVoiceRecord.toggle()
+                }
+            case .denied:
+                isRequestPermission.toggle()
+            case .undetermined:
+                AVAudioSession.sharedInstance().requestRecordPermission({ granted in
+                    if (granted){
+                        withAnimation(.easeInOut(duration: 0.2)){
+                            isVoiceRecord.toggle()
+                        }
+                    } else {
+                        isRequestPermission.toggle()
+                    }
+                })
+            @unknown default:
+                print("Unknown case")
+            }
     }
 }
 

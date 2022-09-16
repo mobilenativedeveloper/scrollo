@@ -11,7 +11,7 @@ import AVKit
 import Foundation
 import UIKit
 
-enum LibraryStatus {
+ enum LibraryStatus {
     case denied
     case approved
     case limited

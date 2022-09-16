@@ -1,32 +1,71 @@
 //
-//  AddStoryViewModel.swift
+//  AttachmentsViewModel.swift
 //  scrollo
 //
-//  Created by Artem Strelnik on 19.08.2022.
+//  Created by Artem Strelnik on 16.09.2022.
 //
 
 import SwiftUI
 import Photos
+import AVKit
+import Foundation
 
-struct AssetModel: Identifiable {
-    var id: String = UUID().uuidString
-    var asset: PHAsset
-    var thumbnail: UIImage
+enum PermissionStatus {
+    case denied
+    case approved
+    case limited
 }
 
-class AddStoryViewModel : ObservableObject {
-    @Published var loadAlbums: Bool = false
-    @Published var loadAssets: Bool = false
+class AttachmentsViewModel: ObservableObject{
+    
+    @Published var permissionStatus: PermissionStatus = .denied
+    
     @Published var albums: [PHAssetCollection] = []
+    
     @Published var selectedAlbum: Int = 0
+    
     @Published var assets: [AssetModel] = []
     
-    init () {
-        getAlbums()
+    @Published var selectedPhotos: [AssetModel] = []
+    
+    var load: Bool = false
+    
+    
+    init(){
+        requestPermission()
+    }
+   
+    func requestPermission()->Void{
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) {[self](status) in
+            DispatchQueue.main.async {
+                switch status {
+                case .denied:
+                    print("denide")
+                    self.permissionStatus = .denied
+                case .authorized:
+                    print("authorized")
+                    self.permissionStatus = .approved
+                    getAlbums()
+                case .limited:
+                    print("limited")
+                    self.permissionStatus = .limited
+                default:
+                    self.permissionStatus = .denied
+                    print("denied")
+                }
+            }
+        }
+    }
+    
+    func openAppSettings(){
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
     }
     
     func getAlbums () -> Void {
-        print("fetch albums")
         let fetchOptions = PHFetchOptions()
         let smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: fetchOptions)
         let userAlbums = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
@@ -41,8 +80,6 @@ class AddStoryViewModel : ObservableObject {
             self.albums.append(assetCollection)
         }
         
-        
-        self.loadAlbums.toggle()
         self.getThumbnailAssetsFromAlbum()
     }
     
@@ -70,9 +107,8 @@ class AddStoryViewModel : ObservableObject {
         return "\(Int(min)):\(Int(60 * secf))"
     }
     
-    
     func getThumbnailAssetsFromAlbum () {
-        self.loadAssets = false
+        self.load = false
         self.assets = []
         let fetchOptions = PHFetchOptions()
         
@@ -84,9 +120,40 @@ class AddStoryViewModel : ObservableObject {
                 self.assets.append(AssetModel(asset: asset, thumbnail: thumbnail))
                 
                 if index == assetsAlbum.count - 1 {
-                    self.loadAssets = true
+                    self.load = true
                 }
             }
+        }
+    }
+    
+    func pickPhoto(asset: AssetModel)->Void{
+        if let index = self.selectedPhotos.firstIndex(where: {$0.id == asset.id}) {
+            self.selectedPhotos.remove(at: index)
+        }
+        else{
+            self.selectedPhotos.append(asset)
+        }
+    }
+    
+    func getNumber (asset: AssetModel) -> Int {
+        
+        if let index = self.selectedPhotos.firstIndex(where: { $0.id == asset.id}) {
+            
+            return index + 1
+        } else {
+            
+            return -1
+        }
+    }
+    
+    func checkSelect (asset: AssetModel) -> Bool {
+        
+        if let _ = self.selectedPhotos.firstIndex(where: { $0.id == asset.id}) {
+            
+            return true
+        } else {
+            
+            return false
         }
     }
 }

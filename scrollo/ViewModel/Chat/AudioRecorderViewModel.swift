@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 class AudioRecorderViewModel: NSObject, ObservableObject, RecordingDelegate {
     @Published var samples: [Float] = []
     @Published var recordingTime: TimeInterval = 0
@@ -21,7 +22,6 @@ class AudioRecorderViewModel: NSObject, ObservableObject, RecordingDelegate {
 
     private let audioManager: SCAudioManager
     
-
     override init() {
         audioManager = SCAudioManager()
 
@@ -30,7 +30,7 @@ class AudioRecorderViewModel: NSObject, ObservableObject, RecordingDelegate {
         audioManager.prepareAudioRecording()
         audioManager.recordingDelegate = self
     }
-
+    
     func startRecording() {
         samples = []
         audioManager.startRecording()
