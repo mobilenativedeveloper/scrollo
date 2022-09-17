@@ -55,7 +55,7 @@ struct ChatItemView: View{
                 
                 HStack(spacing: 0) {
                     ZStack(alignment: .bottomTrailing) {
-                        if let avatar = chat.starter.avatar {
+                        if let avatar = chat.receiver.avatar {
                             WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
                                 .resizable()
                                 .frame(width: 44, height: 44)
@@ -74,7 +74,7 @@ struct ChatItemView: View{
                             .offset(x: 2)
                     }
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(chat.starter.login)
+                        Text(chat.receiver.login)
                             .font(.custom(GothamBold, size: 14))
                             .foregroundColor(Color(hex: "#2E313C"))
                         Text("See you on the next meeting! 😂")

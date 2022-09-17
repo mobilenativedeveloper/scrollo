@@ -28,16 +28,16 @@ struct CreateNewChatView: View {
                 if (!createChatViewModel.load) {
                     ProgressView()
                 } else {
-                    ForEach(0..<createChatViewModel.followers.count, id: \.self){index in
+                    ForEach(0..<createChatViewModel.following.count, id: \.self){index in
                         Button(action: {
-                            createChatViewModel.createChat(userId: createChatViewModel.followers[index].followOnUser.id) { newChat in
+                            createChatViewModel.createChat(userId: createChatViewModel.following[index].followOnUser.id) { newChat in
                                 if let newChat = newChat{
                                     onCreated(newChat)
                                 }
                             }
                         }) {
                             HStack(alignment: .top) {
-                                if let avatar = createChatViewModel.followers[index].followOnUser.avatar {
+                                if let avatar = createChatViewModel.following[index].followOnUser.avatar {
                                     WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
                                         .resizable()
                                         .frame(width: 56, height: 56)
@@ -47,7 +47,7 @@ struct CreateNewChatView: View {
                                 }
 
                                 VStack(alignment: .leading) {
-                                    Text(createChatViewModel.followers[index].followOnUser.login ?? "")
+                                    Text(createChatViewModel.following[index].followOnUser.login ?? "")
                                         .font(.custom(GothamBold, size: 14))
                                         .foregroundColor(Color(hex: "#2E313C"))
                                     Text("@login")
@@ -68,7 +68,7 @@ struct CreateNewChatView: View {
         .transition(.move(edge: .trailing))
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                createChatViewModel.getFollowers()
+                createChatViewModel.getFollowing()
             }
         }
     }

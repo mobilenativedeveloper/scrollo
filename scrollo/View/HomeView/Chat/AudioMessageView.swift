@@ -43,7 +43,7 @@ struct AudioMessageView: View {
                             }){
                                 Image(systemName: "pause.circle")
                                     .font(.system(size: 23))
-                                    .foregroundColor(Color.white)
+                                    .foregroundColor(Color(hex: "#5B86E5"))
                                     .frame(width: 23, height: 23)
                                     .padding(.trailing, 8)
                             }
@@ -55,7 +55,7 @@ struct AudioMessageView: View {
                             }){
                                 Image(systemName: "play.circle")
                                     .font(.system(size: 23))
-                                    .foregroundColor(Color.white)
+                                    .foregroundColor(Color(hex: "#5B86E5"))
                                     .frame(width: 23, height: 23)
                                     .padding(.trailing, 8)
                             }
@@ -63,8 +63,8 @@ struct AudioMessageView: View {
                         
                         
                         Rectangle()
-                            .fill(player.isPlaying && player.id == message.id ? Color.white.opacity(0.5) : Color.white)
-                            .overlay(Color.white.frame(width: player.isPlaying && player.id == message.id ? getCurrentWidth() : 0),alignment: .leading)
+                            .fill(player.isPlaying && player.id == message.id ? Color(hex: "#5B86E5").opacity(0.5) : Color(hex: "#5B86E5"))
+                            .overlay(Color(hex: "#5B86E5").frame(width: player.isPlaying && player.id == message.id ? getCurrentWidth() : 0),alignment: .leading)
                             .mask(WaveformViewTest(audioURL: $audioURL, configuration: $configuration))
                         
                         
@@ -72,7 +72,7 @@ struct AudioMessageView: View {
                         Text(player.isPlaying && player.id == message.id ? "\(Self.timeFormatter.string(from: playValue) ?? "00:00")" : "\(Self.timeFormatter.string(from: getDuration()) ?? "00:00")")
                             .font(.system(size: 12))
                             .fontWeight(.bold)
-                            .foregroundColor(Color.white)
+                            .foregroundColor(Color(hex: "#5B86E5"))
                             .frame(width: 40)
                             .padding(.leading, 8)
                             .onReceive(timer) { _ in
@@ -88,7 +88,7 @@ struct AudioMessageView: View {
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 20)
-                    .background(Color(hex: "#5B86E5"))
+                    .background(Color(hex: "#5B86E5").opacity(0.15))
                     .clipShape(CustomCorner(radius: 10, corners: [.topLeft, .bottomLeft, .bottomRight]))
                 }
             }
@@ -156,7 +156,7 @@ struct AudioMessageView: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 20)
                     .background(Color(hex: "#F2F2F2"))
-                    .cornerRadius(12)
+                    .clipShape(CustomCorner(radius: 10, corners: [.topRight, .bottomLeft, .bottomRight]))
                 }
                 Spacer(minLength: 25)
             }

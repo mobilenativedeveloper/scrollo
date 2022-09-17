@@ -48,7 +48,7 @@ struct VideoMessageView: View {
                     .clipped()
                     .allowsHitTesting(false)
                     .background(Color(hex: "#F2F2F2"))
-                    .cornerRadius(12)
+                    .clipShape(CustomCorner(radius: 10, corners: [.topRight, .bottomLeft, .bottomRight]))
                 Spacer(minLength: 25)
             }
         }

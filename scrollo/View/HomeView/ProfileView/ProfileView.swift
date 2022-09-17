@@ -88,7 +88,7 @@ struct ProfileView: View {
                                     return Color.clear
                                 }
                                 .frame(height: 0)
-                                FollowInfoView(followersCount: user.followersCount, followingCount: user.followingCount)
+                                FollowInfoView(login: user.login!, followersCount: user.followersCount, followingCount: user.followingCount)
                                 UserInfoView(login: user.login ?? "", career: user.career, personal: user.personal)
                                 if self.userId == UserDefaults.standard.string(forKey: "userId") {
                                     NavigationLink(destination: EditUserProfile().environmentObject(profileController).ignoreDefaultHeaderBar) {

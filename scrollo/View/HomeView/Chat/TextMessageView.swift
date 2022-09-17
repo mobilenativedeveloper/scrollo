@@ -36,7 +36,7 @@ struct TextMessageView: View {
                         .foregroundColor(Color(hex: "2E313C"))
                         .padding(.all)
                         .background(
-                            RoundedRectangle(cornerRadius: 12)
+                            RoundedRectangle(cornerRadius: 10)
                                 .stroke(Color(hex: "F2F2F2"), lineWidth: 1)
                         )
                 }
