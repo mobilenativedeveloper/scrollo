@@ -39,6 +39,8 @@
 		AC2A07812866F28500BB1C6D /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2A07802866F28500BB1C6D /* ChatViewModel.swift */; };
 		AC2CAB072874137500BEEB3C /* CommentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2CAB062874137400BEEB3C /* CommentsViewModel.swift */; };
 		AC2CAB0C2874569700BEEB3C /* BottomSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2CAB0B2874569700BEEB3C /* BottomSheetViewModel.swift */; };
+		AC2D001428D5E2FE0076AB8D /* VideoOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2D001328D5E2FE0076AB8D /* VideoOverviewView.swift */; };
+		AC2D001628D5E5EE0076AB8D /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2D001528D5E5EE0076AB8D /* VideoPlayer.swift */; };
 		AC3756CE28B8E8EF00C678B6 /* CreateNewChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3756CD28B8E8EF00C678B6 /* CreateNewChatView.swift */; };
 		AC3756D028B8F9B900C678B6 /* ActionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3756CF28B8F9B900C678B6 /* ActionViewModel.swift */; };
 		AC4039222870387900B9A762 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC4039212870387900B9A762 /* Test.swift */; };
@@ -239,6 +241,8 @@
 		AC2A07802866F28500BB1C6D /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		AC2CAB062874137400BEEB3C /* CommentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewModel.swift; sourceTree = "<group>"; };
 		AC2CAB0B2874569700BEEB3C /* BottomSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewModel.swift; sourceTree = "<group>"; };
+		AC2D001328D5E2FE0076AB8D /* VideoOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoOverviewView.swift; sourceTree = "<group>"; };
+		AC2D001528D5E5EE0076AB8D /* VideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayer.swift; sourceTree = "<group>"; };
 		AC3756CD28B8E8EF00C678B6 /* CreateNewChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewChatView.swift; sourceTree = "<group>"; };
 		AC3756CF28B8F9B900C678B6 /* ActionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewModel.swift; sourceTree = "<group>"; };
 		AC4039212870387900B9A762 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
@@ -489,6 +493,7 @@
 				ACF063C028D49F2200CC4208 /* VideoMessageView.swift */,
 				ACF063C228D4A44300CC4208 /* ImageOverviewView.swift */,
 				ACF063C428D4BAA900CC4208 /* ChatSettingsView.swift */,
+				AC2D001328D5E2FE0076AB8D /* VideoOverviewView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -771,6 +776,7 @@
 				ACF063B828D3A85900CC4208 /* AudioPlayer.swift */,
 				ACF063BE28D4739300CC4208 /* AttachmentsViewModel.swift */,
 				ACF063C628D4F27000CC4208 /* CreateChatViewModel.swift */,
+				AC2D001528D5E5EE0076AB8D /* VideoPlayer.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -1057,6 +1063,7 @@
 				ACEB90112892FE8C0096110D /* LikePostViewModel.swift in Sources */,
 				AC1F7C202876C064009227CB /* EditUserProfile.swift in Sources */,
 				ACE44F61287A6BD6002D0BB1 /* NotifyViewModel.swift in Sources */,
+				AC2D001628D5E5EE0076AB8D /* VideoPlayer.swift in Sources */,
 				ACEB903D2893E1E00096110D /* StickyHeader.swift in Sources */,
 				AC1010332878695A0014E13B /* SavedMediaAlbumView.swift in Sources */,
 				AC101024287856290014E13B /* NotifySettingsViewModel.swift in Sources */,
@@ -1092,6 +1099,7 @@
 				AC10101A287841D00014E13B /* AccountView.swift in Sources */,
 				AC8E24FC28B10045001486FC /* UIBottomSheet.swift in Sources */,
 				AC101037287983860014E13B /* AlertModel.swift in Sources */,
+				AC2D001428D5E2FE0076AB8D /* VideoOverviewView.swift in Sources */,
 				ACC21AB22863219B00AF8B0D /* ActionsView.swift in Sources */,
 				ACEB90412893E29A0096110D /* UserInfoView.swift in Sources */,
 				ACEB903B2893DE170096110D /* ProfileViewModel.swift in Sources */,

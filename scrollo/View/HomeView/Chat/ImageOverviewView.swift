@@ -35,7 +35,7 @@ struct ImageOverviewView: View {
                                         withAnimation(.easeInOut(duration: 0.2)){
                                             offset = value.translation
                                         }
-                                        
+
                                     })
                                     .onEnded({ value in
                                         let height = value.translation.height
@@ -110,8 +110,9 @@ struct ImageOverviewView: View {
                 }
             }
         }
+        
     }
-    
+
     func saveToGallery(){
         guard let inputImage = expandedMedia?.asset?.thumbnail else { return }
 
@@ -129,3 +130,4 @@ class ImageSaver: NSObject {
         print("Save finished!")
     }
 }
+

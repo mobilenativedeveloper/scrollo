@@ -117,8 +117,10 @@ class AddMediaPostViewModel: ObservableObject {
             let group = DispatchGroup()
             let imageManager = PHImageManager.default()
             var avAsset: AVAsset?
+        
             group.enter()
             imageManager.requestAVAsset(forVideo: asset, options: phVideoOptions) { (asset, _, _) in
+                
                 avAsset = asset
                 group.leave()
                 

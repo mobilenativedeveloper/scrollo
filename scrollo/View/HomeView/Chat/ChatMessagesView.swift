@@ -7,6 +7,8 @@
 
 import SwiftUI
 import AVFoundation
+import AVKit
+import Photos
 
 struct ChatMessagesView: View {
     @StateObject var messageViewModel: MessageViewModel = MessageViewModel()
@@ -24,6 +26,10 @@ struct ChatMessagesView: View {
     @State var expandedMedia: MessageModel?
     @State var loadExpandedContent: Bool = false
     @State var offset: CGSize = .zero
+    
+    //Video viewer
+    @State var showVideo: Bool = false
+    @State var selectedVideo: MessageModel?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -49,7 +55,7 @@ struct ChatMessagesView: View {
                                 ImageMessageView(message: $messageViewModel.messages[index], animation: animation, isExpanded: $isExpanded, expandedMedia: $expandedMedia)
                             }
                             else if messageViewModel.messages[index].video != nil || messageViewModel.messages[index].asset?.asset.mediaType == .video {
-                                VideoMessageView(message: $messageViewModel.messages[index])
+                                VideoMessageView(message: $messageViewModel.messages[index], showVideo: $showVideo, selectedVideo: $selectedVideo)
                             }
                         }
                         .onChange(of: messageViewModel.messages) { (value) in
@@ -160,6 +166,20 @@ struct ChatMessagesView: View {
                 })
             }
         }
+        .overlay(content: {
+            Rectangle()
+                .fill(.black)
+                .opacity(loadExpandedContent ? 1 : 0)
+                .opacity(offsetProgress())
+                .ignoresSafeArea()
+        })
+        .overlay(ImageOverviewView(loadExpandedContent: $loadExpandedContent, isExpanded: $isExpanded, expandedMedia: $expandedMedia, animation: animation, offset: $offset, offsetProgress: offsetProgress())
+        )
+        .overlay{
+            if let video = selectedVideo, showVideo {
+                VideoViewer(showVideo: $showVideo, video: $selectedVideo)
+            }
+        }
         .alert(isPresented: $isRequestPermission){
             Alert(title: Text("Разрешить доступ к микрофону"), message: Text("Чтобы отправлять голосовые сообщения, предоставьте этому приложению доступ к микрофону в настройках устройства"), primaryButton: .default(Text("Отмена")), secondaryButton: .default(Text("Настройки")){
                 if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -169,16 +189,6 @@ struct ChatMessagesView: View {
                 }
             })
         }
-        .overlay(content: {
-            Rectangle()
-                .fill(.black)
-                .opacity(loadExpandedContent ? 1 : 0)
-                .opacity(offsetProgress())
-                .ignoresSafeArea()
-                .ignoresSafeArea()
-        })
-        .overlay(ImageOverviewView(loadExpandedContent: $loadExpandedContent, isExpanded: $isExpanded, expandedMedia: $expandedMedia, animation: animation, offset: $offset, offsetProgress: offsetProgress())
-        )
         .onTapGesture {
             UIApplication.shared.endEditing()
         }
@@ -262,4 +272,197 @@ private struct HeaderBar: View{
         .padding(.horizontal)
         .padding(.bottom)
     }
+}
+
+struct PlayerView: UIViewControllerRepresentable {
+    
+    var player: AVPlayer
+    
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        let view = AVPlayerViewController()
+        view.player = player
+        view.showsPlaybackControls = false
+        view.videoGravity = .resizeAspectFill
+        return view
+    }
+    
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
+        
+    }
+}
+
+struct VideoViewer: View{
+    @Binding var showVideo: Bool
+    @Binding var video: MessageModel?
+    
+    @State var player: AVPlayer?
+    @State var isPlayed: Bool = false
+    @State var isHowing: Bool = false
+    @State var isHowingContent: Bool = false
+    @State var offset: CGSize = .zero
+    
+    @State var showHeader: Bool = false
+    
+    @State var hidePlayIcon: Bool = false
+    
+    var body: some View{
+        ZStack{
+            if let player = self.player, isHowing{
+                ZStack{
+                    Rectangle()
+                        .fill(.black)
+                        .opacity(isHowingContent ? 1 : 0)
+                        .opacity(offsetProgress())
+                        .ignoresSafeArea()
+                    PlayerView(player: player)
+                        .frame(width: UIScreen.main.bounds.width , height: UIScreen.main.bounds.height)
+                        .offset(y: offset.height)
+                        .onTapGesture(perform: {
+                            if self.showHeader{
+                                withAnimation(.easeInOut(duration: 0.3)){
+                                    self.showHeader = false
+                                }
+                            }else{
+                                withAnimation(.easeInOut(duration: 0.3)){
+                                    self.showHeader = true
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                                    withAnimation(.easeInOut(duration: 0.3)){
+                                        self.showHeader = false
+                                    }
+                                }
+                            }
+                            if self.isPlayed{
+                                withAnimation(.easeInOut(duration: 0.3)){
+                                    self.player?.pause()
+                                    self.isPlayed = false
+                                }
+                            }
+                            else{
+                                withAnimation(.easeInOut(duration: 0.3)){
+                                    self.player?.play()
+                                    self.isPlayed = true
+                                }
+                            }
+                        })
+                        .gesture(
+                            DragGesture()
+                                .onChanged({ value in
+                                    withAnimation(.easeInOut(duration: 0.3)){
+                                        offset = value.translation
+                                        
+                                        self.hidePlayIcon = true
+                                    }
+                                })
+                                .onEnded({ value in
+                                    let height = value.translation.height
+                                    if height > 0 && height > 100{
+                                        withAnimation(.easeInOut(duration: 0.3)){
+                                            isHowingContent = false
+                                        }
+                                        withAnimation(.easeInOut(duration: 0.3).delay(0.05)){
+                                            self.isHowing = false
+                                        }
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                            offset = .zero
+                                            self.player?.pause()
+                                            showVideo = false
+                                            video = nil
+                                        }
+                                    }
+                                    else{
+                                        withAnimation(.easeInOut(duration: 0.3)){
+                                            offset = .zero
+                                            self.hidePlayIcon = false
+                                        }
+                                    }
+                                })
+                        )
+                    
+                    if !self.isPlayed{
+                        Image(systemName: "play.fill")
+                            .font(.system(size: 70))
+                            .foregroundColor(.white)
+                            .opacity(hidePlayIcon ? 0 : 0.6)
+                            .opacity(offsetProgress())
+                            .transition(.scale)
+                    }
+                }
+                .edgesIgnoringSafeArea(.all)
+                .transition(.move(edge: .bottom))
+            }
+            
+        }
+        .overlay(alignment: .top, content:{
+            if self.showHeader{
+                HStack(spacing: 10){
+                    Spacer(minLength: 10)
+                    
+                    Button(action: {
+                        
+                    }){
+                        Image(systemName: "ellipsis")
+                            .font(.title3)
+                            .foregroundColor(.white)
+                    }
+                    
+                    Button(action: {
+                        withAnimation(.easeInOut(duration: 0.3)){
+                            self.isHowingContent = false
+                        }
+                        withAnimation(.easeInOut(duration: 0.3).delay(0.05)){
+                            self.isHowing = false
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                offset = .zero
+                                self.player?.pause()
+                                showVideo = false
+                                video = nil
+                            }
+                        }
+                    }){
+                        Image(systemName: "xmark")
+                            .font(.title3)
+                            .foregroundColor(.white)
+                    }
+                    .padding(.leading, 10)
+                }
+                .padding()
+                .padding(.top, 20)
+                .background(Color.black.opacity(0.6))
+                .transition(.move(edge: .top))
+                .opacity(self.isHowingContent ? 1 : 0)
+                .opacity(offsetProgress())
+            }
+        })
+        .onAppear {
+            initVideo(video: self.video!.asset!.asset) { av in
+                withAnimation(.easeInOut(duration: 0.3)){
+                    self.player = av
+                    self.player?.play()
+                    self.isPlayed = true
+                    self.isHowing = true
+                    withAnimation(.easeInOut(duration: 0.3).delay(0.3)){
+                        self.isHowingContent = true
+                    }
+                }
+            }
+        }
+    }
+    
+    func initVideo(video: PHAsset, completion: @escaping(AVPlayer?)->Void) {
+        PHImageManager().requestAVAsset(forVideo: video, options: nil) { asset, _, _ in
+            let avAsset = asset as! AVURLAsset
+            completion(AVPlayer(url: avAsset.url))
+        }
+    }
+    
+    func offsetProgress()->CGFloat{
+        let progress = offset.height / 100
+        if progress < 1{
+            return 1
+        } else {
+            return 1 - (progress < 1 ? progress : 1)
+        }
+    }
+        
 }

@@ -9,7 +9,8 @@ import SwiftUI
 
 struct VideoMessageView: View {
     @Binding var message: MessageModel
-    
+    @Binding var showVideo: Bool
+    @Binding var selectedVideo: MessageModel?
     var body: some View {
         HStack(alignment: .top, spacing: 10){
             if message.type == "STARTER" {
@@ -23,8 +24,13 @@ struct VideoMessageView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: UIScreen.main.bounds.width - 150, height: 150)
+                        .contentShape(Rectangle())
                         .clipped()
                         .clipShape(CustomCorner(radius: 10, corners: [.topLeft, .bottomLeft, .bottomRight]))
+                        .onTapGesture {
+                            selectedVideo = message
+                            showVideo = true
+                        }
                         .overlay(
                             Image(systemName: "play.fill")
                                 .font(.title)
