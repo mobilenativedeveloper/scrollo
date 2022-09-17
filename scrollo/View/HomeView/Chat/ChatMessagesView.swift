@@ -9,6 +9,7 @@ import SwiftUI
 import AVFoundation
 import AVKit
 import Photos
+import SDWebImageSwiftUI
 
 struct ChatMessagesView: View {
     @StateObject var messageViewModel: MessageViewModel = MessageViewModel()
@@ -31,15 +32,17 @@ struct ChatMessagesView: View {
     @State var showVideo: Bool = false
     @State var selectedVideo: MessageModel?
     
+    var user: ChatListModel.ChatModel.ChatUser
+    
     var body: some View {
         VStack(spacing: 0) {
             
-            HeaderBar()
+            HeaderBar(user: user)
             
             ScrollView(showsIndicators: false) {
                 ScrollViewReader{scrollReader in
                     VStack(spacing: 16) {
-                        DetailUserView()
+                        DetailUserView(user: user)
                             .padding(.bottom, messageViewModel.messages.count == 0 ? 300 : 0)
                         Spacer()
                         .frame(minWidth: 0, maxWidth: .infinity, minHeight:0, maxHeight: .infinity, alignment: Alignment.topLeading)
@@ -230,6 +233,8 @@ struct ChatMessagesView: View {
 private struct HeaderBar: View{
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State var isPresentChatSettings: Bool = false
+    var user: ChatListModel.ChatModel.ChatUser
+    
     var body: some View{
         HStack {
             Button(action: {
@@ -241,13 +246,22 @@ private struct HeaderBar: View{
                     .aspectRatio(contentMode: .fill)
             }
             .padding(.trailing, 10)
+            
             HStack(spacing: 8) {
-                Image("testUserPhoto")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 32, height: 32)
-                    .cornerRadius(8)
-                    .padding(.trailing, 5)
+                NavigationLink(destination: ProfileView(userId: user.id).ignoreDefaultHeaderBar) {
+                    if let avatar = user.avatar {
+                        WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)"))
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 32, height: 32)
+                            .cornerRadius(8)
+                            .padding(.trailing, 5)
+                    } else {
+                        UIDefaultAvatar(width: 32, height: 32, cornerRadius: 8)
+                            .padding(.trailing, 5)
+                    }
+                }
+                .buttonStyle(FlatLinkStyle())
                 Button(action: {
                     isPresentChatSettings.toggle()
                 }){

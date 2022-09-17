@@ -89,11 +89,11 @@ struct ChatListView: View {
                 }
             )
         }
-        .background(
-            NavigationLink(destination: ChatMessagesView().ignoreDefaultHeaderBar, isActive: $pushOnNewChat, label: {
-                EmptyView()
-            })
-        )
+//        .background(
+//            NavigationLink(destination: ChatMessagesView().ignoreDefaultHeaderBar, isActive: $pushOnNewChat, label: {
+//                EmptyView()
+//            })
+//        )
         .background(Color(hex: "#F9F9F9").edgesIgnoringSafeArea(.all))
         .overlay{
             if presentNewChat {

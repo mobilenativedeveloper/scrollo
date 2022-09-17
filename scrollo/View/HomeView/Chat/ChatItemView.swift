@@ -16,7 +16,7 @@ struct ChatItemView: View{
     @Binding var chatList: [ChatListModel.ChatModel]
     
     var body: some View {
-        NavigationLink(destination: ChatMessagesView().ignoreDefaultHeaderBar) {
+        NavigationLink(destination: ChatMessagesView(user: chat.receiver).ignoreDefaultHeaderBar) {
             ZStack {
                 LinearGradient(gradient: .init(colors: [Color(hex: "#f55442"), Color(hex: "#fa6c5c").opacity(0.5)]), startPoint: .trailing, endPoint: .leading)
                     .clipShape(CustomCorner(radius: 15, corners: [.topLeft, .bottomLeft]))

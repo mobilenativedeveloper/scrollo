@@ -12,10 +12,10 @@ struct FavoriteContactView : View {
     @EnvironmentObject var chatViewModel: ChatViewModel
     var chat: ChatListModel.ChatModel
     var body : some View {
-        NavigationLink(destination: ChatMessagesView().ignoreDefaultHeaderBar) {
+        NavigationLink(destination: ChatMessagesView(user: chat.receiver).ignoreDefaultHeaderBar) {
             VStack(spacing: 0) {
                 ZStack(alignment: .bottomTrailing) {
-                    if let avatar = chat.starter.avatar {
+                    if let avatar = chat.receiver.avatar {
                         WebImage(url: URL(string: "\(API_URL)/uploads/\(avatar)")!)
                             .resizable()
                             .scaledToFill()
@@ -32,7 +32,7 @@ struct FavoriteContactView : View {
                         .offset(x: 2, y: -9)
                 }
                 
-                Text(chat.starter.login)
+                Text(chat.receiver.login)
                     .font(.system(size: 13))
                     .foregroundColor(Color(hex: "#4F4F4F"))
             }

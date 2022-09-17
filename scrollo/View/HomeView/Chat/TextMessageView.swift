@@ -24,6 +24,7 @@ struct TextMessageView: View {
                 }
             }
             else {
+                
                 Image("testUserPhoto")
                     .resizable()
                     .scaledToFill()

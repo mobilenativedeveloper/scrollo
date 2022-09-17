@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ImageMessageView: View {
     @Binding var message: MessageModel
+    
     var animation: Namespace.ID
     @Binding var isExpanded: Bool
     @Binding var expandedMedia: MessageModel?
