@@ -8,6 +8,7 @@
 import SwiftUI
 import Photos
 
+
 struct SelectAttachmentsView: View {
     @StateObject var photos: AttachmentsViewModel = AttachmentsViewModel()
     @Binding var isPresent: Bool
@@ -135,7 +136,10 @@ struct SelectAttachmentsView: View {
                                 }
                             }
                             else{
+                                Spacer()
                                 ProgressView()
+                                    .offset(y: -bounceOffset)
+                                Spacer()
                             }
                         }
                         
@@ -246,6 +250,7 @@ struct SelectAttachmentsView: View {
 
 private struct GridThumbnailGallery : View {
     @EnvironmentObject var photos: AttachmentsViewModel
+    @State var animation: Bool = false
     var asset: AssetModel
     var size: CGFloat
     var body : some View {
@@ -286,7 +291,12 @@ private struct GridThumbnailGallery : View {
             .frame(width: 20, height: 20)
             .offset(x: -8, y: 8)
         }
-        
+        .opacity(animation ? 1 : 0)
+        .onAppear(perform: {
+            withAnimation(.easeInOut(duration: 0.3)){
+                self.animation.toggle()
+            }
+        })
         .onTapGesture {
             withAnimation(.easeInOut(duration: 0.1)){
                 photos.pickPhoto(asset: asset)
